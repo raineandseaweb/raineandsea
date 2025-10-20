@@ -1,0 +1,83 @@
+import { generateImageKey, uploadImageVariants } from "@/lib/r2";
+import formidable from "formidable";
+import fs from "fs";
+import sharp from "sharp";
+import { NextApiRequest, NextApiResponse } from "next";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    const form = formidable({
+      maxFileSize: 10 * 1024 * 1024, // 10MB limit
+      filter: ({ mimetype }) => {
+        return mimetype?.startsWith("image/") || false;
+      },
+    });
+
+    const [fields, files] = await form.parse(req);
+
+    const file = Array.isArray(files.image) ? files.image[0] : files.image;
+    const productSlug = Array.isArray(fields.productSlug)
+      ? fields.productSlug[0]
+      : fields.productSlug;
+
+    if (!file) {
+      return res.status(400).json({ error: "No image file provided" });
+    }
+
+    if (!productSlug) {
+      return res.status(400).json({ error: "Product slug is required" });
+    }
+
+    // Generate unique key for the image
+    const imageKey = generateImageKey(
+      productSlug,
+      file.originalFilename || "image.jpg"
+    );
+
+    // Read file buffer
+    const fileBuffer = fs.readFileSync(file.filepath);
+
+    // Generate thumbnail using Sharp
+    const thumbnailBuffer = await sharp(fileBuffer)
+      .resize(300, 300, {
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    // Upload both variants to R2
+    const result = await uploadImageVariants(
+      fileBuffer,
+      thumbnailBuffer,
+      imageKey,
+      file.mimetype || "image/jpeg"
+    );
+
+    // Clean up temporary file
+    fs.unlinkSync(file.filepath);
+
+    return res.status(200).json({
+      success: true,
+      url: result.full.url,
+      thumbnailUrl: result.thumbnail.url,
+      imageKey,
+    });
+  } catch (error) {
+    console.error("Image upload error:", error);
+    return res.status(500).json({ error: "Failed to upload image" });
+  }
+}
