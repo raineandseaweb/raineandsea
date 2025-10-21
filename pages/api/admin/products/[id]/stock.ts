@@ -87,9 +87,7 @@ export default async function handler(
               const emailResult = await sendStockNotificationEmail(
                 notification.email,
                 product.title,
-                `${
-                  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-                }/products/${product.slug}`
+                product.slug
               );
 
               if (emailResult.success) {

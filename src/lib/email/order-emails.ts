@@ -4,8 +4,8 @@ import { getSecretAsync } from "../encryption/async-secrets";
 // Lazy initialization of email transporter
 let transporter: nodemailer.Transporter | null = null;
 let FROM_EMAIL: string | null = null;
+let SITE_URL: string | null = null;
 const ADMIN_EMAIL = "noreply.raineandsea+orders@gmail.com";
-const SITE_URL = process.env.SITE_URL || "http://localhost:3000";
 
 async function initializeEmailTransporter() {
   if (transporter) return;
@@ -31,6 +31,7 @@ async function initializeEmailTransporter() {
 
   FROM_EMAIL =
     (await getSecretAsync("FROM_EMAIL")) || "noreply@raineandsea.com";
+  SITE_URL = process.env.SITE_URL || "http://localhost:3000";
 
   transporter = nodemailer.createTransport(EMAIL_CONFIG);
 }
