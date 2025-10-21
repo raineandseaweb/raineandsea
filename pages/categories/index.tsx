@@ -66,23 +66,25 @@ export default function CategoriesPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">
               Product Categories
             </h1>
-            <p className="text-gray-600">Browse our products by category</p>
+            <p className="text-sm sm:text-base text-gray-600">
+              Browse our products by category
+            </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8">
-              <p className="text-red-600">{error}</p>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
+              <p className="text-sm sm:text-base text-red-600">{error}</p>
             </div>
           )}
 
           {/* Categories Grid */}
           {categories.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
               {categories.map((category) => (
                 <CategoryCard key={category.id} category={category} />
               ))}
@@ -114,25 +116,25 @@ export default function CategoriesPage() {
           )}
 
           {/* Call to Action */}
-          <div className="mt-16 text-center">
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200/50">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="mt-12 sm:mt-16 text-center">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200/50">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
                 Can&apos;t find what you&apos;re looking for?
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                 Browse all our products or use our search feature to find
                 exactly what you need.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Link
                   href="/products"
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
                 >
                   Browse All Products
                 </Link>
                 <Link
                   href="/products"
-                  className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
                 >
                   Search Products
                 </Link>

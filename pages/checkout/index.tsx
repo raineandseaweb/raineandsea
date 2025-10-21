@@ -94,6 +94,7 @@ export default function CheckoutPage() {
   const [defaultShippingAddress, setDefaultShippingAddress] =
     useState<Address | null>(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
 
   useEffect(() => {
     // Allow guest checkout - no longer redirect to signin
@@ -147,6 +148,7 @@ export default function CheckoutPage() {
   const fetchSavedAddresses = async () => {
     if (!user) return;
 
+    setIsLoadingAddresses(true);
     try {
       const response = await fetch("/api/addresses", {
         headers: {
@@ -173,6 +175,8 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error("Error fetching saved addresses:", error);
+    } finally {
+      setIsLoadingAddresses(false);
     }
   };
 
@@ -608,18 +612,20 @@ export default function CheckoutPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-16">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+              Checkout
+            </h1>
 
             <form onSubmit={handleSubmit}>
               {/* Guest Checkout Section */}
               {formData.isGuestCheckout && (
-                <div className="bg-blue-50 rounded-lg border border-blue-200 p-6 mb-6">
-                  <h2 className="text-xl font-semibold text-blue-900 mb-4">
+                <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 sm:p-6 mb-4 sm:mb-6">
+                  <h2 className="text-lg sm:text-xl font-semibold text-blue-900 mb-3 sm:mb-4">
                     Guest Checkout
                   </h2>
-                  <p className="text-blue-700 mb-4">
+                  <p className="text-sm sm:text-base text-blue-700 mb-3 sm:mb-4">
                     You're checking out as a guest. We'll send your order
                     confirmation to the email below.
                   </p>
@@ -634,7 +640,7 @@ export default function CheckoutPage() {
                         handleInputChange("guestEmail", e.target.value)
                       }
                       placeholder="your@email.com"
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                         errors.guestEmail ? "border-red-300" : "border-blue-300"
                       }`}
                     />
@@ -644,7 +650,7 @@ export default function CheckoutPage() {
                       </p>
                     )}
                   </div>
-                  <div className="mt-4 text-sm text-blue-600">
+                  <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-blue-600">
                     <p>
                       Already have an account?{" "}
                       <a
@@ -659,16 +665,16 @@ export default function CheckoutPage() {
               )}
 
               {/* Shipping Information */}
-              <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">
+              <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                     Shipping Address
                   </h2>
                   {user && (
                     <button
                       type="button"
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium touch-manipulation"
                     >
                       Manage Addresses
                     </button>
@@ -676,8 +682,17 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Address Selection for Logged-in Users */}
-                {user && savedAddresses.length > 0 && (
-                  <div className="mb-6">
+                {user && isLoadingAddresses ? (
+                  <div className="mb-4 sm:mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Choose Shipping Address
+                    </label>
+                    <div className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md bg-gray-100 animate-pulse">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    </div>
+                  </div>
+                ) : user && savedAddresses.length > 0 ? (
+                  <div className="mb-4 sm:mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Choose Shipping Address
                     </label>
@@ -686,7 +701,7 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         handleAddressSelection("shipping", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                     >
                       {savedAddresses.map((address) => (
                         <option key={address.id} value={address.id}>
@@ -696,14 +711,14 @@ export default function CheckoutPage() {
                       ))}
                     </select>
                   </div>
-                )}
+                ) : null}
 
                 {/* No addresses message for logged-in users */}
-                {user && savedAddresses.length === 0 && (
-                  <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-                    <div className="text-gray-400 mb-4">
+                {user && !isLoadingAddresses && savedAddresses.length === 0 && (
+                  <div className="text-center py-6 sm:py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                    <div className="text-gray-400 mb-3 sm:mb-4">
                       <svg
-                        className="w-12 h-12 mx-auto"
+                        className="w-8 h-8 sm:w-12 sm:h-12 mx-auto"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -722,16 +737,16 @@ export default function CheckoutPage() {
                         />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                       No addresses saved
                     </h3>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-4">
                       Add your first address to continue with checkout
                     </p>
                     <button
                       type="button"
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                      className="bg-blue-600 text-white px-4 py-3 sm:py-2 rounded-md hover:bg-blue-700 transition-colors touch-manipulation text-sm sm:text-base"
                     >
                       Add Address
                     </button>
@@ -741,7 +756,7 @@ export default function CheckoutPage() {
                 {/* Address Form - Only show for guest checkout */}
                 {formData.isGuestCheckout && (
                   <>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Full Name *
@@ -755,7 +770,7 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                             errors.shippingName
                               ? "border-red-300"
                               : "border-gray-300"
@@ -782,7 +797,7 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                         />
                       </div>
 
@@ -799,7 +814,7 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                             errors.shippingLine1
                               ? "border-red-300"
                               : "border-gray-300"
@@ -825,11 +840,11 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                         />
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             City *
@@ -843,7 +858,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                               errors.shippingCity
                                 ? "border-red-300"
                                 : "border-gray-300"
@@ -869,7 +884,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                               errors.shippingRegion
                                 ? "border-red-300"
                                 : "border-gray-300"
@@ -883,7 +898,7 @@ export default function CheckoutPage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Postal Code *
@@ -897,7 +912,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                               errors.shippingPostal
                                 ? "border-red-300"
                                 : "border-gray-300"
@@ -922,7 +937,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                           >
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
@@ -944,8 +959,8 @@ export default function CheckoutPage() {
               </div>
 
               {/* Billing Information - Compact and Conditional */}
-              <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-                <div className="flex items-center mb-4">
+              <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="flex items-center mb-3 sm:mb-4">
                   <label className="flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -953,20 +968,20 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         handleSameAddressChange(e.target.checked)
                       }
-                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded touch-manipulation"
                     />
-                    <span className="text-lg font-semibold text-gray-900">
+                    <span className="text-base sm:text-lg font-semibold text-gray-900">
                       Billing Address
                     </span>
                   </label>
                 </div>
 
                 {formData.useSameAddress ? (
-                  <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                  <div className="p-2 sm:p-3 bg-green-50 border border-green-200 rounded-md">
                     <div className="flex">
                       <div className="flex-shrink-0">
                         <svg
-                          className="h-5 w-5 text-green-400"
+                          className="h-4 w-4 sm:h-5 sm:w-5 text-green-400"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -977,8 +992,8 @@ export default function CheckoutPage() {
                           />
                         </svg>
                       </div>
-                      <div className="ml-3">
-                        <p className="text-sm text-green-800">
+                      <div className="ml-2 sm:ml-3">
+                        <p className="text-xs sm:text-sm text-green-800">
                           Billing address will be the same as shipping address
                         </p>
                       </div>
@@ -987,8 +1002,17 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     {/* Address Selection for Logged-in Users */}
-                    {user && savedAddresses.length > 0 && (
-                      <div className="mb-4">
+                    {user && isLoadingAddresses ? (
+                      <div className="mb-3 sm:mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Choose Billing Address
+                        </label>
+                        <div className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md bg-gray-100 animate-pulse">
+                          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                        </div>
+                      </div>
+                    ) : user && savedAddresses.length > 0 ? (
+                      <div className="mb-3 sm:mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Choose Billing Address
                         </label>
@@ -997,7 +1021,7 @@ export default function CheckoutPage() {
                           onChange={(e) =>
                             handleAddressSelection("billing", e.target.value)
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                         >
                           {savedAddresses.map((address) => (
                             <option key={address.id} value={address.id}>
@@ -1007,12 +1031,12 @@ export default function CheckoutPage() {
                           ))}
                         </select>
                       </div>
-                    )}
+                    ) : null}
 
                     {/* Address Form - Only show for guest checkout */}
                     {formData.isGuestCheckout && (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-3 sm:space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Full Name *
@@ -1026,7 +1050,7 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                                 errors.billingName
                                   ? "border-red-300"
                                   : "border-gray-300"
@@ -1053,7 +1077,7 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                             />
                           </div>
                         </div>
@@ -1071,7 +1095,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                               errors.billingLine1
                                 ? "border-red-300"
                                 : "border-gray-300"
@@ -1097,11 +1121,11 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                           />
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               City *
@@ -1115,7 +1139,7 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                                 errors.billingCity
                                   ? "border-red-300"
                                   : "border-gray-300"
@@ -1141,7 +1165,7 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                                 errors.billingRegion
                                   ? "border-red-300"
                                   : "border-gray-300"
@@ -1167,7 +1191,7 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
                                 errors.billingPostal
                                   ? "border-red-300"
                                   : "border-gray-300"
@@ -1193,7 +1217,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                           >
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
@@ -1206,57 +1230,63 @@ export default function CheckoutPage() {
               </div>
 
               {/* Order Summary */}
-              <div className="mt-8 bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="mt-6 sm:mt-8 bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                   Order Summary
                 </h2>
 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {cart.items.map((item) => (
                     <div
                       key={item.id}
                       className="flex justify-between items-center"
                     >
-                      <div>
-                        <p className="font-medium text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 text-sm sm:text-base truncate">
                           {item.product?.title || `Product ${item.product_id}`}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-900 text-sm sm:text-base ml-2">
                         {formatPrice(getItemPrice(item) * item.quantity)}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <hr className="my-4" />
+                <hr className="my-3 sm:my-4" />
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="text-gray-900">
+                    <span className="text-sm sm:text-base text-gray-600">
+                      Subtotal
+                    </span>
+                    <span className="text-sm sm:text-base text-gray-900">
                       {formatPrice(totals.subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tax</span>
-                    <span className="text-gray-900">
+                    <span className="text-sm sm:text-base text-gray-600">
+                      Tax
+                    </span>
+                    <span className="text-sm sm:text-base text-gray-900">
                       {formatPrice(totals.tax)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="text-gray-900">
+                    <span className="text-sm sm:text-base text-gray-600">
+                      Shipping
+                    </span>
+                    <span className="text-sm sm:text-base text-gray-900">
                       {totals.shipping === 0
                         ? "Free"
                         : formatPrice(totals.shipping)}
                     </span>
                   </div>
                   <hr />
-                  <div className="flex justify-between font-semibold text-lg">
+                  <div className="flex justify-between font-semibold text-base sm:text-lg">
                     <span className="text-gray-900">Total</span>
                     <span className="text-gray-900">
                       {formatPrice(totals.total)}
@@ -1264,7 +1294,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4 sm:mt-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Order Notes (Optional)
                   </label>
@@ -1277,7 +1307,7 @@ export default function CheckoutPage() {
                       }))
                     }
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
                     placeholder="Any special instructions for your order..."
                   />
                 </div>
@@ -1285,7 +1315,7 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full mt-6 bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full mt-4 sm:mt-6 bg-blue-600 text-white px-4 py-3 sm:py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base touch-manipulation active:bg-blue-800"
                 >
                   {isSubmitting ? "Processing..." : "Complete Purchase"}
                 </button>
@@ -1311,7 +1341,6 @@ export default function CheckoutPage() {
         onAddressesUpdated={(updatedAddresses) => {
           setSavedAddresses(updatedAddresses);
         }}
-        autoOpenAddForm={savedAddresses.length === 0}
         mode="checkout"
       />
     </div>

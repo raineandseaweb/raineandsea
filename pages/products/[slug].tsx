@@ -39,7 +39,7 @@ interface ProductOption {
   values: Array<{
     id: string;
     name: string;
-    price_adjustment: string;
+    price_adjustment: number;
     is_default: boolean;
     is_sold_out: boolean;
     sort_order: number;
@@ -228,7 +228,9 @@ export default function ProductDetailPage() {
             (v) => v.id === selectedValueId
           );
           if (selectedValue) {
-            optionsAdjustment += parseFloat(selectedValue.price_adjustment);
+            optionsAdjustment += parseFloat(
+              String(selectedValue.price_adjustment)
+            );
           }
         }
       });
@@ -262,7 +264,7 @@ export default function ProductDetailPage() {
       const option = product.options?.[optionIndex];
       if (option) {
         option.values.forEach((value) => {
-          const adjustment = parseFloat(value.price_adjustment || "0");
+          const adjustment = parseFloat(String(value.price_adjustment || "0"));
           generateCombinations(optionIndex + 1, currentAdjustment + adjustment);
         });
       }
@@ -361,9 +363,9 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-20 sm:pb-24">
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+          <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 lg:mb-8 px-1">
             <Link
               href="/"
               className="hover:text-gray-900 transition-colors duration-200"
@@ -378,34 +380,34 @@ export default function ProductDetailPage() {
               Products
             </Link>
             <span>/</span>
-            <span className="text-gray-900">
+            <span className="text-gray-900 truncate">
               {cleanProductTitle(product.title)}
             </span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
             {/* Product Images */}
             <ProductImageCarousel
               images={getCarouselImages()}
               productTitle={cleanProductTitle(product.title)}
-              className="max-w-lg mx-auto lg:mx-0"
+              className="w-full"
             />
 
             {/* Product Details */}
-            <div className="space-y-6 lg:sticky lg:top-24 self-start">
+            <div className="space-y-4 sm:space-y-6 lg:sticky lg:top-24 self-start">
               {/* Header */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <h1 className="text-2xl font-bold text-gray-900">
+                <div className="flex items-start justify-between mb-2 sm:mb-3">
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 pr-2">
                     {cleanProductTitle(product.title)}
                   </h1>
                   {(user?.role === "admin" || user?.role === "root") && (
                     <button
                       onClick={openEditModal}
-                      className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
+                      className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 flex-shrink-0"
                     >
                       <svg
-                        className="w-4 h-4 mr-1.5"
+                        className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -417,20 +419,21 @@ export default function ProductDetailPage() {
                           d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                         />
                       </svg>
-                      Edit Product
+                      <span className="hidden sm:inline">Edit Product</span>
+                      <span className="sm:hidden">Edit</span>
                     </button>
                   )}
                 </div>
                 {product.description &&
                   product.description !== product.title && (
-                    <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-3">
                       {product.description}
                     </p>
                   )}
 
                 {/* Categories */}
                 {product.categories && product.categories.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-3">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3">
                     {product.categories.map((category) => (
                       <Link
                         key={category.id}
@@ -445,7 +448,7 @@ export default function ProductDetailPage() {
 
                 {/* Tags */}
                 {product.tags && product.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5">
                     {product.tags
                       .filter((tag) => {
                         // Don't show "Custom Made" or "Made to Order" for solid objects
@@ -471,7 +474,7 @@ export default function ProductDetailPage() {
                         }
                         return true;
                       })
-                      .slice(0, 6)
+                      .slice(0, 4)
                       .map((tag) => (
                         <span
                           key={tag.id}
@@ -502,7 +505,7 @@ export default function ProductDetailPage() {
                         return false;
                       }
                       return true;
-                    }).length > 6 && (
+                    }).length > 4 && (
                       <button
                         onClick={() => setShowAllTags(true)}
                         className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer"
@@ -530,7 +533,7 @@ export default function ProductDetailPage() {
                             return false;
                           }
                           return true;
-                        }).length - 6}{" "}
+                        }).length - 4}{" "}
                         more
                       </button>
                     )}
@@ -540,10 +543,10 @@ export default function ProductDetailPage() {
 
               {/* Unified purchase section */}
               {product && (
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200/50 space-y-5">
+                <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/50 space-y-4 sm:space-y-5">
                   <div className="flex items-baseline justify-between">
-                    <div className="flex items-baseline gap-3">
-                      <span className="text-3xl font-bold text-gray-900">
+                    <div className="flex items-baseline gap-2 sm:gap-3">
+                      <span className="text-2xl sm:text-3xl font-bold text-gray-900">
                         {formatPrice(getTotalPrice(), "USD")}
                       </span>
                     </div>
@@ -561,7 +564,7 @@ export default function ProductDetailPage() {
                           const optionValues = option.values.map((value) => ({
                             id: value.id,
                             label: value.name,
-                            priceAdjustment: parseFloat(value.price_adjustment),
+                            priceAdjustment: value.price_adjustment,
                           }));
 
                           const selectedValue = optionValues.find(
@@ -590,20 +593,20 @@ export default function ProductDetailPage() {
                   )}
 
                   {/* Quantity and Add to Cart */}
-                  <div className="pt-2 border-t border-gray-100 space-y-3">
+                  <div className="pt-2 border-t border-gray-100 space-y-3 sm:space-y-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
                         Quantity
                       </label>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3">
                         <button
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold"
+                          className="w-10 h-10 sm:w-12 sm:h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold text-lg"
                         >
                           −
                         </button>
-                        <div className="w-16 h-10 border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                          <span className="text-sm font-bold text-gray-900">
+                        <div className="w-16 h-10 sm:w-20 sm:h-12 border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+                          <span className="text-sm sm:text-base font-bold text-gray-900">
                             {quantity}
                           </span>
                         </div>
@@ -611,7 +614,7 @@ export default function ProductDetailPage() {
                           onClick={() =>
                             setQuantity(Math.min(999, quantity + 1))
                           }
-                          className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold"
+                          className="w-10 h-10 sm:w-12 sm:h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold text-lg"
                         >
                           +
                         </button>
@@ -620,7 +623,7 @@ export default function ProductDetailPage() {
                     <button
                       onClick={addToCart}
                       disabled={false}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 sm:py-4 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md text-base sm:text-lg"
                     >
                       Add to Cart
                     </button>
@@ -648,16 +651,18 @@ export default function ProductDetailPage() {
 
       {/* All Tags Modal */}
       {showAllTags && product.tags && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-xl">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">All Tags</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 max-w-md w-full shadow-xl">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                All Tags
+              </h3>
               <button
                 onClick={() => setShowAllTags(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1"
               >
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -671,11 +676,11 @@ export default function ProductDetailPage() {
                 </svg>
               </button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {product.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+                  className="inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
                 >
                   {tag.name}
                 </span>
@@ -689,7 +694,7 @@ export default function ProductDetailPage() {
       <ProductEditModal
         isOpen={showEditModal}
         onClose={closeEditModal}
-        product={product}
+        product={product as any}
         onProductUpdated={fetchProduct}
         availableTags={availableTags}
       />

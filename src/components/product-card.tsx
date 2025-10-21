@@ -100,13 +100,16 @@ export function ProductCard({
     return formatPrice(priceRange.min, currency);
   };
 
-  const isOutOfStock = (product.quantity_available || 0) === 0;
+  const isOutOfStock =
+    (product.quantity_available ||
+      product.variants?.[0]?.quantity_available ||
+      0) === 0;
 
   return (
     <PrefetchLink href={`/products/${product.slug}`}>
       <div className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-200 overflow-hidden cursor-pointer">
         {/* Product Image */}
-        <div className="relative w-full h-64 bg-gray-50 overflow-hidden">
+        <div className="relative w-full h-48 sm:h-56 lg:h-64 bg-gray-50 overflow-hidden">
           {product.image ? (
             <Image
               src={product.image}
@@ -115,12 +118,12 @@ export function ProductCard({
               className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
                 isOutOfStock ? "opacity-60" : ""
               }`}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
               <svg
-                className="w-10 h-10 text-gray-300"
+                className="w-8 h-8 sm:w-10 sm:h-10 text-gray-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -138,19 +141,19 @@ export function ProductCard({
           {/* Out of stock overlay */}
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <div className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+              <div className="bg-red-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold">
                 Out of Stock
               </div>
             </div>
           )}
 
           {/* Overlay gradient for legibility */}
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none group-hover:scale-105 transition-transform duration-300" />
+          <div className="absolute inset-x-0 bottom-0 h-16 sm:h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none group-hover:scale-105 transition-transform duration-300" />
 
           {/* Price pill */}
           {priceRange.min > 0 && (
-            <div className="absolute bottom-3 left-3">
-              <span className="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold bg-white/90 text-gray-900 shadow-sm backdrop-blur">
+            <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
+              <span className="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-xs font-semibold bg-white/90 text-gray-900 shadow-sm backdrop-blur">
                 {priceDisplay()}
               </span>
             </div>
@@ -158,9 +161,9 @@ export function ProductCard({
         </div>
 
         {/* Product Info */}
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <h3
-            className={`text-sm font-medium mb-1 group-hover:text-blue-600 transition-colors leading-snug ${
+            className={`text-xs sm:text-sm font-medium mb-1 group-hover:text-blue-600 transition-colors leading-snug ${
               isOutOfStock ? "text-gray-500" : "text-gray-900"
             }`}
           >

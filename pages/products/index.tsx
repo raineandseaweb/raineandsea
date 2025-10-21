@@ -2,6 +2,7 @@ import { InfiniteProductGrid } from "@/components/infinite-product-grid";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { SearchControls } from "@/components/search-controls";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 interface Product {
@@ -27,6 +28,13 @@ interface Product {
   }>;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
 interface ProductsResponse {
   data: Product[];
   pagination: {
@@ -37,6 +45,7 @@ interface ProductsResponse {
     hasNext: boolean;
     hasPrev: boolean;
   };
+  category?: Category;
 }
 
 // Products page component
@@ -52,6 +61,7 @@ function ProductsPageContent() {
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [category, setCategory] = useState<Category | null>(null);
 
   // Initialize from URL parameters and localStorage
   useEffect(() => {
@@ -63,11 +73,17 @@ function ProductsPageContent() {
       urlParams.get("in_stock_only") === "true" ||
       localStorage.getItem("inStockOnly") === "true";
     const page = parseInt(urlParams.get("page") || "1");
+    const categorySlug = urlParams.get("category");
 
     setSearchQuery(q);
     setSortBy(sort);
     setInStockOnly(inStock);
     setCurrentPage(page);
+
+    // Reset category when URL changes
+    if (!categorySlug) {
+      setCategory(null);
+    }
   }, []);
 
   // Listen for search updates from SearchControls
@@ -127,15 +143,27 @@ function ProductsPageContent() {
         params.append("in_stock_only", "true");
       }
 
+      // Add category parameter if present in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const categorySlug = urlParams.get("category");
+      if (categorySlug) {
+        params.append("category", categorySlug);
+      }
+
       const response = await fetch(`/api/products?${params}`);
-      const data: ProductsResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error("Failed to fetch products");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch products");
       }
+
+      const data: ProductsResponse = await response.json();
 
       if (isInitial) {
         setProducts(data.data);
+        if (data.category) {
+          setCategory(data.category);
+        }
       } else {
         setProducts((prev) => [...prev, ...data.data]);
       }
@@ -172,13 +200,35 @@ function ProductsPageContent() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Product Catalog
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
+          {/* Breadcrumb for category view */}
+          {category && (
+            <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+              <Link
+                href="/"
+                className="hover:text-gray-900 transition-colors duration-200"
+              >
+                Home
+              </Link>
+              <span>/</span>
+              <Link
+                href="/categories"
+                className="hover:text-gray-900 transition-colors duration-200"
+              >
+                Categories
+              </Link>
+              <span>/</span>
+              <span className="text-gray-900 truncate">{category.name}</span>
+            </nav>
+          )}
+
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">
+              {category ? category.name : "Product Catalog"}
             </h1>
-            <p className="text-gray-600">
-              Discover our collection of premium products
+            <p className="text-sm sm:text-base text-gray-600">
+              {category?.description ||
+                "Discover our collection of premium crystal jewelry"}
             </p>
           </div>
 
@@ -186,21 +236,21 @@ function ProductsPageContent() {
           <SearchControls key="search-controls" />
 
           {/* Results count - separate from search controls to prevent re-renders */}
-          <div className="text-sm text-gray-600 mb-6">
+          <div className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 px-1">
             {totalCount} products found
           </div>
 
           {/* Inline loading indicator for subsequent fetches */}
           {!initialLoad && loading && (
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 px-1">
               <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-600"></div>
               Updating results...
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8">
-              <p className="text-red-600">{error}</p>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
+              <p className="text-sm sm:text-base text-red-600">{error}</p>
             </div>
           )}
 

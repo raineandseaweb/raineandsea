@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import {
+  categories,
   inventory,
   prices,
   productMedia,
@@ -38,6 +39,7 @@ export default async function handler(
       limit = 20,
       sort = "relevance",
       in_stock_only = false,
+      category: categorySlug,
     } = validation.data;
 
     const offset = (page - 1) * limit;
@@ -51,6 +53,29 @@ export default async function handler(
           products.description
         } ILIKE ${`%${query}%`})`
       );
+    }
+
+    // Add category filtering if requested
+    if (categorySlug) {
+      // First, find the category by slug
+      const categoryResult = await db
+        .select({ id: categories.id })
+        .from(categories)
+        .where(eq(categories.slug, categorySlug))
+        .limit(1);
+
+      if (categoryResult.length === 0) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      const categoryId = categoryResult[0].id;
+
+      // Add category filter using the junction table
+      conditions.push(sql`EXISTS (
+        SELECT 1 FROM product_categories 
+        WHERE product_categories.product_id = ${products.id} 
+        AND product_categories.category_id = ${categoryId}
+      )`);
     }
 
     // Add stock filtering if requested
@@ -292,6 +317,25 @@ export default async function handler(
       })
       .filter(Boolean);
 
+    // Get category information if filtering by category
+    let categoryInfo = null;
+    if (categorySlug) {
+      const categoryResult = await db
+        .select({
+          id: categories.id,
+          name: categories.name,
+          slug: categories.slug,
+          description: categories.description,
+        })
+        .from(categories)
+        .where(eq(categories.slug, categorySlug))
+        .limit(1);
+
+      if (categoryResult.length > 0) {
+        categoryInfo = categoryResult[0];
+      }
+    }
+
     return res.status(200).json({
       data: productsList,
       pagination: {
@@ -302,6 +346,7 @@ export default async function handler(
         hasNext: page < totalPages,
         hasPrev: page > 1,
       },
+      category: categoryInfo,
     });
   } catch (error) {
     console.error("Products API error:", error);

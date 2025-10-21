@@ -76,15 +76,15 @@ export function InfiniteProductGrid({
   // Initial loading state
   if (loading && products.length === 0) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {Array.from({ length: 12 }).map((_, i) => (
           <div
             key={i}
-            className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 animate-pulse"
+            className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-3 sm:p-4 lg:p-6 animate-pulse"
           >
-            <div className="aspect-square bg-gray-200 rounded-xl mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="aspect-square bg-gray-200 rounded-lg mb-3 sm:mb-4"></div>
+            <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="h-2 sm:h-3 bg-gray-200 rounded w-1/2"></div>
           </div>
         ))}
       </div>
@@ -123,7 +123,7 @@ export function InfiniteProductGrid({
   return (
     <div className="w-full">
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {products.map((product) => (
           <ProductCard
             key={product.id}
@@ -135,11 +135,11 @@ export function InfiniteProductGrid({
 
       {/* Loading sentinel for infinite scroll */}
       {hasMore && (
-        <div ref={sentinelRef} className="flex justify-center py-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 animate-pulse">
-            <div className="aspect-square bg-gray-200 rounded-xl mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+        <div ref={sentinelRef} className="flex justify-center py-6 sm:py-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-3 sm:p-4 lg:p-6 animate-pulse">
+            <div className="aspect-square bg-gray-200 rounded-lg mb-3 sm:mb-4"></div>
+            <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="h-2 sm:h-3 bg-gray-200 rounded w-1/2"></div>
           </div>
         </div>
       )}

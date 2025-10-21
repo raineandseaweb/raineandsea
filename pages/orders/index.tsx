@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/auth-context";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface OrderItem {
   id: string;
@@ -55,6 +55,10 @@ export default function OrdersPage() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -67,9 +71,14 @@ export default function OrdersPage() {
     }
   }, [user, loading, router]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (isRefresh = false) => {
     try {
-      setLoadingOrders(true);
+      if (isRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setLoadingOrders(true);
+      }
+
       const response = await fetch("/api/orders", {
         credentials: "include",
       });
@@ -80,11 +89,46 @@ export default function OrdersPage() {
 
       const result = await response.json();
       setOrders(result.data);
+
+      if (isRefresh) {
+        addToast({ title: "Orders refreshed", type: "success" });
+      }
     } catch (error) {
       console.error("Error fetching orders:", error);
       addToast({ title: "Failed to load order history", type: "error" });
     } finally {
       setLoadingOrders(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    fetchOrders(true);
+  };
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe || isRightSwipe) {
+      // Add haptic feedback for mobile devices
+      if ("vibrate" in navigator) {
+        navigator.vibrate(10);
+      }
     }
   };
 
@@ -119,19 +163,48 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Order History
-          </h1>
-          <p className="text-gray-600">View and track all your past orders</p>
+      <div
+        className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8"
+        ref={containerRef}
+      >
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Order History
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
+                View and track all your past orders
+              </p>
+            </div>
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="p-2 text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50"
+              title="Refresh orders"
+            >
+              <svg
+                className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {orders.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+          <div className="text-center py-8 sm:py-12 px-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full mb-4">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -144,46 +217,63 @@ export default function OrdersPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
               No orders yet
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 mb-6">
               You haven't placed any orders yet. Start shopping to see your
               orders here.
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base font-medium"
             >
               Start Shopping
             </Link>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-3 sm:space-y-6">
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="bg-white rounded-lg shadow-sm border p-6"
+                className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 active:scale-[0.98] transition-transform"
+                onClick={() => handleViewOrder(order)}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
               >
                 {/* Order Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {order.orderNumber}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Placed on{" "}
-                      {new Date(order.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="mt-2 sm:mt-0 flex items-center space-x-3">
-                    <StatusIndicator status={order.status} type="order" />
-                    <button
-                      onClick={() => handleViewOrder(order)}
-                      className="text-blue-600 hover:text-blue-700 font-medium text-sm"
-                    >
-                      View Details
-                    </button>
+                <div className="flex flex-col space-y-3 mb-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                        {order.orderNumber}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                        Placed on{" "}
+                        {new Date(order.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2 ml-3">
+                      <StatusIndicator
+                        status={order.status}
+                        type="order"
+                        className="text-xs px-2 py-1"
+                      />
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
 
@@ -193,19 +283,22 @@ export default function OrdersPage() {
                     <div key={item.id} className="flex items-center space-x-3">
                       <div className="flex-shrink-0">
                         {item.product_image ? (
-                          <div className="relative w-12 h-12 bg-gray-50 rounded overflow-hidden">
+                          <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gray-50 rounded overflow-hidden">
                             <Image
                               src={item.product_image}
                               alt={item.product_title}
                               fill
                               className="object-cover"
-                              sizes="48px"
+                              sizes="(max-width: 640px) 40px, 48px"
+                              loading="lazy"
+                              placeholder="blur"
+                              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                             />
                           </div>
                         ) : (
-                          <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded flex items-center justify-center">
                             <svg
-                              className="w-5 h-5 text-gray-400"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -221,7 +314,7 @@ export default function OrdersPage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
                           {item.descriptive_title || item.product_title}
                         </p>
                         <p className="text-xs text-gray-600">
@@ -231,19 +324,19 @@ export default function OrdersPage() {
                     </div>
                   ))}
                   {order.items.length > 2 && (
-                    <p className="text-xs text-gray-500 pl-[60px]">
+                    <p className="text-xs text-gray-500 pl-[52px] sm:pl-[60px]">
                       +{order.items.length - 2} more item(s)
                     </p>
                   )}
                 </div>
 
                 {/* Order Total */}
-                <div className="border-t pt-4">
+                <div className="border-t pt-3 sm:pt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold text-gray-900">
+                    <span className="text-base sm:text-lg font-semibold text-gray-900">
                       Total: {formatPrice(order.total, order.currency)}
                     </span>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-xs sm:text-sm text-gray-600">
                       {order.items.length} item(s)
                     </span>
                   </div>

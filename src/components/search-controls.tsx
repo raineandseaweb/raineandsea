@@ -149,62 +149,107 @@ export const SearchControls = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-      <div className="flex gap-4 mb-4">
-        <div className="flex-1 relative">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8">
+      {/* Mobile-First Search Bar */}
+      <div className="relative mb-4 sm:mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+            <svg
+              className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="Search products..."
+            placeholder="Search crystal jewelry..."
             onChange={handleSearchInputChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all duration-200"
           />
           {isSearching && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-blue-600 border-t-transparent"></div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-gray-700">Sort by:</label>
-          <div className="relative">
+      {/* Mobile-Optimized Controls */}
+      <div className="space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-6">
+        {/* Sort Control */}
+        <div className="flex items-center justify-between sm:justify-start gap-3">
+          <label className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+            Sort by:
+          </label>
+          <div className="relative inline-block sm:flex-none">
             <select
               ref={sortSelectRef}
               onChange={handleSortChange}
               disabled={isChangingSort}
-              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-auto appearance-none px-3 sm:px-4 py-2 sm:py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 pr-8 sm:pr-12"
             >
               <option value="relevance">Relevance</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
               <option value="newest">Newest First</option>
             </select>
+            {/* Custom dropdown arrow with controlled right padding */}
+            <span className="pointer-events-none absolute inset-y-0 right-2 sm:right-3 flex items-center">
+              <svg
+                className="h-4 w-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </span>
             {isChangingSort && (
-              <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+              <div className="absolute right-7 sm:right-9 top-1/2 -translate-y-1/2">
+                <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-blue-600 border-t-transparent"></div>
               </div>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="inStockOnly"
-            checked={inStockOnly}
-            onChange={handleStockFilterChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
+
+        {/* Stock Filter */}
+        <div className="flex items-center justify-between sm:justify-start gap-3">
           <label
             htmlFor="inStockOnly"
-            className="text-sm font-medium text-gray-700"
+            className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:hidden"
           >
-            In stock only
+            Filters:
           </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="inStockOnly"
+              checked={inStockOnly}
+              onChange={handleStockFilterChange}
+              className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="inStockOnly"
+              className="text-sm text-gray-600 cursor-pointer"
+            >
+              In stock only
+            </label>
+          </div>
         </div>
-        <div className="text-sm text-gray-600">Search products</div>
       </div>
     </div>
   );

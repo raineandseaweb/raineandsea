@@ -98,5 +98,6 @@ export const searchSchema = z.object({
     .enum(["relevance", "price_asc", "price_desc", "newest"])
     .default("relevance"),
   in_stock_only: z.coerce.boolean().default(false),
+  category: z.string().optional(),
   filters: z.record(z.string(), z.any()).optional(),
 });

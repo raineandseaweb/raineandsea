@@ -7,6 +7,7 @@ import {
 } from "@/lib/shipping-utils";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface OrderItem {
   id: string;
@@ -76,6 +77,29 @@ export function OrderDetailsModal({
   order,
   showCustomer = false,
 }: OrderDetailsModalProps) {
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      // Prevent scrolling on the body
+      document.body.style.overflow = "hidden";
+      // Prevent scrolling on touch devices
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+    } else {
+      // Restore scrolling
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    };
+  }, [isOpen]);
+
   if (!isOpen || !order) return null;
 
   const formatPrice = (price: string | number, currency: string = "USD") => {
@@ -104,15 +128,15 @@ export function OrderDetailsModal({
   const total = order.totals?.total ?? parseFloat(order.total.toString());
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-          <h3 className="text-xl font-semibold text-gray-900">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
+      <div className="bg-white w-full h-[90vh] sm:h-auto sm:max-h-[90vh] sm:rounded-lg sm:max-w-4xl overflow-hidden flex flex-col mt-8 sm:mt-0">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex justify-between items-center flex-shrink-0">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate pr-4">
             Order Details - {order.orderNumber}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition-colors p-2 -mr-2"
           >
             <svg
               className="w-6 h-6"
@@ -130,31 +154,49 @@ export function OrderDetailsModal({
           </button>
         </div>
 
-        <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <div className="space-y-6 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-6">
             {/* Left Column */}
             <div className="space-y-4">
               {/* Order Information */}
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-3">
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
                   Order Information
                 </h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Order Number:</span>
-                    <span className="font-medium">{order.orderNumber}</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Order Number:
+                    </span>
+                    <span className="font-medium text-sm sm:text-base">
+                      {order.orderNumber}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
-                    <StatusIndicator status={order.status} type="order" />
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Status:
+                    </span>
+                    <StatusIndicator
+                      status={order.status}
+                      type="order"
+                      className="text-xs px-2 py-1 mt-1 sm:mt-0"
+                    />
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Placed:</span>
-                    <span>{formatDate(order.created_at)}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Placed:
+                    </span>
+                    <span className="text-sm sm:text-base">
+                      {formatDate(order.created_at)}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Last Updated:</span>
-                    <span>{formatDate(order.updated_at)}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Last Updated:
+                    </span>
+                    <span className="text-sm sm:text-base">
+                      {formatDate(order.updated_at)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -162,21 +204,29 @@ export function OrderDetailsModal({
               {/* Shipping Address */}
               {order.shippingAddress && (
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-3">
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
                     Shipping Address
                   </h4>
                   <div className="text-sm text-gray-700 space-y-1">
-                    <p className="font-medium">{order.shippingAddress.name}</p>
-                    <p>{order.shippingAddress.line1}</p>
+                    <p className="font-medium text-sm sm:text-base">
+                      {order.shippingAddress.name}
+                    </p>
+                    <p className="text-xs sm:text-sm">
+                      {order.shippingAddress.line1}
+                    </p>
                     {order.shippingAddress.line2 && (
-                      <p>{order.shippingAddress.line2}</p>
+                      <p className="text-xs sm:text-sm">
+                        {order.shippingAddress.line2}
+                      </p>
                     )}
-                    <p>
+                    <p className="text-xs sm:text-sm">
                       {order.shippingAddress.city},{" "}
                       {order.shippingAddress.region}{" "}
                       {order.shippingAddress.postal_code}
                     </p>
-                    <p>{order.shippingAddress.country}</p>
+                    <p className="text-xs sm:text-sm">
+                      {order.shippingAddress.country}
+                    </p>
                   </div>
                 </div>
               )}
@@ -184,13 +234,15 @@ export function OrderDetailsModal({
               {/* Tracking Information */}
               {order.tracking_number && (
                 <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-3">
+                  <h4 className="font-semibold text-blue-900 mb-3 text-sm sm:text-base">
                     Tracking Information
                   </h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-800">Tracking Number:</span>
-                      <span className="font-mono text-blue-900">
+                  <div className="space-y-3 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                      <span className="text-blue-800 text-xs sm:text-sm">
+                        Tracking Number:
+                      </span>
+                      <span className="font-mono text-blue-900 text-xs sm:text-sm break-all mt-1 sm:mt-0">
                         {formatTrackingNumber(
                           order.tracking_number,
                           (order.shipping_provider as ShippingProvider) ||
@@ -198,9 +250,11 @@ export function OrderDetailsModal({
                         )}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-blue-800">Provider:</span>
-                      <span className="font-medium text-blue-900">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                      <span className="text-blue-800 text-xs sm:text-sm">
+                        Provider:
+                      </span>
+                      <span className="font-medium text-blue-900 text-sm sm:text-base mt-1 sm:mt-0">
                         {getProviderDisplayName(
                           (order.shipping_provider as ShippingProvider) ||
                             "other"
@@ -208,9 +262,11 @@ export function OrderDetailsModal({
                       </span>
                     </div>
                     {order.shipped_at && (
-                      <div className="flex justify-between">
-                        <span className="text-blue-800">Shipped:</span>
-                        <span className="text-blue-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                        <span className="text-blue-800 text-xs sm:text-sm">
+                          Shipped:
+                        </span>
+                        <span className="text-blue-900 text-sm sm:text-base mt-1 sm:mt-0">
                           {new Date(order.shipped_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -224,9 +280,22 @@ export function OrderDetailsModal({
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:text-blue-800 underline font-medium"
+                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                       >
-                        Track Package →
+                        Track Package
+                        <svg
+                          className="w-4 h-4 ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
                       </a>
                     </div>
                   </div>
@@ -260,7 +329,7 @@ export function OrderDetailsModal({
             {/* Right Column - Order Items */}
             <div className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-3">
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
                   Order Items ({order.items.length})
                 </h4>
                 <div className="space-y-3">
@@ -288,19 +357,22 @@ export function OrderDetailsModal({
                           className="flex-shrink-0"
                         >
                           {productImage ? (
-                            <div className="relative w-16 h-16 bg-gray-50 rounded overflow-hidden">
+                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded overflow-hidden">
                               <Image
                                 src={productImage}
                                 alt={productTitle}
                                 fill
                                 className="object-cover"
-                                sizes="64px"
+                                sizes="(max-width: 640px) 48px, 64px"
+                                loading="lazy"
+                                placeholder="blur"
+                                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                               />
                             </div>
                           ) : (
-                            <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded flex items-center justify-center">
                               <svg
-                                className="w-6 h-6 text-gray-400"
+                                className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -318,11 +390,11 @@ export function OrderDetailsModal({
                         <div className="flex-1 min-w-0">
                           <Link
                             href={`/products/${productSlug}`}
-                            className="text-sm font-medium text-gray-900 hover:text-blue-600 block"
+                            className="text-xs sm:text-sm font-medium text-gray-900 hover:text-blue-600 block"
                           >
                             {item.descriptive_title || productTitle}
                           </Link>
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-xs sm:text-sm text-gray-600 mt-1">
                             Qty: {item.quantity} ×{" "}
                             {formatPrice(unitAmount, order.currency)}
                           </p>
@@ -334,7 +406,7 @@ export function OrderDetailsModal({
                                   .join(", ")}
                               </p>
                             )}
-                          <p className="text-sm font-medium text-gray-900 mt-1">
+                          <p className="text-xs sm:text-sm font-medium text-gray-900 mt-1">
                             {formatPrice(
                               unitAmount * item.quantity,
                               order.currency
@@ -349,29 +421,41 @@ export function OrderDetailsModal({
 
               {/* Order Totals */}
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-3">
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
                   Order Totals
                 </h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span>{formatPrice(subtotal, order.currency)}</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Subtotal:
+                    </span>
+                    <span className="text-sm sm:text-base">
+                      {formatPrice(subtotal, order.currency)}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tax:</span>
-                    <span>{formatPrice(tax, order.currency)}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Tax:
+                    </span>
+                    <span className="text-sm sm:text-base">
+                      {formatPrice(tax, order.currency)}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping:</span>
-                    <span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <span className="text-gray-600 text-xs sm:text-sm">
+                      Shipping:
+                    </span>
+                    <span className="text-sm sm:text-base">
                       {shipping === 0
                         ? "Free"
                         : formatPrice(shipping, order.currency)}
                     </span>
                   </div>
-                  <div className="flex justify-between pt-2 border-t border-gray-300">
-                    <span className="font-semibold text-gray-900">Total:</span>
-                    <span className="font-semibold text-gray-900">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-3 border-t border-gray-300">
+                    <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                      Total:
+                    </span>
+                    <span className="font-semibold text-gray-900 text-base sm:text-lg">
                       {formatPrice(total, order.currency)}
                     </span>
                   </div>

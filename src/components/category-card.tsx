@@ -13,21 +13,21 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
-    <PrefetchLink href={`/categories/${category.slug}`}>
-      <div className="group relative bg-white rounded-2xl shadow-sm border border-gray-200/50 hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer">
-        <div className="relative w-full h-48">
+    <PrefetchLink href={`/products?category=${category.slug}`}>
+      <div className="group relative bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer">
+        <div className="relative w-full h-36 sm:h-48">
           {category.thumbnail ? (
             <Image
               src={category.thumbnail}
               alt={category.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
               <svg
-                className="w-12 h-12 text-blue-600"
+                className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -46,8 +46,8 @@ export function CategoryCard({ category }: CategoryCardProps) {
           <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-opacity duration-300"></div>
 
           {/* Category name overlay */}
-          <div className="absolute inset-0 flex items-center justify-center p-4">
-            <h3 className="text-white text-lg font-semibold text-center drop-shadow-lg group-hover:text-blue-200 transition-colors">
+          <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-4">
+            <h3 className="text-white text-sm sm:text-lg font-semibold text-center drop-shadow-lg group-hover:text-blue-200 transition-colors leading-tight">
               {category.name}
             </h3>
           </div>

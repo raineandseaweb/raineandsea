@@ -59,7 +59,7 @@ export function StatusIndicator({
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${getStatusColor(
+      className={`inline-flex items-center px-2.5 py-1 sm:py-0.5 rounded-md text-xs font-medium ${getStatusColor(
         status,
         type
       )} ${className}`}

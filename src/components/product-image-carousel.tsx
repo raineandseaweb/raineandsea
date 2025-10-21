@@ -112,12 +112,12 @@ export function ProductImageCarousel({
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-3 sm:space-y-4 ${className}`}>
       {/* Main Image */}
       <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
           </div>
         )}
 
@@ -127,19 +127,19 @@ export function ProductImageCarousel({
           fill
           className="object-cover"
           priority={selectedIndex === 0}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
 
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows - Always visible on mobile */}
         {sortedImages.length > 1 && (
           <>
             <button
               onClick={handlePrevious}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
               aria-label="Previous image"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -154,11 +154,11 @@ export function ProductImageCarousel({
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
               aria-label="Next image"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -176,7 +176,7 @@ export function ProductImageCarousel({
 
         {/* Image Counter */}
         {sortedImages.length > 1 && (
-          <div className="absolute top-4 right-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/50 text-white px-2 py-1 rounded text-xs sm:text-sm">
             {selectedIndex + 1} / {sortedImages.length}
           </div>
         )}
@@ -184,7 +184,7 @@ export function ProductImageCarousel({
 
       {/* Thumbnail Strip */}
       {sortedImages.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-2 scrollbar-hide">
           {sortedImages.map((image, index) => (
             <button
               key={image.id}
@@ -192,7 +192,7 @@ export function ProductImageCarousel({
                 thumbnailRefs.current[index] = el;
               }}
               onClick={() => handleThumbnailClick(index)}
-              className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
+              className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border-2 transition-all ${
                 selectedIndex === index
                   ? "border-blue-500 ring-2 ring-blue-200"
                   : "border-gray-200 hover:border-gray-300"
@@ -205,7 +205,7 @@ export function ProductImageCarousel({
                 height={80}
                 className="w-full h-full object-cover"
                 loading="lazy"
-                sizes="80px"
+                sizes="(max-width: 640px) 64px, 80px"
               />
             </button>
           ))}
