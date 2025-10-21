@@ -4,11 +4,12 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "functions": {
-    "src/app/api/**/*.ts": {
+    "pages/api/**/*.ts": {
       "maxDuration": 30
     }
   },
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "rewrites": []
 }
