@@ -99,13 +99,13 @@ export default function OrderLookupPage() {
       }
 
       setOrder(result.data);
-      addToast("Order found successfully", "success");
+      addToast({ title: "Order found successfully", type: "success" });
     } catch (error) {
       console.error("Order lookup error:", error);
       setError(
         error instanceof Error ? error.message : "Failed to lookup order"
       );
-      addToast("Failed to lookup order", "error");
+      addToast({ title: "Failed to lookup order", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -327,13 +327,21 @@ export default function OrderLookupPage() {
                         <strong>Tracking Number:</strong>{" "}
                         {formatTrackingNumber(
                           order.tracking_number,
-                          order.shipping_provider || "other"
+                          (order.shipping_provider as
+                            | "usps"
+                            | "ups"
+                            | "fedex"
+                            | "other") || "other"
                         )}
                       </span>
                       <a
                         href={generateTrackingUrl(
                           order.tracking_number,
-                          order.shipping_provider || "other"
+                          (order.shipping_provider as
+                            | "usps"
+                            | "ups"
+                            | "fedex"
+                            | "other") || "other"
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -345,7 +353,11 @@ export default function OrderLookupPage() {
                     <div className="text-sm text-blue-800">
                       <strong>Shipping Provider:</strong>{" "}
                       {getProviderDisplayName(
-                        order.shipping_provider || "other"
+                        (order.shipping_provider as
+                          | "usps"
+                          | "ups"
+                          | "fedex"
+                          | "other") || "other"
                       )}
                     </div>
                     {order.shipped_at && (

@@ -5,6 +5,7 @@ import {
   getThumbnailUrl,
 } from "@/lib/image-utils";
 import {
+  ErrorType,
   sendErrorResponse,
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
@@ -29,7 +30,7 @@ export default withSecureApi(
         return sendErrorResponse(
           res,
           "Order number is required",
-          "VALIDATION_ERROR",
+          ErrorType.VALIDATION_ERROR,
           400
         );
       }
@@ -52,7 +53,12 @@ export default withSecureApi(
         .limit(1);
 
       if (!order) {
-        return sendErrorResponse(res, "Order not found", "NOT_FOUND", 404);
+        return sendErrorResponse(
+          res,
+          "Order not found",
+          ErrorType.NOT_FOUND_ERROR,
+          404
+        );
       }
 
       // Verify access based on order type
@@ -62,7 +68,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Email is required for guest orders",
-            "VALIDATION_ERROR",
+            ErrorType.VALIDATION_ERROR,
             400
           );
         }
@@ -70,7 +76,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Email does not match order",
-            "UNAUTHORIZED",
+            ErrorType.AUTHORIZATION_ERROR,
             403
           );
         }
@@ -84,7 +90,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Unauthorized access to order",
-            "UNAUTHORIZED",
+            ErrorType.AUTHORIZATION_ERROR,
             403
           );
         }
@@ -159,7 +165,7 @@ export default withSecureApi(
       return sendErrorResponse(
         res,
         "Failed to retrieve order details",
-        "INTERNAL_SERVER_ERROR",
+        ErrorType.INTERNAL_ERROR,
         500
       );
     }

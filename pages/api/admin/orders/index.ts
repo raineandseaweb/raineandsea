@@ -35,7 +35,28 @@ export default withSecureAdmin(
 
         // Status filter
         if (status && typeof status === "string") {
-          conditions.push(eq(orders.status, status));
+          const validStatuses = [
+            "received",
+            "paid",
+            "shipped",
+            "completed",
+            "cancelled",
+            "refunded",
+          ];
+          if (validStatuses.includes(status)) {
+            conditions.push(
+              eq(
+                orders.status,
+                status as
+                  | "received"
+                  | "paid"
+                  | "shipped"
+                  | "completed"
+                  | "cancelled"
+                  | "refunded"
+              )
+            );
+          }
         }
 
         // Search filter (by customer email, guest email, order number, or order ID)
@@ -63,10 +84,18 @@ export default withSecureAdmin(
           ? (sortBy as string)
           : "created_at";
 
+        // Define order by column mapping
+        const orderByColumnMap: Record<string, any> = {
+          created_at: orders.created_at,
+          updated_at: orders.updated_at,
+          status: orders.status,
+          order_number: orders.order_number,
+          total: orders.total,
+        };
+
+        const orderByColumn = orderByColumnMap[sortField] || orders.created_at;
         const orderBy =
-          sortOrder === "desc"
-            ? desc(orders[sortField as keyof typeof orders])
-            : orders[sortField as keyof typeof orders];
+          sortOrder === "desc" ? desc(orderByColumn) : orderByColumn;
 
         // Get orders with customer information (including guest orders)
         const adminOrders = await db

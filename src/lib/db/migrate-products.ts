@@ -13,9 +13,6 @@ import {
   productCategories,
   productMedia,
   products,
-  variantOptions,
-  variantOptionValues,
-  variants,
 } from "./schema";
 
 interface ProductImage {
@@ -223,104 +220,105 @@ async function processVariants(productData: ProductData, productId: string) {
     return;
   }
 
-  // Create a base variant for this product
-  const baseVariant = await db
-    .insert(variants)
-    .values({
-      product_id: productId,
-      sku: `${productData._id}-base`,
-      title: productData.title,
-    })
-    .returning();
+  // Create a base variant for this product - DISABLED: variants table removed
+  // const baseVariant = await db
+  //   .insert(variants)
+  //   .values({
+  //     product_id: productId,
+  //     sku: `${productData._id}-base`,
+  //     title: productData.title,
+  //   })
+  //   .returning();
 
   // Add base price
   await db.insert(prices).values({
-    variant_id: baseVariant[0].id,
+    product_id: productId,
     currency: "USD",
     amount: productData.price.toString(),
   });
 
   // Add inventory
   await db.insert(inventory).values({
-    variant_id: baseVariant[0].id,
+    product_id: productId,
     quantity_available: productData.stock || 1,
     quantity_reserved: 0,
   });
 
-  // Process each variant group (e.g., "Size", "Style", etc.)
-  for (
-    let variantIndex = 0;
-    variantIndex < productData.variants.length;
-    variantIndex++
-  ) {
-    const variantGroup = productData.variants[variantIndex];
+  // Process each variant group (e.g., "Size", "Style", etc.) - DISABLED: variants table removed
+  // for (
+  //   let variantIndex = 0;
+  //   variantIndex < productData.variants.length;
+  //   variantIndex++
+  // ) {
+  //   const variantGroup = productData.variants[variantIndex];
 
-    // Create variant option (e.g., "Size", "Style")
-    const variantOption = await db
-      .insert(variantOptions)
-      .values({
-        variant_id: baseVariant[0].id,
-        name: variantGroup.name || `Option ${variantIndex + 1}`,
-        display_name:
-          variantGroup.name || `Select ${variantGroup.name || "option"}`,
-        sort_order: variantIndex,
-      })
-      .returning();
+  //   // Create variant option (e.g., "Size", "Style")
+  //   const variantOption = await db
+  //     .insert(variantOptions)
+  //     .values({
+  //       variant_id: baseVariant[0].id,
+  //       name: variantGroup.name || `Option ${variantIndex + 1}`,
+  //       display_name:
+  //         variantGroup.name || `Select ${variantGroup.name || "option"}`,
+  //       sort_order: variantIndex,
+  //     })
+  //     .returning();
 
-    // Process each option value (e.g., "Small", "Medium", "Large")
-    for (
-      let optionIndex = 0;
-      optionIndex < variantGroup.options.length;
-      optionIndex++
-    ) {
-      const option = variantGroup.options[optionIndex];
+  //   // Process each option value (e.g., "Small", "Medium", "Large")
+  //   for (
+  //     let optionIndex = 0;
+  //     optionIndex < variantGroup.options.length;
+  //     optionIndex++
+  //   ) {
+  //     const option = variantGroup.options[optionIndex];
 
-      // Skip default/placeholder options
-      if (option.isDefault || !option.name || option.name.includes("Select")) {
-        continue;
-      }
+  //     // Skip default/placeholder options
+  //     if (option.isDefault || !option.name || option.name.includes("Select")) {
+  //       continue;
+  //     }
 
-      // Calculate price adjustment relative to base price
-      const priceAdjustment =
-        option.price !== null
-          ? (option.price - productData.price).toString()
-          : "0";
+  //     // Calculate price adjustment relative to base price
+  //     const priceAdjustment =
+  //       option.price !== null
+  //         ? (option.price - productData.price).toString()
+  //         : "0";
 
-      await db.insert(variantOptionValues).values({
-        option_id: variantOption[0].id,
-        name: option.name,
-        price_adjustment: priceAdjustment,
-        is_default: option.isDefault,
-        is_sold_out: option.isSoldOut,
-        sort_order: optionIndex,
-      });
-    }
-  }
+  //     await db.insert(variantOptionValues).values({
+  //       option_id: variantOption[0].id,
+  //       name: option.name,
+  //       price_adjustment: priceAdjustment,
+  //       is_default: option.isDefault,
+  //       is_sold_out: option.isSoldOut,
+  //       sort_order: optionIndex,
+  //     });
+  //   }
+  // }
 }
 
 async function createDefaultVariant(
   productData: ProductData,
   productId: string
 ) {
-  const variant = await db
-    .insert(variants)
-    .values({
-      product_id: productId,
-      sku: `${productData._id}-default`,
-      title: productData.title,
-    })
-    .returning();
+  // Create a single default variant - DISABLED: variants table removed
+  // const variant = await db
+  //   .insert(variants)
+  //   .values({
+  //     product_id: productId,
+  //     sku: `${productData._id}-default`,
+  //     title: productData.title,
+  //   })
+  //   .returning();
 
   // Add price
   await db.insert(prices).values({
-    variant_id: variant[0].id,
+    product_id: productId,
     currency: "USD",
     amount: productData.price.toString(),
   });
 
   // Add inventory
   await db.insert(inventory).values({
-    variant_id: variant[0].id,
+    product_id: productId,
     quantity_available: productData.stock || 1,
     quantity_reserved: 0,
   });

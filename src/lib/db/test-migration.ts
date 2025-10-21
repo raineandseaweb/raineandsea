@@ -5,7 +5,7 @@ config({ path: ".env.local" });
 
 import { count } from "drizzle-orm";
 import { db } from "./index";
-import { categories, inventory, prices, products, variants } from "./schema";
+import { categories, inventory, prices, products } from "./schema";
 
 async function testMigration() {
   try {
@@ -19,9 +19,9 @@ async function testMigration() {
     const categoryCount = await db.select({ count: count() }).from(categories);
     console.log(`📂 Categories: ${categoryCount[0].count}`);
 
-    // Count variants
-    const variantCount = await db.select({ count: count() }).from(variants);
-    console.log(`🔧 Variants: ${variantCount[0].count}`);
+    // Count variants - disabled as variants table removed
+    // const variantCount = await db.select({ count: count() }).from(variants);
+    // console.log(`🔧 Variants: ${variantCount[0].count}`);
 
     // Count prices
     const priceCount = await db.select({ count: count() }).from(prices);

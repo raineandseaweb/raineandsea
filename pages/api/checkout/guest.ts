@@ -12,6 +12,7 @@ import {
   sendOrderConfirmationEmail,
 } from "@/lib/email";
 import {
+  ErrorType,
   sendErrorResponse,
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
@@ -50,7 +51,7 @@ export default async function handler(
       return sendErrorResponse(
         res,
         "Valid email address is required for guest checkout",
-        "VALIDATION_ERROR",
+        ErrorType.VALIDATION_ERROR,
         400
       );
     }
@@ -59,7 +60,7 @@ export default async function handler(
       return sendErrorResponse(
         res,
         "Cart items are required",
-        "VALIDATION_ERROR",
+        ErrorType.VALIDATION_ERROR,
         400
       );
     }
@@ -68,7 +69,7 @@ export default async function handler(
       return sendErrorResponse(
         res,
         "Shipping address is required",
-        "VALIDATION_ERROR",
+        ErrorType.VALIDATION_ERROR,
         400
       );
     }
@@ -106,7 +107,7 @@ export default async function handler(
         return sendErrorResponse(
           res,
           `Product ${cartItem.product_id} not found`,
-          "VALIDATION_ERROR",
+          ErrorType.VALIDATION_ERROR,
           400
         );
       }
@@ -320,7 +321,7 @@ export default async function handler(
     return sendErrorResponse(
       res,
       "Guest order submission failed",
-      "INTERNAL_SERVER_ERROR",
+      ErrorType.INTERNAL_ERROR,
       500
     );
   }

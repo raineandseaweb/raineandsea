@@ -82,7 +82,7 @@ export async function validateAuthToken(
       user: {
         id: user[0].id,
         email: user[0].email,
-        name: user[0].name,
+        name: user[0].name ?? undefined,
         role: user[0].role,
         email_verified: !!user[0].email_verified,
         exp: decoded.exp,
@@ -111,7 +111,7 @@ export function extractTokenFromRequest(req: any): string | null {
  */
 export async function requireAuth(req: any): Promise<AuthenticatedUser> {
   const token = extractTokenFromRequest(req);
-  const result = await validateAuthToken(token);
+  const result = await validateAuthToken(token ?? "");
 
   if (!result.success || !result.user) {
     throw new Error(result.error || "Authentication required");

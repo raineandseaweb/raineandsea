@@ -42,7 +42,7 @@ const cartItemSchema = z.object({
     .min(1, "Quantity must be at least 1")
     .max(10, "Maximum quantity is 10"),
   selected_options: z
-    .record(z.string().uuid("Invalid option value ID"))
+    .record(z.string(), z.string().uuid("Invalid option value ID"))
     .optional(),
 });
 
@@ -86,7 +86,7 @@ export function validateCheckoutData(data: unknown): CheckoutData {
     // Validation logging removed for performance
 
     // Simple validation without complex schema to avoid Zod version conflicts
-    const dataObj = data as any;
+    const dataObj = data as Record<string, unknown>;
 
     // Basic validation
     if (
@@ -121,7 +121,7 @@ export function validateCheckoutData(data: unknown): CheckoutData {
     }
 
     // Validate shipping address
-    const addr = dataObj.shippingAddress;
+    const addr = dataObj.shippingAddress as Record<string, unknown>;
     if (
       !addr.name ||
       !addr.email ||
@@ -138,9 +138,9 @@ export function validateCheckoutData(data: unknown): CheckoutData {
     return result as CheckoutData;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Zod validation errors:", error.errors);
-      const errorMessages = error.errors.map(
-        (err) => `${err.path.join(".")}: ${err.message}`
+      console.error("Zod validation errors:", error.issues);
+      const errorMessages = error.issues.map(
+        (err: z.ZodIssue) => `${err.path.join(".")}: ${err.message}`
       );
       throw new Error(`Validation failed: ${errorMessages.join(", ")}`);
     }
@@ -167,7 +167,7 @@ export function sanitizeString(input: string): string {
 /**
  * Sanitizes all string fields in an object recursively
  */
-export function sanitizeObject(obj: any): any {
+export function sanitizeObject(obj: unknown): unknown {
   if (obj === null || obj === undefined) {
     return obj;
   }
@@ -180,8 +180,8 @@ export function sanitizeObject(obj: any): any {
     return obj.map(sanitizeObject);
   }
 
-  if (typeof obj === "object") {
-    const sanitized: any = {};
+  if (typeof obj === "object" && obj !== null) {
+    const sanitized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(obj)) {
       sanitized[key] = sanitizeObject(value);
     }

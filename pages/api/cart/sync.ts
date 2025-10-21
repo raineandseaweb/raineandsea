@@ -84,6 +84,9 @@ export default async function handler(
           for (const [optionName, optionValueName] of Object.entries(
             selected_options
           )) {
+            // Ensure optionValueName is a string
+            if (typeof optionValueName !== "string") continue;
+
             // Get the price adjustment for this option value
             const optionValue = await db
               .select()
@@ -99,7 +102,9 @@ export default async function handler(
               .limit(1);
 
             if (optionValue.length > 0) {
-              finalPrice += parseFloat(optionValue[0].price_adjustment);
+              finalPrice += parseFloat(
+                optionValue[0].product_option_values.price_adjustment
+              );
             }
           }
         }

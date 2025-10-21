@@ -12,6 +12,7 @@ import {
   getThumbnailUrl,
 } from "@/lib/image-utils";
 import {
+  ErrorType,
   sendErrorResponse,
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
@@ -43,7 +44,7 @@ export default async function handler(
       return sendErrorResponse(
         res,
         "Order number and email are required",
-        "VALIDATION_ERROR",
+        ErrorType.VALIDATION_ERROR,
         400
       );
     }
@@ -52,7 +53,7 @@ export default async function handler(
       return sendErrorResponse(
         res,
         "Invalid email format",
-        "VALIDATION_ERROR",
+        ErrorType.VALIDATION_ERROR,
         400
       );
     }
@@ -98,7 +99,7 @@ export default async function handler(
       return sendErrorResponse(
         res,
         "Order not found or email does not match",
-        "NOT_FOUND",
+        ErrorType.NOT_FOUND_ERROR,
         404
       );
     }
@@ -184,7 +185,7 @@ export default async function handler(
     return sendErrorResponse(
       res,
       "Order lookup failed",
-      "INTERNAL_SERVER_ERROR",
+      ErrorType.INTERNAL_ERROR,
       500
     );
   }

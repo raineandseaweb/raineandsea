@@ -24,7 +24,7 @@ export default async function handler(
     if (!validationResult.success) {
       return res.status(400).json({
         error: "Validation failed",
-        details: validationResult.error.errors.map((err) => ({
+        details: validationResult.error.issues.map((err) => ({
           field: err.path.join("."),
           message: err.message,
         })),

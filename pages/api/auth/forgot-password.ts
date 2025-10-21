@@ -36,7 +36,7 @@ export default async function handler(
       const userName = user.length > 0 ? user[0].name : undefined;
 
       // Send password reset email
-      await sendPasswordResetEmail(email, result.token, userName);
+      await sendPasswordResetEmail(email, result.token, userName || undefined);
     }
 
     // Always return success to prevent email enumeration

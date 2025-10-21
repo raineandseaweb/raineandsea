@@ -24,7 +24,7 @@ export default async function handler(
     if (!passwordValidation.success) {
       return res.status(400).json({
         error: "Password validation failed",
-        details: passwordValidation.error.errors.map((err) => ({
+        details: passwordValidation.error.issues.map((err) => ({
           field: err.path.join("."),
           message: err.message,
         })),

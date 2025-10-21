@@ -78,7 +78,7 @@ function SortableOptionItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: option.id });
+  } = useSortable({ id: option.id || `option-${Math.random()}` });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -305,7 +305,7 @@ function SortableValuesList({
       onDragEnd={onDragEnd}
     >
       <SortableContext
-        items={values.map((v) => v.id)}
+        items={values.map((v) => v.id || `value-${Math.random()}`)}
         strategy={verticalListSortingStrategy}
       >
         <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
@@ -351,7 +351,7 @@ function SortableValueItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: value.id });
+  } = useSortable({ id: value.id || `value-${Math.random()}` });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -771,7 +771,9 @@ export default function ProductOptionsModal({
             onDragEnd={handleOptionsDragEnd}
           >
             <SortableContext
-              items={productOptions.map((option) => option.id)}
+              items={productOptions.map(
+                (option) => option.id || `option-${Math.random()}`
+              )}
               strategy={verticalListSortingStrategy}
             >
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">

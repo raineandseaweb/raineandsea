@@ -16,6 +16,7 @@ interface Product {
   }>;
   variants?: Array<{
     options?: Array<{
+      _id?: string;
       imgUrl?: string;
     }>;
   }>;

@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { addresses } from "@/lib/db/schema";
 import {
+  ErrorType,
   sendErrorResponse,
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
@@ -20,7 +21,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Authentication required",
-            "AUTHENTICATION_ERROR",
+            ErrorType.AUTHENTICATION_ERROR,
             401
           );
         }
@@ -54,7 +55,7 @@ export default withSecureApi(
         return sendErrorResponse(
           res,
           "Failed to fetch addresses",
-          "INTERNAL_SERVER_ERROR",
+          ErrorType.INTERNAL_ERROR,
           500
         );
       }
@@ -64,7 +65,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Authentication required",
-            "AUTHENTICATION_ERROR",
+            ErrorType.AUTHENTICATION_ERROR,
             401
           );
         }
@@ -87,7 +88,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Missing required address fields",
-            "VALIDATION_ERROR",
+            ErrorType.VALIDATION_ERROR,
             400
           );
         }
@@ -96,7 +97,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Invalid address type",
-            "VALIDATION_ERROR",
+            ErrorType.VALIDATION_ERROR,
             400
           );
         }
@@ -148,7 +149,7 @@ export default withSecureApi(
         return sendErrorResponse(
           res,
           "Failed to create address",
-          "INTERNAL_SERVER_ERROR",
+          ErrorType.INTERNAL_ERROR,
           500
         );
       }

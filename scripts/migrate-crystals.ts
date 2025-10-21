@@ -16,6 +16,7 @@ const db = drizzle(pool);
 interface ProductData {
   _id: string;
   title: string;
+  price: number;
   crystals: string[];
   variants: Array<{
     _id: string;
@@ -77,7 +78,12 @@ async function migrateCrystals() {
       }
 
       // Add crystal options from variants (only for products that have crystals)
-      if (productData.crystals && productData.crystals.length > 0 && productData.variants && productData.variants.length > 0) {
+      if (
+        productData.crystals &&
+        productData.crystals.length > 0 &&
+        productData.variants &&
+        productData.variants.length > 0
+      ) {
         for (const variant of productData.variants) {
           if (variant.options && variant.options.length > 0) {
             for (let i = 0; i < variant.options.length; i++) {
@@ -91,11 +97,31 @@ async function migrateCrystals() {
               // Only add crystal options if they look like crystal names
               // Skip generic options like "Yes", "No", "Small", "Medium", "Large", etc.
               const genericOptions = [
-                "Select an option", "Select a diameter", "Select a size", "Select a color",
-                "Yes", "No", "Small", "Medium", "Large", "Extra Large", "XL", "S", "M", "L",
-                "Red", "Blue", "Green", "Yellow", "Black", "White", "Pink", "Purple", "Orange"
+                "Select an option",
+                "Select a diameter",
+                "Select a size",
+                "Select a color",
+                "Yes",
+                "No",
+                "Small",
+                "Medium",
+                "Large",
+                "Extra Large",
+                "XL",
+                "S",
+                "M",
+                "L",
+                "Red",
+                "Blue",
+                "Green",
+                "Yellow",
+                "Black",
+                "White",
+                "Pink",
+                "Purple",
+                "Orange",
               ];
-              
+
               if (genericOptions.includes(option.name)) {
                 continue;
               }

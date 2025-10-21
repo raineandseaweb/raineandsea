@@ -74,7 +74,11 @@ export default withSecureApi(
 
     try {
       // Extract unique product IDs for batch query
-      const productIds = [...new Set(cartItems.map((item) => item.product_id))];
+      const productIds: string[] = [
+        ...new Set(
+          (cartItems as { product_id: string }[]).map((item) => item.product_id)
+        ),
+      ];
 
       // Batch fetch all products with prices
       const productsData = await db
@@ -98,22 +102,24 @@ export default withSecureApi(
         optionName: string;
         optionValue: string;
       }> = [];
-      cartItems.forEach((cartItem) => {
-        if (
-          cartItem.selected_options &&
-          Object.keys(cartItem.selected_options).length > 0
-        ) {
-          Object.entries(cartItem.selected_options).forEach(
-            ([optionName, optionValue]) => {
-              allOptionValues.push({
-                productId: cartItem.product_id,
-                optionName,
-                optionValue: optionValue as string,
-              });
-            }
-          );
+      cartItems.forEach(
+        (cartItem: { product_id: string; selected_options?: any }) => {
+          if (
+            cartItem.selected_options &&
+            Object.keys(cartItem.selected_options).length > 0
+          ) {
+            Object.entries(cartItem.selected_options).forEach(
+              ([optionName, optionValue]) => {
+                allOptionValues.push({
+                  productId: cartItem.product_id,
+                  optionName,
+                  optionValue: optionValue as string,
+                });
+              }
+            );
+          }
         }
-      });
+      );
 
       // Batch fetch option values if any exist
       let optionValuesMap = new Map<string, any>();

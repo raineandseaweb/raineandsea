@@ -91,8 +91,24 @@ export default withSecureAdmin(
           .where(eq(orderItems.order_id, id));
 
         // Get shipping address (only for customer orders)
-        let shippingAddress = [];
-        let billingAddress = [];
+        let shippingAddress: Array<{
+          name: string | null;
+          line1: string | null;
+          line2: string | null;
+          city: string | null;
+          region: string | null;
+          postal_code: string | null;
+          country: string | null;
+        }> = [];
+        let billingAddress: Array<{
+          name: string | null;
+          line1: string | null;
+          line2: string | null;
+          city: string | null;
+          region: string | null;
+          postal_code: string | null;
+          country: string | null;
+        }> = [];
 
         if (orderData.customer_id) {
           shippingAddress = await db
@@ -326,11 +342,11 @@ export default withSecureAdmin(
 
                 await sendShippingConfirmationEmail({
                   orderId: orderData.id,
-                  orderNumber: orderData.order_number,
+                  orderNumber: orderData.order_number || undefined,
                   customerEmail: orderData.is_guest_order
                     ? orderData.guest_email!
                     : orderData.customer_email!,
-                  customerName: orderData.customer_name,
+                  customerName: orderData.customer_name || undefined,
                   trackingNumber: trackingInfo.trackingNumber,
                   shippingProvider: trackingInfo.provider,
                   trackingUrl,
@@ -338,8 +354,10 @@ export default withSecureAdmin(
                     variant_id: item.variant_id,
                     quantity: item.quantity,
                     unit_amount: parseFloat(item.unit_amount),
-                    selected_options: item.selected_options || {},
-                    descriptive_title: item.descriptive_title,
+                    selected_options:
+                      (item.selected_options as Record<string, string>) ||
+                      undefined,
+                    descriptive_title: item.descriptive_title || undefined,
                   })),
                   shippingAddress: {
                     name:
@@ -349,12 +367,12 @@ export default withSecureAdmin(
                     email: orderData.is_guest_order
                       ? orderData.guest_email!
                       : orderData.customer_email!,
-                    line1: shippingAddress.line1,
-                    line2: shippingAddress.line2,
-                    city: shippingAddress.city,
-                    region: shippingAddress.region,
-                    postal_code: shippingAddress.postal_code,
-                    country: shippingAddress.country,
+                    line1: shippingAddress.line1 || "",
+                    line2: shippingAddress.line2 || undefined,
+                    city: shippingAddress.city || "",
+                    region: shippingAddress.region || "",
+                    postal_code: shippingAddress.postal_code || "",
+                    country: shippingAddress.country || "",
                   },
                   subtotal: parseFloat(orderData.subtotal),
                   tax: parseFloat(orderData.tax),

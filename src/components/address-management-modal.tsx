@@ -171,7 +171,7 @@ export function AddressManagementModal({
         setPendingUpdated({});
         setPendingDeleted([]);
         setPendingDefaultId(
-          uniqueAddresses.find((a) => a.is_default)?.id || null
+          uniqueAddresses.find((a: Address) => a.is_default)?.id || null
         );
       }
     } catch (error) {

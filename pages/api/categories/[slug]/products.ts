@@ -271,7 +271,10 @@ export default async function handler(
     tagResults.forEach((row) => {
       if (productMap.has(row.product_id)) {
         const product = productMap.get(row.product_id);
-        const tagExists = product.tags.some((tag) => tag.id === row.tag_id);
+        const tagExists = product.tags.some(
+          (tag: { id: string; name: string; color: string }) =>
+            tag.id === row.tag_id
+        );
         if (!tagExists && row.tag_id) {
           product.tags.push({
             id: row.tag_id,

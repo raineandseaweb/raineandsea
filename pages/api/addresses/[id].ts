@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { addresses } from "@/lib/db/schema";
 import {
+  ErrorType,
   sendErrorResponse,
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
@@ -19,7 +20,7 @@ export default withSecureApi(
       return sendErrorResponse(
         res,
         "Authentication required",
-        "AUTHENTICATION_ERROR",
+        ErrorType.AUTHENTICATION_ERROR,
         401
       );
     }
@@ -30,7 +31,7 @@ export default withSecureApi(
       return sendErrorResponse(
         res,
         "Address ID is required",
-        "VALIDATION_ERROR",
+        ErrorType.VALIDATION_ERROR,
         400
       );
     }
@@ -55,7 +56,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Missing required address fields",
-            "VALIDATION_ERROR",
+            ErrorType.VALIDATION_ERROR,
             400
           );
         }
@@ -64,7 +65,7 @@ export default withSecureApi(
           return sendErrorResponse(
             res,
             "Invalid address type",
-            "VALIDATION_ERROR",
+            ErrorType.VALIDATION_ERROR,
             400
           );
         }
@@ -77,7 +78,12 @@ export default withSecureApi(
           .limit(1);
 
         if (existingAddress.length === 0) {
-          return sendErrorResponse(res, "Address not found", "NOT_FOUND", 404);
+          return sendErrorResponse(
+            res,
+            "Address not found",
+            ErrorType.NOT_FOUND_ERROR,
+            404
+          );
         }
 
         // If this is set as default, unset other defaults of the same type
@@ -119,7 +125,7 @@ export default withSecureApi(
         return sendErrorResponse(
           res,
           "Failed to update address",
-          "INTERNAL_SERVER_ERROR",
+          ErrorType.INTERNAL_ERROR,
           500
         );
       }
@@ -133,7 +139,12 @@ export default withSecureApi(
           .limit(1);
 
         if (existingAddress.length === 0) {
-          return sendErrorResponse(res, "Address not found", "NOT_FOUND", 404);
+          return sendErrorResponse(
+            res,
+            "Address not found",
+            ErrorType.NOT_FOUND_ERROR,
+            404
+          );
         }
 
         // Delete address
@@ -147,7 +158,7 @@ export default withSecureApi(
         return sendErrorResponse(
           res,
           "Failed to delete address",
-          "INTERNAL_SERVER_ERROR",
+          ErrorType.INTERNAL_ERROR,
           500
         );
       }

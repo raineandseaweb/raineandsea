@@ -3,6 +3,7 @@ import {
   formatTrackingNumber,
   generateTrackingUrl,
   getProviderDisplayName,
+  ShippingProvider,
 } from "@/lib/shipping-utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -192,7 +193,8 @@ export function OrderDetailsModal({
                       <span className="font-mono text-blue-900">
                         {formatTrackingNumber(
                           order.tracking_number,
-                          order.shipping_provider || "other"
+                          (order.shipping_provider as ShippingProvider) ||
+                            "other"
                         )}
                       </span>
                     </div>
@@ -200,7 +202,8 @@ export function OrderDetailsModal({
                       <span className="text-blue-800">Provider:</span>
                       <span className="font-medium text-blue-900">
                         {getProviderDisplayName(
-                          order.shipping_provider || "other"
+                          (order.shipping_provider as ShippingProvider) ||
+                            "other"
                         )}
                       </span>
                     </div>
@@ -216,7 +219,8 @@ export function OrderDetailsModal({
                       <a
                         href={generateTrackingUrl(
                           order.tracking_number,
-                          order.shipping_provider || "other"
+                          (order.shipping_provider as ShippingProvider) ||
+                            "other"
                         )}
                         target="_blank"
                         rel="noopener noreferrer"

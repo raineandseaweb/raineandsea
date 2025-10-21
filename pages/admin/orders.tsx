@@ -21,6 +21,10 @@ interface Order {
   tracking_number?: string;
   shipping_provider?: string;
   shipped_at?: string;
+  subtotal: string | number;
+  tax: string | number;
+  shipping: string | number;
+  total: string | number;
   customer: {
     id: string;
     email: string;
@@ -36,11 +40,13 @@ interface Order {
     id: string;
     product_id: string;
     quantity: number;
-    unit_amount: number;
-    total: number;
-    selected_options?: Record<string, string>;
+    unit_amount: string | number;
+    selected_options?: any;
     descriptive_title?: string;
-    product: {
+    product_title?: string;
+    product_slug: string;
+    product_image?: string;
+    product?: {
       id: string;
       title: string;
       slug: string;
@@ -136,11 +142,11 @@ export default function AdminOrdersPage() {
           hasMore: data.data.pagination.hasMore,
         });
       } else {
-        addToast("Failed to fetch orders", "error");
+        addToast({ title: "Failed to fetch orders", type: "error" });
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
-      addToast("Failed to fetch orders", "error");
+      addToast({ title: "Failed to fetch orders", type: "error" });
     } finally {
       setLoadingOrders(false);
     }
@@ -182,18 +188,24 @@ export default function AdminOrdersPage() {
       });
 
       if (response.ok) {
-        addToast("Order status updated successfully", "success");
+        addToast({
+          title: "Order status updated successfully",
+          type: "success",
+        });
         fetchOrders(); // Refresh orders
         if (selectedOrder?.id === orderId) {
           setSelectedOrder({ ...selectedOrder, status: newStatus });
         }
       } else {
         const errorData = await response.json();
-        addToast(errorData.error || "Failed to update order status", "error");
+        addToast({
+          title: errorData.error || "Failed to update order status",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Error updating order status:", error);
-      addToast("Failed to update order status", "error");
+      addToast({ title: "Failed to update order status", type: "error" });
     }
   };
 

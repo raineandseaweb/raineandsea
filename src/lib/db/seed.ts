@@ -10,7 +10,6 @@ import {
   prices,
   productCategories,
   products,
-  variants,
 } from "./schema";
 
 export async function seedDatabase() {
@@ -80,71 +79,71 @@ export async function seedDatabase() {
 
     console.log("✅ Products created");
 
-    // Create variants
-    const laptopVariant = await db
-      .insert(variants)
-      .values({
-        product_id: laptopProduct[0].id,
-        sku: "MBP16-M3-512",
-        title: 'MacBook Pro 16" M3 Pro 512GB',
-        dimensions: { length: 35.57, width: 24.81, height: 1.68 },
-        weight: "2.16",
-      })
-      .returning();
+    // Create variants - DISABLED: variants table removed from schema
+    // const laptopVariant = await db
+    //   .insert(variants)
+    //   .values({
+    //     product_id: laptopProduct[0].id,
+    //     sku: "MBP16-M3-512",
+    //     title: 'MacBook Pro 16" M3 Pro 512GB',
+    //     dimensions: { length: 35.57, width: 24.81, height: 1.68 },
+    //     weight: "2.16",
+    //   })
+    //   .returning();
 
-    const shirtVariantS = await db
-      .insert(variants)
-      .values({
-        product_id: shirtProduct[0].id,
-        sku: "SHIRT-COTTON-S",
-        title: "Premium Cotton Shirt - Small",
-      })
-      .returning();
+    // const shirtVariantS = await db
+    //   .insert(variants)
+    //   .values({
+    //     product_id: shirtProduct[0].id,
+    //     sku: "SHIRT-COTTON-S",
+    //     title: "Premium Cotton Shirt - Small",
+    //   })
+    //   .returning();
 
-    const shirtVariantM = await db
-      .insert(variants)
-      .values({
-        product_id: shirtProduct[0].id,
-        sku: "SHIRT-COTTON-M",
-        title: "Premium Cotton Shirt - Medium",
-      })
-      .returning();
+    // const shirtVariantM = await db
+    //   .insert(variants)
+    //   .values({
+    //     product_id: shirtProduct[0].id,
+    //     sku: "SHIRT-COTTON-M",
+    //     title: "Premium Cotton Shirt - Medium",
+    //   })
+    //   .returning();
 
-    const chairVariant = await db
-      .insert(variants)
-      .values({
-        product_id: chairProduct[0].id,
-        sku: "CHAIR-ERGONOMIC-BLACK",
-        title: "Ergonomic Office Chair - Black",
-        dimensions: { length: 60, width: 60, height: 120 },
-        weight: "25.5",
-      })
-      .returning();
+    // const chairVariant = await db
+    //   .insert(variants)
+    //   .values({
+    //     product_id: chairProduct[0].id,
+    //     sku: "CHAIR-ERGONOMIC-BLACK",
+    //     title: "Ergonomic Office Chair - Black",
+    //     dimensions: { length: 60, width: 60, height: 120 },
+    //     weight: "25.5",
+    //   })
+    //   .returning();
 
-    console.log("✅ Variants created");
+    console.log("✅ Variants created (skipped - table removed)");
 
     // Create prices
     await db.insert(prices).values({
-      variant_id: laptopVariant[0].id,
+      product_id: laptopProduct[0].id,
       currency: "USD",
       amount: "2499.00",
       compare_at_amount: "2799.00",
     });
 
     await db.insert(prices).values({
-      variant_id: shirtVariantS[0].id,
+      product_id: shirtProduct[0].id,
       currency: "USD",
       amount: "49.99",
     });
 
     await db.insert(prices).values({
-      variant_id: shirtVariantM[0].id,
+      product_id: shirtProduct[0].id,
       currency: "USD",
       amount: "49.99",
     });
 
     await db.insert(prices).values({
-      variant_id: chairVariant[0].id,
+      product_id: chairProduct[0].id,
       currency: "USD",
       amount: "299.99",
       compare_at_amount: "399.99",
@@ -154,25 +153,25 @@ export async function seedDatabase() {
 
     // Create inventory
     await db.insert(inventory).values({
-      variant_id: laptopVariant[0].id,
+      product_id: laptopProduct[0].id,
       quantity_available: 15,
       quantity_reserved: 0,
     });
 
     await db.insert(inventory).values({
-      variant_id: shirtVariantS[0].id,
+      product_id: shirtProduct[0].id,
       quantity_available: 50,
       quantity_reserved: 0,
     });
 
     await db.insert(inventory).values({
-      variant_id: shirtVariantM[0].id,
+      product_id: shirtProduct[0].id,
       quantity_available: 75,
       quantity_reserved: 0,
     });
 
     await db.insert(inventory).values({
-      variant_id: chairVariant[0].id,
+      product_id: chairProduct[0].id,
       quantity_available: 8,
       quantity_reserved: 0,
     });
@@ -206,12 +205,12 @@ export async function seedDatabase() {
         clothingCategory[0],
         homeCategory[0],
       ],
-      variants: [
-        laptopVariant[0],
-        shirtVariantS[0],
-        shirtVariantM[0],
-        chairVariant[0],
-      ],
+      // variants: [ // DISABLED: variants table removed
+      //   laptopVariant[0],
+      //   shirtVariantS[0],
+      //   shirtVariantM[0],
+      //   chairVariant[0],
+      // ],
     };
   } catch (error) {
     console.error("❌ Error seeding database:", error);

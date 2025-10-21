@@ -62,7 +62,10 @@ export default async function handler(
     }
 
     // Cache the user data
-    cacheUser(token, user[0]);
+    cacheUser(token, {
+      ...user[0],
+      name: user[0].name || "",
+    });
 
     return res.status(200).json({ user: user[0] });
   } catch (error) {

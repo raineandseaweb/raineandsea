@@ -15,12 +15,32 @@ interface Product {
   title: string;
   description: string;
   image?: string;
-  base_price?: number | null;
+  base_price?: string;
   status: "active" | "inactive" | "draft";
   created_at: string;
   updated_at: string;
   tags?: Array<{ id: string; name: string }>;
   categories?: Array<{ id: string; name: string }>;
+  media?: Array<{
+    id: string;
+    url: string;
+    alt: string;
+    sort: number;
+  }>;
+  options?: Array<{
+    id: string;
+    name: string;
+    display_name: string;
+    sort_order: number;
+    values: Array<{
+      id: string;
+      name: string;
+      price_adjustment: string;
+      is_default: boolean;
+      is_sold_out: boolean;
+      sort_order: number;
+    }>;
+  }>;
   inventory?: {
     quantity_available: number;
     quantity_reserved: number;
@@ -595,7 +615,7 @@ export default function AdminProducts() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {product.base_price
-                              ? `$${product.base_price.toFixed(2)}`
+                              ? `$${parseFloat(product.base_price).toFixed(2)}`
                               : "-"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

@@ -18,17 +18,22 @@ import { withRateLimit } from "./rate-limiting";
 export async function secureCheckoutMiddleware(
   req: NextApiRequest,
   res: NextApiResponse
-): Promise<{ user: AuthenticatedUser; data: any }> {
+): Promise<{ user: AuthenticatedUser; data: unknown }> {
   console.log("Secure checkout middleware - Request cookies:", req.cookies);
   console.log("Secure checkout middleware - Request body:", req.body);
 
   // 1. Rate limiting
   try {
     withRateLimit(req, "CHECKOUT");
-  } catch (error) {
-    console.error("Rate limit error:", error);
-    sendErrorResponse(res, error.message, ErrorType.RATE_LIMIT_ERROR, 429);
-    throw error;
+  } catch (rateLimitError) {
+    console.error("Rate limit error:", rateLimitError);
+    sendErrorResponse(
+      res,
+      (rateLimitError as Error).message,
+      ErrorType.RATE_LIMIT_ERROR,
+      429
+    );
+    throw rateLimitError;
   }
 
   // 2. Authentication
@@ -38,7 +43,12 @@ export async function secureCheckoutMiddleware(
     console.log("Authentication successful, user:", user);
   } catch (error) {
     console.error("Authentication error:", error);
-    sendErrorResponse(res, error.message, ErrorType.AUTHENTICATION_ERROR, 401);
+    sendErrorResponse(
+      res,
+      (error as Error).message,
+      ErrorType.AUTHENTICATION_ERROR,
+      401
+    );
     throw error;
   }
 
@@ -77,7 +87,12 @@ export async function secureCheckoutMiddleware(
     console.log("Input validation successful:", validatedData);
   } catch (error) {
     console.error("Input validation error:", error);
-    sendErrorResponse(res, error.message, ErrorType.VALIDATION_ERROR, 400);
+    sendErrorResponse(
+      res,
+      (error as Error).message,
+      ErrorType.VALIDATION_ERROR,
+      400
+    );
     throw error;
   }
 
@@ -95,7 +110,12 @@ export async function secureApiMiddleware(
   try {
     withRateLimit(req, "API");
   } catch (error) {
-    sendErrorResponse(res, error.message, ErrorType.RATE_LIMIT_ERROR, 429);
+    sendErrorResponse(
+      res,
+      (error as Error).message,
+      ErrorType.RATE_LIMIT_ERROR,
+      429
+    );
     throw error;
   }
 
@@ -122,7 +142,12 @@ export async function secureAuthMiddleware(
   try {
     withRateLimit(req, "AUTH");
   } catch (error) {
-    sendErrorResponse(res, error.message, ErrorType.RATE_LIMIT_ERROR, 429);
+    sendErrorResponse(
+      res,
+      (error as Error).message,
+      ErrorType.RATE_LIMIT_ERROR,
+      429
+    );
     throw error;
   }
 }
@@ -138,7 +163,12 @@ export async function secureAdminMiddleware(
   try {
     withRateLimit(req, "API");
   } catch (error) {
-    sendErrorResponse(res, error.message, ErrorType.RATE_LIMIT_ERROR, 429);
+    sendErrorResponse(
+      res,
+      (error as Error).message,
+      ErrorType.RATE_LIMIT_ERROR,
+      429
+    );
     throw error;
   }
 
@@ -147,7 +177,12 @@ export async function secureAdminMiddleware(
   try {
     user = await requireAuth(req);
   } catch (error) {
-    sendErrorResponse(res, error.message, ErrorType.AUTHENTICATION_ERROR, 401);
+    sendErrorResponse(
+      res,
+      (error as Error).message,
+      ErrorType.AUTHENTICATION_ERROR,
+      401
+    );
     throw error;
   }
 
@@ -173,7 +208,7 @@ export function withSecureCheckout(
     req: NextApiRequest,
     res: NextApiResponse,
     user: AuthenticatedUser,
-    data: any
+    data: unknown
   ) => Promise<void>
 ) {
   return withErrorHandling(

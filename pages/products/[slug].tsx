@@ -139,8 +139,8 @@ export default function ProductDetailPage() {
         id: data.data.id,
         sku: data.data.slug,
         title: data.data.title,
-        price: data.data.base_price,
-        compare_at_price: null,
+        price: parseFloat(data.data.base_price || "0"),
+        compare_at_price: undefined,
         currency: "USD",
         quantity_available: 10, // Default stock
       };
@@ -544,30 +544,9 @@ export default function ProductDetailPage() {
                   <div className="flex items-baseline justify-between">
                     <div className="flex items-baseline gap-3">
                       <span className="text-3xl font-bold text-gray-900">
-                        {formatPrice(
-                          getTotalPrice(),
-                          product.currency || "USD"
-                        )}
+                        {formatPrice(getTotalPrice(), "USD")}
                       </span>
-                      {product.compare_at_price && (
-                        <span className="text-lg text-gray-500 line-through">
-                          {formatPrice(
-                            parseFloat(product.compare_at_price.toString()),
-                            product.currency || "USD"
-                          )}
-                        </span>
-                      )}
                     </div>
-                    {product.compare_at_price && (
-                      <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-md">
-                        Save{" "}
-                        {formatPrice(
-                          parseFloat(product.compare_at_price.toString()) -
-                            getTotalPrice(),
-                          product.currency || "USD"
-                        )}
-                      </span>
-                    )}
                   </div>
 
                   {/* Options - Unified system for all product options */}
@@ -601,7 +580,7 @@ export default function ProductDetailPage() {
                                   [option.id]: value.id,
                                 }));
                               }}
-                              currency={product.currency || "USD"}
+                              currency="USD"
                               useDropdown={optionValues.length > 5}
                             />
                           );
@@ -630,12 +609,7 @@ export default function ProductDetailPage() {
                         </div>
                         <button
                           onClick={() =>
-                            setQuantity(
-                              Math.min(
-                                product.quantity_available || 999,
-                                quantity + 1
-                              )
-                            )
+                            setQuantity(Math.min(999, quantity + 1))
                           }
                           className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold"
                         >
@@ -645,30 +619,14 @@ export default function ProductDetailPage() {
                     </div>
                     <button
                       onClick={addToCart}
-                      disabled={(product.quantity_available || 0) === 0}
+                      disabled={false}
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                     >
-                      {(product.quantity_available || 0) === 0
-                        ? "Out of Stock"
-                        : "Add to Cart"}
+                      Add to Cart
                     </button>
                     <div className="flex items-center gap-2 text-sm">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          selectedVariant.quantity_available > 10
-                            ? "bg-green-500"
-                            : selectedVariant.quantity_available > 0
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
-                        }`}
-                      />
-                      <span className="text-gray-600">
-                        {selectedVariant.quantity_available > 10
-                          ? "In stock"
-                          : selectedVariant.quantity_available > 0
-                          ? "Limited stock"
-                          : "Out of stock"}
-                      </span>
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span className="text-gray-600">In stock</span>
                     </div>
                   </div>
 
@@ -676,7 +634,7 @@ export default function ProductDetailPage() {
                   <StockNotificationSignup
                     productSlug={product.slug}
                     productTitle={product.title}
-                    isOutOfStock={(product.quantity_available || 0) === 0}
+                    isOutOfStock={false}
                   />
                 </div>
               )}

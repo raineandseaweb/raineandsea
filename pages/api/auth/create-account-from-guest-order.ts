@@ -61,7 +61,7 @@ export default async function handler(
         email,
         name: name || "",
         password: hashedPassword,
-        email_verified: true, // Mark as verified since they just placed an order
+        email_verified: new Date(), // Mark as verified since they just placed an order
       })
       .returning();
 
@@ -100,7 +100,7 @@ export default async function handler(
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         error: "Validation error",
-        details: error.errors,
+        details: error.issues,
       });
     }
 

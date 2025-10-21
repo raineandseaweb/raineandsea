@@ -221,9 +221,15 @@ export default async function handler(
     }
   } catch (error) {
     console.error("Cart API error:", error);
-    console.error("Error stack:", error.stack);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack trace"
+    );
     return res
       .status(500)
-      .json({ error: "Internal server error", details: error.message });
+      .json({
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
   }
 }

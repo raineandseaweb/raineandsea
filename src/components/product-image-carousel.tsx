@@ -188,7 +188,9 @@ export function ProductImageCarousel({
           {sortedImages.map((image, index) => (
             <button
               key={image.id}
-              ref={(el) => (thumbnailRefs.current[index] = el)}
+              ref={(el) => {
+                thumbnailRefs.current[index] = el;
+              }}
               onClick={() => handleThumbnailClick(index)}
               className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
                 selectedIndex === index

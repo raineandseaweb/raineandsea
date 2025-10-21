@@ -10,7 +10,7 @@ import {
   getProductImageUrlFromMedia,
   getThumbnailUrl,
 } from "@/lib/image-utils";
-import { sendErrorResponse } from "@/lib/security/error-handling";
+import { ErrorType, sendErrorResponse } from "@/lib/security/error-handling";
 import { withSecureApi } from "@/lib/security/security-middleware";
 import { and, desc, eq, or } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -29,7 +29,7 @@ export default withSecureApi(
         return sendErrorResponse(
           res,
           "Authentication required",
-          "AUTHENTICATION_ERROR",
+          ErrorType.AUTHENTICATION_ERROR,
           401
         );
       }
@@ -148,7 +148,7 @@ export default withSecureApi(
       return sendErrorResponse(
         res,
         "Failed to fetch orders",
-        "INTERNAL_SERVER_ERROR",
+        ErrorType.INTERNAL_ERROR,
         500
       );
     }

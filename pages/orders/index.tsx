@@ -82,7 +82,7 @@ export default function OrdersPage() {
       setOrders(result.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
-      addToast("Failed to load order history", "error");
+      addToast({ title: "Failed to load order history", type: "error" });
     } finally {
       setLoadingOrders(false);
     }

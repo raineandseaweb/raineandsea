@@ -244,7 +244,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!cart?.items) return 0;
     return cart.items.reduce((total, item) => {
       if (!item.product) return total; // Skip items without product data
-      const basePrice = parseFloat(item.product.base_price || "0");
+      const basePriceValue = item.product.base_price;
+      const basePrice =
+        typeof basePriceValue === "number"
+          ? basePriceValue
+          : parseFloat(String(basePriceValue || "0"));
       let finalPrice = basePrice;
 
       // Add option price adjustments
@@ -256,7 +260,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               (v: any) => v.name === selectedValueName
             );
             if (selectedValue) {
-              finalPrice += parseFloat(selectedValue.price_adjustment || "0");
+              const priceAdjustment = selectedValue.price_adjustment;
+              finalPrice += parseFloat(String(priceAdjustment || "0"));
             }
           }
         });

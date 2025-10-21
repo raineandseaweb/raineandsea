@@ -7,7 +7,7 @@ export const SearchControls = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [isChangingSort, setIsChangingSort] = useState(false);
   const [inStockOnly, setInStockOnly] = useState(false);
-  const debounceTimeoutRef = useRef<NodeJS.Timeout>();
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sortSelectRef = useRef<HTMLSelectElement>(null);
 

@@ -17,18 +17,18 @@ export interface ErrorResponse {
   error: string;
   type: ErrorType;
   code?: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 // Success response interface
-export interface SuccessResponse<T = any> {
+export interface SuccessResponse<T = unknown> {
   success: true;
   data: T;
   message?: string;
 }
 
 // Union type for API responses
-export type ApiResponse<T = any> = SuccessResponse<T> | ErrorResponse;
+export type ApiResponse<T = unknown> = SuccessResponse<T> | ErrorResponse;
 
 /**
  * Generic error handler that logs errors and returns safe responses
@@ -202,7 +202,7 @@ export function sendErrorResponse(
   type: ErrorType,
   statusCode: number = 400,
   code?: string,
-  details?: any
+  details?: Record<string, unknown>
 ): void {
   res.status(statusCode).json({
     success: false,
@@ -216,7 +216,10 @@ export function sendErrorResponse(
 /**
  * Log error for monitoring
  */
-export function logError(error: Error, context: any = {}): void {
+export function logError(
+  error: Error,
+  context: Record<string, unknown> = {}
+): void {
   console.error("Error logged:", {
     message: error.message,
     stack: error.stack,
@@ -228,7 +231,10 @@ export function logError(error: Error, context: any = {}): void {
 /**
  * Log security event
  */
-export function logSecurityEvent(event: string, details: any = {}): void {
+export function logSecurityEvent(
+  event: string,
+  details: Record<string, unknown> = {}
+): void {
   console.warn("Security event:", {
     event,
     details,

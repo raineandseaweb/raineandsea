@@ -90,6 +90,11 @@ async function migrateImagesToR2() {
           }
 
           // Find the local file path
+          if (!record.mediaUrl) {
+            console.log(`  ❌ No media URL for record`);
+            errorCount++;
+            continue;
+          }
           const localPath = findLocalImagePath(record.mediaUrl, imageMapping);
           if (!localPath) {
             console.log(`  ❌ Local file not found for: ${record.mediaUrl}`);
