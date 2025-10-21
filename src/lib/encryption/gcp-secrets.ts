@@ -4,13 +4,66 @@ import { config } from "dotenv";
 // Load environment variables
 config({ path: ".env.local" });
 
-// Initialize Secret Manager client
-const secretClient = new SecretManagerServiceClient({
-  projectId: process.env.GCP_PROJECT_ID,
-  keyFilename: process.env.GCP_SERVICE_ACCOUNT_KEY_PATH,
-});
+// Initialize Secret Manager client with environment-aware configuration
+function createSecretManagerClient() {
+  console.log("🔧 Initializing GCP Secret Manager client...");
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log("GCP_PROJECT_ID:", process.env.GCP_PROJECT_ID ? "✅ Set" : "❌ Missing");
+  console.log("GCP_SERVICE_ACCOUNT_KEY:", process.env.GCP_SERVICE_ACCOUNT_KEY ? "✅ Set" : "❌ Missing");
+  console.log("GCP_SERVICE_ACCOUNT_KEY_PATH:", process.env.GCP_SERVICE_ACCOUNT_KEY_PATH ? "✅ Set" : "❌ Missing");
 
-const PROJECT_ID = process.env.GCP_PROJECT_ID!;
+  const config: any = {
+    projectId: process.env.GCP_PROJECT_ID,
+  };
+
+  // For production (Vercel), use service account JSON from environment variable
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.GCP_SERVICE_ACCOUNT_KEY
+  ) {
+    console.log("🔧 Using production GCP credentials from environment variable");
+    try {
+      config.credentials = JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY);
+      console.log("✅ Successfully parsed GCP service account credentials");
+    } catch (error) {
+      console.error("❌ Failed to parse GCP_SERVICE_ACCOUNT_KEY:", error);
+      throw new Error("Invalid GCP_SERVICE_ACCOUNT_KEY format");
+    }
+  } else if (process.env.GCP_SERVICE_ACCOUNT_KEY_PATH) {
+    // For local development, use file path
+    console.log("🔧 Using local GCP credentials from file path");
+    config.keyFilename = process.env.GCP_SERVICE_ACCOUNT_KEY_PATH;
+  } else {
+    console.error("❌ GCP service account configuration not found");
+    console.error("Required: GCP_SERVICE_ACCOUNT_KEY_PATH (local) or GCP_SERVICE_ACCOUNT_KEY (production)");
+    throw new Error(
+      "GCP service account configuration not found. Set either GCP_SERVICE_ACCOUNT_KEY_PATH (local) or GCP_SERVICE_ACCOUNT_KEY (production)"
+    );
+  }
+
+  return new SecretManagerServiceClient(config);
+}
+
+// Lazy initialization - don't create client at module load time
+let secretClient: SecretManagerServiceClient | null = null;
+let PROJECT_ID: string | null = null;
+
+function getSecretClient(): SecretManagerServiceClient {
+  if (!secretClient) {
+    secretClient = createSecretManagerClient();
+  }
+  return secretClient;
+}
+
+function getProjectId(): string {
+  if (!PROJECT_ID) {
+    PROJECT_ID = process.env.GCP_PROJECT_ID!;
+    if (!PROJECT_ID) {
+      throw new Error("GCP_PROJECT_ID environment variable is required");
+    }
+  }
+  return PROJECT_ID;
+}
 
 export interface SecretResult {
   value: string;
@@ -29,14 +82,16 @@ export async function getSecret(
   version: string = "latest"
 ): Promise<SecretResult> {
   try {
-    const name = `projects/${PROJECT_ID}/secrets/${secretName}/versions/${version}`;
+    const client = getSecretClient();
+    const projectId = getProjectId();
+    const name = `projects/${projectId}/secrets/${secretName}/versions/${version}`;
     
-    const [secret] = await secretClient.accessSecretVersion({
+    const [secret] = await client.accessSecretVersion({
       name: name,
     });
 
     const secretValue = secret.payload?.data?.toString();
-    
+
     if (!secretValue) {
       return {
         value: "",
@@ -54,7 +109,8 @@ export async function getSecret(
     return {
       value: "",
       success: false,
-      error: error instanceof Error ? error.message : "Unknown secret access error",
+      error:
+        error instanceof Error ? error.message : "Unknown secret access error",
     };
   }
 }
@@ -70,9 +126,11 @@ export async function createSecret(
   secretValue: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const client = getSecretClient();
+    const projectId = getProjectId();
     // Create the secret
-    const [secret] = await secretClient.createSecret({
-      parent: `projects/${PROJECT_ID}`,
+    const [secret] = await client.createSecret({
+      parent: `projects/${projectId}`,
       secretId: secretName,
       secret: {
         replication: {
@@ -82,7 +140,7 @@ export async function createSecret(
     });
 
     // Add the secret version
-    await secretClient.addSecretVersion({
+    await client.addSecretVersion({
       parent: secret.name!,
       payload: {
         data: Buffer.from(secretValue, "utf8"),
@@ -94,7 +152,10 @@ export async function createSecret(
     console.error(`Error creating secret ${secretName}:`, error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown secret creation error",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Unknown secret creation error",
     };
   }
 }
@@ -110,8 +171,10 @@ export async function updateSecret(
   secretValue: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    await secretClient.addSecretVersion({
-      parent: `projects/${PROJECT_ID}/secrets/${secretName}`,
+    const client = getSecretClient();
+    const projectId = getProjectId();
+    await client.addSecretVersion({
+      parent: `projects/${projectId}/secrets/${secretName}`,
       payload: {
         data: Buffer.from(secretValue, "utf8"),
       },
@@ -122,7 +185,8 @@ export async function updateSecret(
     console.error(`Error updating secret ${secretName}:`, error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown secret update error",
+      error:
+        error instanceof Error ? error.message : "Unknown secret update error",
     };
   }
 }
@@ -145,7 +209,10 @@ export async function deleteSecret(
     console.error(`Error deleting secret ${secretName}:`, error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown secret deletion error",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Unknown secret deletion error",
     };
   }
 }
@@ -178,7 +245,8 @@ export async function listSecrets(): Promise<{
     return {
       secrets: [],
       success: false,
-      error: error instanceof Error ? error.message : "Unknown list secrets error",
+      error:
+        error instanceof Error ? error.message : "Unknown list secrets error",
     };
   }
 }
@@ -192,7 +260,7 @@ export async function getMultipleSecrets(
   secretNames: string[]
 ): Promise<Record<string, string>> {
   const secrets: Record<string, string> = {};
-  
+
   const results = await Promise.all(
     secretNames.map(async (name) => {
       const result = await getSecret(name);
@@ -232,7 +300,8 @@ export async function testSecretManagerConnection(): Promise<{
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown Secret Manager error",
+      error:
+        error instanceof Error ? error.message : "Unknown Secret Manager error",
     };
   }
 }
