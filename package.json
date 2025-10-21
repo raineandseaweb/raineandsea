@@ -64,7 +64,6 @@
     "drizzle-kit": "^0.31.5",
     "drizzle-orm": "^0.44.6",
     "formidable": "^3.5.4",
-    "isomorphic-dompurify": "^2.29.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.545.0",

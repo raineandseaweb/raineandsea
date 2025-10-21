@@ -1,7 +1,6 @@
-import DOMPurify from "isomorphic-dompurify";
-
 /**
  * Sanitizes HTML content to prevent XSS attacks
+ * Simple implementation without external dependencies
  */
 export function sanitizeHTML(input: string): string {
   if (typeof input !== "string") {
@@ -9,10 +8,8 @@ export function sanitizeHTML(input: string): string {
   }
 
   try {
-    return DOMPurify.sanitize(input, {
-      ALLOWED_TAGS: [], // No HTML tags allowed
-      ALLOWED_ATTR: [], // No attributes allowed
-    });
+    // Remove all HTML tags and return plain text
+    return input.replace(/<[^>]*>/g, "");
   } catch (error) {
     console.error("HTML sanitization error:", error);
     return "";
