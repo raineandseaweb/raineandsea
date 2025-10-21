@@ -12,7 +12,7 @@ export function makeAbsoluteUrl(url: string | null): string | null {
   if (url.startsWith("http")) return url;
   if (url.startsWith("/images/")) return null; // never expose legacy in-repo paths
   if (url.startsWith("/")) {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     return `${baseUrl}${url}`;
   }
   return url;
