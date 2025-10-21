@@ -8,9 +8,18 @@ config({ path: ".env.local" });
 function createSecretManagerClient() {
   console.log("🔧 Initializing GCP Secret Manager client...");
   console.log("NODE_ENV:", process.env.NODE_ENV);
-  console.log("GCP_PROJECT_ID:", process.env.GCP_PROJECT_ID ? "✅ Set" : "❌ Missing");
-  console.log("GCP_SERVICE_ACCOUNT_KEY:", process.env.GCP_SERVICE_ACCOUNT_KEY ? "✅ Set" : "❌ Missing");
-  console.log("GCP_SERVICE_ACCOUNT_KEY_PATH:", process.env.GCP_SERVICE_ACCOUNT_KEY_PATH ? "✅ Set" : "❌ Missing");
+  console.log(
+    "GCP_PROJECT_ID:",
+    process.env.GCP_PROJECT_ID ? "✅ Set" : "❌ Missing"
+  );
+  console.log(
+    "GCP_SERVICE_ACCOUNT_KEY:",
+    process.env.GCP_SERVICE_ACCOUNT_KEY ? "✅ Set" : "❌ Missing"
+  );
+  console.log(
+    "GCP_SERVICE_ACCOUNT_KEY_PATH:",
+    process.env.GCP_SERVICE_ACCOUNT_KEY_PATH ? "✅ Set" : "❌ Missing"
+  );
 
   const config: any = {
     projectId: process.env.GCP_PROJECT_ID,
@@ -21,7 +30,9 @@ function createSecretManagerClient() {
     process.env.NODE_ENV === "production" &&
     process.env.GCP_SERVICE_ACCOUNT_KEY
   ) {
-    console.log("🔧 Using production GCP credentials from environment variable");
+    console.log(
+      "🔧 Using production GCP credentials from environment variable"
+    );
     try {
       config.credentials = JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY);
       console.log("✅ Successfully parsed GCP service account credentials");
@@ -35,7 +46,9 @@ function createSecretManagerClient() {
     config.keyFilename = process.env.GCP_SERVICE_ACCOUNT_KEY_PATH;
   } else {
     console.error("❌ GCP service account configuration not found");
-    console.error("Required: GCP_SERVICE_ACCOUNT_KEY_PATH (local) or GCP_SERVICE_ACCOUNT_KEY (production)");
+    console.error(
+      "Required: GCP_SERVICE_ACCOUNT_KEY_PATH (local) or GCP_SERVICE_ACCOUNT_KEY (production)"
+    );
     throw new Error(
       "GCP service account configuration not found. Set either GCP_SERVICE_ACCOUNT_KEY_PATH (local) or GCP_SERVICE_ACCOUNT_KEY (production)"
     );
@@ -85,7 +98,7 @@ export async function getSecret(
     const client = getSecretClient();
     const projectId = getProjectId();
     const name = `projects/${projectId}/secrets/${secretName}/versions/${version}`;
-    
+
     const [secret] = await client.accessSecretVersion({
       name: name,
     });
@@ -200,7 +213,7 @@ export async function deleteSecret(
   secretName: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    await secretClient.deleteSecret({
+    await secretClient?.deleteSecret({
       name: `projects/${PROJECT_ID}/secrets/${secretName}`,
     });
 
@@ -227,7 +240,7 @@ export async function listSecrets(): Promise<{
   error?: string;
 }> {
   try {
-    const [secrets] = await secretClient.listSecrets({
+    const [secrets] = await secretClient!.listSecrets({
       parent: `projects/${PROJECT_ID}`,
     });
 
