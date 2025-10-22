@@ -1,19 +1,18 @@
 import { generateImageKey, uploadImageVariants } from "@/lib/r2";
+import { withSecureAdmin } from "@/lib/security/security-middleware";
 import formidable from "formidable";
 import fs from "fs";
-import sharp from "sharp";
 import { NextApiRequest, NextApiResponse } from "next";
+import sharp from "sharp";
 
 export const config = {
   api: {
     bodyParser: false,
+    responseLimit: "10mb",
   },
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -24,6 +23,8 @@ export default async function handler(
       filter: ({ mimetype }) => {
         return mimetype?.startsWith("image/") || false;
       },
+      // For serverless environments, keep files in memory instead of writing to disk
+      keepExtensions: true,
     });
 
     const [fields, files] = await form.parse(req);
@@ -67,8 +68,14 @@ export default async function handler(
       file.mimetype || "image/jpeg"
     );
 
-    // Clean up temporary file
-    fs.unlinkSync(file.filepath);
+    // Clean up temporary file if it exists
+    try {
+      if (file.filepath && fs.existsSync(file.filepath)) {
+        fs.unlinkSync(file.filepath);
+      }
+    } catch (cleanupError) {
+      console.warn("Failed to cleanup temp file:", cleanupError);
+    }
 
     return res.status(200).json({
       success: true,
@@ -78,6 +85,11 @@ export default async function handler(
     });
   } catch (error) {
     console.error("Image upload error:", error);
-    return res.status(500).json({ error: "Failed to upload image" });
+    return res.status(500).json({
+      error: "Failed to upload image",
+      details: error instanceof Error ? error.message : String(error),
+    });
   }
 }
+
+export default withSecureAdmin(handler);

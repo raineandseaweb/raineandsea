@@ -6,6 +6,11 @@
   "functions": {
     "pages/api/**/*.ts": {
       "maxDuration": 30
+    },
+    "pages/api/admin/upload-image.ts": {
+      "maxDuration": 30,
+      "memory": 1024,
+      "includeFiles": "**/*.@(jpg|jpeg|png|gif|webp)"
     }
   },
   "env": {
