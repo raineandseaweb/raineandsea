@@ -29,6 +29,7 @@ interface Media {
 interface MediaModalProps {
   isOpen: boolean;
   onClose: () => void;
+  productId: string;
   productTitle: string;
   initialMedia: Media[];
   onSave: (media: Media[]) => Promise<void>;
@@ -115,6 +116,7 @@ function SortableImageItem({
 export default function MediaModal({
   isOpen,
   onClose,
+  productId,
   productTitle,
   initialMedia,
   onSave,
@@ -122,8 +124,7 @@ export default function MediaModal({
   const [media, setMedia] = useState<Media[]>(initialMedia);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [newImageAlt, setNewImageAlt] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadingFiles, setUploadingFiles] = useState<Set<string>>(new Set());
   const [dragActive, setDragActive] = useState(false);
 
   const sensors = useSensors(
@@ -139,12 +140,22 @@ export default function MediaModal({
     }
   }, [isOpen, initialMedia]);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      setNewImageAlt(file.name.replace(/\.[^/.]+$/, "")); // Use filename without extension as alt text
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    // Upload all selected files immediately
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.type.startsWith("image/")) {
+        await uploadFile(file);
+      }
     }
+
+    // Reset file input
+    event.target.value = "";
   };
 
   const handleDrag = (e: React.DragEvent) => {
@@ -157,29 +168,28 @@ export default function MediaModal({
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type.startsWith("image/")) {
-        setSelectedFile(file);
-        setNewImageAlt(file.name.replace(/\.[^/.]+$/, ""));
-      } else {
-        alert("Please drop an image file.");
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      for (let i = 0; i < e.dataTransfer.files.length; i++) {
+        const file = e.dataTransfer.files[i];
+        if (file.type.startsWith("image/")) {
+          await uploadFile(file);
+        }
       }
     }
   };
 
-  const handleUploadImage = async () => {
-    if (!selectedFile) return;
+  const uploadFile = async (file: File) => {
+    const fileId = `temp-${Date.now()}-${Math.random()}`;
+    setUploadingFiles((prev) => new Set(prev).add(fileId));
 
-    setUploading(true);
     try {
       const formData = new FormData();
-      formData.append("image", selectedFile);
+      formData.append("image", file);
       formData.append(
         "productSlug",
         productTitle.toLowerCase().replace(/[^a-z0-9]/g, "-")
@@ -196,28 +206,27 @@ export default function MediaModal({
 
       const result = await response.json();
 
-      const newMediaItem: Media = {
-        id: `temp-${Date.now()}`,
-        url: result.url,
-        thumbnailUrl: result.thumbnailUrl,
-        alt: newImageAlt.trim() || "Product image",
-        sort: media.length,
-      };
-
-      setMedia([...media, newMediaItem]);
-      setSelectedFile(null);
-      setNewImageAlt("");
-
-      // Reset file input
-      const fileInput = document.getElementById(
-        "image-upload"
-      ) as HTMLInputElement;
-      if (fileInput) fileInput.value = "";
+      // Add to media list (in memory only, not saved to DB yet)
+      // Use functional update to ensure we get the latest state
+      setMedia((prevMedia) => {
+        const newMediaItem: Media = {
+          id: fileId,
+          url: result.url,
+          thumbnailUrl: result.thumbnailUrl,
+          alt: file.name.replace(/\.[^/.]+$/, ""),
+          sort: prevMedia.length,
+        };
+        return [...prevMedia, newMediaItem];
+      });
     } catch (error) {
       console.error("Upload error:", error);
-      alert("Failed to upload image. Please try again.");
+      alert(`Failed to upload ${file.name}. Please try again.`);
     } finally {
-      setUploading(false);
+      setUploadingFiles((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(fileId);
+        return newSet;
+      });
     }
   };
 
@@ -280,6 +289,36 @@ export default function MediaModal({
   const handleSave = async () => {
     setLoading(true);
     try {
+      // Save any temporary images to the database
+      const tempImages = media.filter((m) => m.id.startsWith("temp-"));
+
+      for (const tempImage of tempImages) {
+        try {
+          const saveResponse = await fetch(
+            `/api/admin/products/${productId}/media`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                url: tempImage.url,
+                alt: tempImage.alt,
+              }),
+            }
+          );
+
+          if (saveResponse.ok) {
+            const savedMedia = await saveResponse.json();
+            // Replace temp ID with real ID
+            tempImage.id = savedMedia.media.id;
+          }
+        } catch (error) {
+          console.error("Error saving temp image:", error);
+        }
+      }
+
       await onSave(media);
       onClose();
     } catch (error) {
@@ -287,6 +326,12 @@ export default function MediaModal({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    // Reset to initial media (discards all temp uploads)
+    setMedia(initialMedia);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -378,6 +423,7 @@ export default function MediaModal({
                   id="image-upload"
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleFileSelect}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
@@ -407,31 +453,13 @@ export default function MediaModal({
                 </div>
               </div>
 
-              {selectedFile && (
-                <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-                  <div className="font-medium">Selected file:</div>
-                  <div>
-                    {selectedFile.name} (
-                    {(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+              {uploadingFiles.size > 0 && (
+                <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                  <div className="font-medium">
+                    Uploading {uploadingFiles.size} file(s)...
                   </div>
                 </div>
               )}
-
-              <input
-                type="text"
-                value={newImageAlt}
-                onChange={(e) => setNewImageAlt(e.target.value)}
-                placeholder="Alt text (optional)"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                type="button"
-                onClick={handleUploadImage}
-                disabled={!selectedFile || uploading}
-                className="w-full px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {uploading ? "Uploading..." : "Upload Image"}
-              </button>
             </div>
           </div>
         </div>
@@ -439,7 +467,7 @@ export default function MediaModal({
         <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleCancel}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Cancel

@@ -11,7 +11,7 @@ import {
 } from "@/lib/db/schema";
 import { getProductImageUrl } from "@/lib/image-utils";
 import { AuthenticatedUser, withAdminProtection } from "@/lib/role-middleware";
-import { and, asc, desc, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(
@@ -64,6 +64,63 @@ async function handler(
       // Status filter
       if (status && typeof status === "string" && status !== "all") {
         conditions.push(eq(products.status, status as any));
+      }
+
+      // Filter by tags if specified
+      if (tagIds) {
+        const tagIdArray = Array.isArray(tagIds) ? tagIds : [tagIds];
+        const productsWithTags = await db
+          .select({ product_id: productTags.product_id })
+          .from(productTags)
+          .where(inArray(productTags.tag_id, tagIdArray));
+
+        const productIdsWithTags = productsWithTags.map((p) => p.product_id);
+
+        if (productIdsWithTags.length > 0) {
+          conditions.push(inArray(products.id, productIdsWithTags));
+        } else {
+          // No products match tags, return empty result
+          conditions.push(sql`FALSE`);
+        }
+      }
+
+      // Filter by categories if specified
+      if (categoryIds) {
+        const categoryIdArray = Array.isArray(categoryIds)
+          ? categoryIds
+          : [categoryIds];
+        const productsWithCategories = await db
+          .select({ product_id: productCategories.product_id })
+          .from(productCategories)
+          .where(inArray(productCategories.category_id, categoryIdArray));
+
+        const productIdsWithCategories = productsWithCategories.map(
+          (p) => p.product_id
+        );
+
+        if (productIdsWithCategories.length > 0) {
+          conditions.push(inArray(products.id, productIdsWithCategories));
+        } else {
+          // No products match categories, return empty result
+          conditions.push(sql`FALSE`);
+        }
+      }
+
+      // Filter by stock status
+      if (stockStatus && typeof stockStatus === "string") {
+        if (stockStatus === "in_stock") {
+          conditions.push(
+            sql`COALESCE(${inventory.quantity_available}, 0) > 10`
+          );
+        } else if (stockStatus === "low_stock") {
+          conditions.push(
+            sql`COALESCE(${inventory.quantity_available}, 0) > 0 AND COALESCE(${inventory.quantity_available}, 0) <= 10`
+          );
+        } else if (stockStatus === "out_of_stock") {
+          conditions.push(
+            sql`COALESCE(${inventory.quantity_available}, 0) = 0`
+          );
+        }
       }
 
       const whereClause =
@@ -133,63 +190,30 @@ async function handler(
           break;
       }
 
+      // Pagination - apply before fetching
+      const pageNum = parseInt(page as string, 10);
+      const limitNum = parseInt(limit as string, 10);
+      const offset = (pageNum - 1) * limitNum;
+
+      // Get total count for pagination
+      const totalCountResult = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(products)
+        .leftJoin(inventory, eq(products.id, inventory.product_id))
+        .where(whereClause);
+
+      const total = totalCountResult[0]?.count || 0;
+      const totalPages = Math.ceil(total / limitNum);
+
+      // Apply pagination to query
+      query = query.limit(limitNum).offset(offset);
+
       query =
         sortOrder === "asc"
           ? query.orderBy(asc(sortColumn))
           : query.orderBy(desc(sortColumn));
 
       let allProducts = await query;
-
-      // Filter by tags if specified
-      if (tagIds) {
-        const tagIdArray = Array.isArray(tagIds) ? tagIds : [tagIds];
-        const productsWithTags = await db
-          .select({ product_id: productTags.product_id })
-          .from(productTags)
-          .where(inArray(productTags.tag_id, tagIdArray));
-
-        const productIdsWithTags = new Set(
-          productsWithTags.map((p) => p.product_id)
-        );
-        allProducts = allProducts.filter((p) => productIdsWithTags.has(p.id));
-      }
-
-      // Filter by categories if specified
-      if (categoryIds) {
-        const categoryIdArray = Array.isArray(categoryIds)
-          ? categoryIds
-          : [categoryIds];
-        const productsWithCategories = await db
-          .select({ product_id: productCategories.product_id })
-          .from(productCategories)
-          .where(inArray(productCategories.category_id, categoryIdArray));
-
-        const productIdsWithCategories = new Set(
-          productsWithCategories.map((p) => p.product_id)
-        );
-        allProducts = allProducts.filter((p) =>
-          productIdsWithCategories.has(p.id)
-        );
-      }
-
-      // Filter by stock status
-      if (stockStatus && typeof stockStatus === "string") {
-        if (stockStatus === "in_stock") {
-          allProducts = allProducts.filter(
-            (p) => (p.quantity_available || 0) > 10
-          );
-        } else if (stockStatus === "low_stock") {
-          allProducts = allProducts.filter(
-            (p) =>
-              (p.quantity_available || 0) > 0 &&
-              (p.quantity_available || 0) <= 10
-          );
-        } else if (stockStatus === "out_of_stock") {
-          allProducts = allProducts.filter(
-            (p) => (p.quantity_available || 0) === 0
-          );
-        }
-      }
 
       // Get tags for all products
       const productTagsData = await db
@@ -216,6 +240,24 @@ async function handler(
           eq(productCategories.category_id, categories.id)
         );
 
+      // Get all media for these products
+      const productMediaData = await db
+        .select({
+          product_id: productMedia.product_id,
+          id: productMedia.id,
+          url: productMedia.blob_url,
+          alt: productMedia.alt,
+          sort: productMedia.sort,
+        })
+        .from(productMedia)
+        .where(
+          inArray(
+            productMedia.product_id,
+            allProducts.map((p) => p.id)
+          )
+        )
+        .orderBy(productMedia.product_id, productMedia.sort);
+
       // Group tags by product
       const tagsByProduct = productTagsData.reduce((acc, item) => {
         if (!acc[item.product_id]) {
@@ -240,22 +282,28 @@ async function handler(
         return acc;
       }, {} as Record<string, Array<{ id: string; name: string }>>);
 
-      // Pagination
-      const pageNum = parseInt(page as string, 10);
-      const limitNum = parseInt(limit as string, 10);
-      const offset = (pageNum - 1) * limitNum;
-      const total = allProducts.length;
-      const totalPages = Math.ceil(total / limitNum);
+      // Group media by product
+      const mediaByProduct = productMediaData.reduce((acc, item) => {
+        if (!acc[item.product_id]) {
+          acc[item.product_id] = [];
+        }
+        acc[item.product_id].push({
+          id: item.id,
+          url: item.url,
+          alt: item.alt,
+          sort: item.sort,
+        });
+        return acc;
+      }, {} as Record<string, Array<{ id: string; url: string; alt: string; sort: number }>>);
 
-      const paginatedProducts = allProducts.slice(offset, offset + limitNum);
-
-      // Combine products with their tags, categories, inventory, and analytics
-      const productsWithData = paginatedProducts.map((product) => ({
+      // Combine products with their tags, categories, inventory, analytics, and media
+      const productsWithData = allProducts.map((product) => ({
         ...product,
         image: getProductImageUrl(product.image, product.media_blob_url),
         base_price: product.base_price ? parseFloat(product.base_price) : null,
         tags: tagsByProduct[product.id] || [],
         categories: categoriesByProduct[product.id] || [],
+        media: mediaByProduct[product.id] || [],
         inventory: {
           quantity_available: product.quantity_available || 0,
           quantity_reserved: product.quantity_reserved || 0,

@@ -585,7 +585,9 @@ export default function AdminProducts() {
                               )}
                               <div className={`${product.image ? "ml-4" : ""}`}>
                                 <div className="text-sm font-medium text-gray-900">
-                                  {product.title}
+                                  {product.title.length > 50
+                                    ? `${product.title.substring(0, 50)}...`
+                                    : product.title}
                                 </div>
                                 {product.tags && product.tags.length > 0 && (
                                   <div className="flex flex-wrap gap-1 mt-1">

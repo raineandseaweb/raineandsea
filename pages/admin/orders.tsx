@@ -1,3 +1,4 @@
+import { OrderFilters } from "@/components/admin/order-filters";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { OrderDetailsModal } from "@/components/order-details-modal";
@@ -64,11 +65,10 @@ interface Order {
   };
 }
 
-interface OrderFilters {
+interface OrderFiltersState {
   status: string;
   search: string;
-  limit: number;
-  offset: number;
+  orderType: string;
 }
 
 interface StatusCount {
@@ -94,16 +94,19 @@ export default function AdminOrdersPage() {
     orderId: string;
     newStatus: string;
   } | null>(null);
-  const [filters, setFilters] = useState<OrderFilters>({
+  const [filters, setFilters] = useState<OrderFiltersState>({
     status: "",
     search: "",
-    limit: 20,
-    offset: 0,
+    orderType: "",
   });
   const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 50,
     total: 0,
-    hasMore: false,
+    totalPages: 0,
   });
+  const [sortBy, setSortBy] = useState("created_at");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
     if (
@@ -113,11 +116,13 @@ export default function AdminOrdersPage() {
       router.push("/");
       return;
     }
+  }, [user, loading, router]);
 
+  useEffect(() => {
     if (user) {
       fetchOrders();
     }
-  }, [user, loading, router, filters]);
+  }, [user, filters, pagination.page, pagination.limit, sortBy, sortOrder]);
 
   const fetchOrders = async () => {
     try {
@@ -126,8 +131,14 @@ export default function AdminOrdersPage() {
 
       if (filters.status) queryParams.append("status", filters.status);
       if (filters.search) queryParams.append("search", filters.search);
-      queryParams.append("limit", filters.limit.toString());
-      queryParams.append("offset", filters.offset.toString());
+      if (filters.orderType) queryParams.append("orderType", filters.orderType);
+      queryParams.append("limit", pagination.limit.toString());
+      queryParams.append(
+        "offset",
+        ((pagination.page - 1) * pagination.limit).toString()
+      );
+      queryParams.append("sortBy", sortBy);
+      queryParams.append("sortOrder", sortOrder);
 
       const response = await fetch(`/api/admin/orders?${queryParams}`, {
         credentials: "include",
@@ -138,8 +149,10 @@ export default function AdminOrdersPage() {
         setOrders(data.data.orders);
         setStatusCounts(data.data.filters.statusCounts);
         setPagination({
+          page: pagination.page,
+          limit: pagination.limit,
           total: data.data.pagination.total,
-          hasMore: data.data.pagination.hasMore,
+          totalPages: Math.ceil(data.data.pagination.total / pagination.limit),
         });
       } else {
         addToast({ title: "Failed to fetch orders", type: "error" });
@@ -242,22 +255,66 @@ export default function AdminOrdersPage() {
     setPendingStatusUpdate(null);
   };
 
-  const handleFilterChange = (
-    key: keyof OrderFilters,
-    value: string | number
-  ) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-      offset: 0, // Reset offset when filters change
-    }));
+  const handleFilterChange = (newFilters: OrderFiltersState) => {
+    setFilters(newFilters);
+    setPagination({ ...pagination, page: 1 });
   };
 
-  const handlePageChange = (newOffset: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      offset: newOffset,
-    }));
+  const handleResetFilters = () => {
+    setFilters({
+      search: "",
+      status: "",
+      orderType: "",
+    });
+    setSortBy("created_at");
+    setSortOrder("desc");
+    setPagination({ ...pagination, page: 1 });
+  };
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      // Toggle sort order if clicking the same column
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // Set new column and default to descending
+      setSortBy(column);
+      setSortOrder("desc");
+    }
+    setPagination({ ...pagination, page: 1 });
+  };
+
+  const SortableHeader = ({
+    column,
+    children,
+    align = "left",
+  }: {
+    column: string;
+    children: React.ReactNode;
+    align?: "left" | "right";
+  }) => {
+    const isSorted = sortBy === column;
+    const alignClass =
+      align === "right" ? "text-right justify-end" : "text-left";
+
+    return (
+      <th
+        className={`px-6 py-3 ${alignClass} text-xs font-medium text-gray-500 uppercase tracking-wider`}
+      >
+        <button
+          onClick={() => handleSort(column)}
+          className={`flex items-center space-x-1 hover:text-gray-700 transition-colors ${
+            align === "right" ? "ml-auto" : ""
+          }`}
+        >
+          <span>{children}</span>
+          {isSorted && (
+            <span className="text-blue-600">
+              {sortOrder === "asc" ? "↑" : "↓"}
+            </span>
+          )}
+        </button>
+      </th>
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -313,59 +370,11 @@ export default function AdminOrdersPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status Filter
-                </label>
-                <select
-                  value={filters.status}
-                  onChange={(e) => handleFilterChange("status", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">All Statuses</option>
-                  {statusCounts.map((status) => (
-                    <option key={status.status} value={status.status}>
-                      {status.status.charAt(0).toUpperCase() +
-                        status.status.slice(1)}{" "}
-                      ({status.count})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search
-                </label>
-                <input
-                  type="text"
-                  placeholder="Search by email, order number, or order ID..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange("search", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Items Per Page
-                </label>
-                <select
-                  value={filters.limit}
-                  onChange={(e) =>
-                    handleFilterChange("limit", parseInt(e.target.value))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <OrderFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={handleResetFilters}
+          />
 
           {/* Orders Table */}
           <div className="bg-white rounded-lg shadow-sm border">
@@ -383,30 +392,34 @@ export default function AdminOrdersPage() {
             ) : orders.length === 0 ? (
               <div className="p-8 text-center">
                 <p className="text-gray-600">No orders found</p>
+                <button
+                  onClick={handleResetFilters}
+                  className="mt-2 text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Reset Filters
+                </button>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <SortableHeader column="order_number">
                         Order
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      </SortableHeader>
+                      <SortableHeader column="customer_name">
                         Customer
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      </SortableHeader>
+                      <SortableHeader column="status">Status</SortableHeader>
+                      <SortableHeader column="total" align="right">
                         Total
-                      </th>
+                      </SortableHeader>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tracking
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <SortableHeader column="created_at" align="right">
                         Date
-                      </th>
+                      </SortableHeader>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
@@ -439,7 +452,7 @@ export default function AdminOrdersPage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <StatusIndicator status={order.status} type="order" />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
                           {formatPrice(order.totals.total)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -466,7 +479,7 @@ export default function AdminOrdersPage() {
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
                           {formatDate(order.created_at)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -502,39 +515,103 @@ export default function AdminOrdersPage() {
             )}
 
             {/* Pagination */}
-            {pagination.total > filters.limit && (
-              <div className="px-6 py-4 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
-                    Showing {filters.offset + 1} to{" "}
-                    {Math.min(filters.offset + filters.limit, pagination.total)}{" "}
-                    of {pagination.total} orders
-                  </div>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() =>
-                        handlePageChange(
-                          Math.max(0, filters.offset - filters.limit)
-                        )
-                      }
-                      disabled={filters.offset === 0}
-                      className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() =>
-                        handlePageChange(filters.offset + filters.limit)
-                      }
-                      disabled={!pagination.hasMore}
-                      className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                    >
-                      Next
-                    </button>
-                  </div>
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="text-sm text-gray-600">
+                  Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+                  {Math.min(
+                    pagination.page * pagination.limit,
+                    pagination.total
+                  )}{" "}
+                  of {pagination.total} orders
+                </div>
+                <div className="flex items-center space-x-2">
+                  <label className="text-sm text-gray-600">Per page:</label>
+                  <select
+                    value={pagination.limit}
+                    onChange={(e) =>
+                      setPagination({
+                        ...pagination,
+                        limit: parseInt(e.target.value),
+                        page: 1,
+                      })
+                    }
+                    className="px-2 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
                 </div>
               </div>
-            )}
+              {pagination.totalPages > 1 && (
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() =>
+                      setPagination({
+                        ...pagination,
+                        page: pagination.page - 1,
+                      })
+                    }
+                    disabled={pagination.page === 1}
+                    className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <div className="flex items-center space-x-1">
+                    {Array.from(
+                      { length: Math.min(pagination.totalPages, 5) },
+                      (_, i) => {
+                        let pageNum;
+                        if (pagination.totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (pagination.page <= 3) {
+                          pageNum = i + 1;
+                        } else if (
+                          pagination.page >=
+                          pagination.totalPages - 2
+                        ) {
+                          pageNum = pagination.totalPages - 4 + i;
+                        } else {
+                          pageNum = pagination.page - 2 + i;
+                        }
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() =>
+                              setPagination({
+                                ...pagination,
+                                page: pageNum,
+                              })
+                            }
+                            className={`px-3 py-1 border rounded-lg ${
+                              pagination.page === pageNum
+                                ? "bg-blue-600 text-white border-blue-600"
+                                : "border-gray-300 hover:bg-gray-50"
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      }
+                    )}
+                  </div>
+                  <button
+                    onClick={() =>
+                      setPagination({
+                        ...pagination,
+                        page: pagination.page + 1,
+                      })
+                    }
+                    disabled={pagination.page === pagination.totalPages}
+                    className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>

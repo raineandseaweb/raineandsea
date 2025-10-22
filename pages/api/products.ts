@@ -48,10 +48,9 @@ export default async function handler(
     const conditions = [eq(products.status, "active")];
 
     if (query) {
+      const searchTerm = `%${query}%`;
       conditions.push(
-        sql`(${products.title} ILIKE ${`%${query}%`} OR ${
-          products.description
-        } ILIKE ${`%${query}%`})`
+        sql`(${products.title} ILIKE ${searchTerm} OR ${products.description} ILIKE ${searchTerm})`
       );
     }
 

@@ -9,7 +9,7 @@ import {
 } from "@/lib/db/schema";
 import { sendSuccessResponse } from "@/lib/security/error-handling";
 import { withSecureAdmin } from "@/lib/security/security-middleware";
-import { and, desc, eq, inArray, like, or, sql } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -24,6 +24,7 @@ export default withSecureAdmin(
         const {
           status,
           search,
+          orderType,
           limit = "20",
           offset = "0",
           sortBy = "created_at",
@@ -43,7 +44,27 @@ export default withSecureAdmin(
             "cancelled",
             "refunded",
           ];
-          if (validStatuses.includes(status)) {
+
+          // Handle special filter groups
+          if (status === "in_progress") {
+            // In progress includes: received, paid, shipped
+            conditions.push(
+              or(
+                eq(orders.status, "received"),
+                eq(orders.status, "paid"),
+                eq(orders.status, "shipped")
+              )
+            );
+          } else if (status === "completed_group") {
+            // Completed group includes: completed, cancelled, refunded
+            conditions.push(
+              or(
+                eq(orders.status, "completed"),
+                eq(orders.status, "cancelled"),
+                eq(orders.status, "refunded")
+              )
+            );
+          } else if (validStatuses.includes(status)) {
             conditions.push(
               eq(
                 orders.status,
@@ -59,16 +80,39 @@ export default withSecureAdmin(
           }
         }
 
+        // Order type filter (guest vs user)
+        if (orderType && typeof orderType === "string") {
+          if (orderType === "guest") {
+            conditions.push(eq(orders.is_guest_order, true));
+          } else if (orderType === "user") {
+            conditions.push(eq(orders.is_guest_order, false));
+          }
+        }
+
         // Search filter (by customer email, guest email, order number, or order ID)
         if (search && typeof search === "string") {
-          conditions.push(
-            or(
-              like(customers.email, `%${search}%`),
-              like(orders.guest_email, `%${search}%`),
-              like(orders.order_number, `%${search}%`),
-              like(orders.id, `%${search}%`)
-            )
-          );
+          const searchTerm = search.trim();
+          // Check if search term looks like a UUID
+          const isUUID =
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+              searchTerm
+            );
+
+          if (isUUID) {
+            // Exact match for UUID
+            conditions.push(eq(orders.id, searchTerm));
+          } else {
+            // Text search for other fields - handle NULL customer emails for guest orders
+            conditions.push(
+              or(
+                sql`COALESCE(${
+                  customers.email
+                }, '') ILIKE ${`%${searchTerm}%`}`,
+                ilike(orders.guest_email, `%${searchTerm}%`),
+                ilike(orders.order_number, `%${searchTerm}%`)
+              )
+            );
+          }
         }
 
         // Build order by clause with validation
@@ -79,6 +123,9 @@ export default withSecureAdmin(
           "updated_at",
           "total",
           "subtotal",
+          "order_number",
+          "customer_name",
+          "customer_email",
         ];
         const sortField = validSortFields.includes(sortBy as string)
           ? (sortBy as string)
@@ -91,6 +138,9 @@ export default withSecureAdmin(
           status: orders.status,
           order_number: orders.order_number,
           total: orders.total,
+          subtotal: orders.subtotal,
+          customer_name: customers.name,
+          customer_email: customers.email,
         };
 
         const orderByColumn = orderByColumnMap[sortField] || orders.created_at;

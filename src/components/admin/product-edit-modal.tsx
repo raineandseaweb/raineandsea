@@ -733,6 +733,7 @@ export function ProductEditModal({
       <MediaModal
         isOpen={showMediaModal}
         onClose={() => setShowMediaModal(false)}
+        productId={localProduct?.id || ""}
         productTitle={localProduct?.title || ""}
         initialMedia={localProduct?.media || []}
         onSave={async (media) => {

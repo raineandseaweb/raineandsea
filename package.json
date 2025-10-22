@@ -28,6 +28,8 @@
     "db:titles:dry": "tsx src/lib/db/normalize-product-titles.ts",
     "db:titles:write": "tsx src/lib/db/normalize-product-titles.ts --write",
     "db:titles:audit": "tsx src/lib/db/audit-product-titles.ts",
+    "sync:prod-images": "tsx scripts/sync-prod-images.ts",
+    "sync:prod-images-from-local": "tsx scripts/sync-prod-images-from-local.ts",
     "scrape:etsy": "tsx scrapers/etsy-scraper.ts",
     "scrape:etsy-curl": "tsx scrapers/etsy-curl-scraper.ts",
     "scrape:etsy-stealth": "tsx scrapers/etsy-stealth-scraper.ts",
