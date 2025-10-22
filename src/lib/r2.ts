@@ -35,9 +35,7 @@ async function initializeR2Client() {
   BUCKET_NAME = process.env.CLOUDFLARE_R2_PRODUCTS_BUCKET!;
   PUBLIC_URL_BASE =
     process.env.PUBLIC_URL_BASE ||
-    (accountId && BUCKET_NAME
-      ? `https://pub-${accountId}.r2.dev/${BUCKET_NAME}`
-      : "");
+    (accountId ? `https://pub-${accountId}.r2.dev` : "");
 }
 
 export interface UploadResult {
@@ -58,8 +56,14 @@ export async function uploadImageToR2(
   try {
     await initializeR2Client();
 
+    if (!BUCKET_NAME) {
+      throw new Error(
+        `R2 bucket name not configured. Expected CLOUDFLARE_R2_PRODUCTS_BUCKET env var`
+      );
+    }
+
     const command = new PutObjectCommand({
-      Bucket: BUCKET_NAME!,
+      Bucket: BUCKET_NAME,
       Key: key,
       Body: file,
       ContentType: contentType,
@@ -74,7 +78,12 @@ export async function uploadImageToR2(
     };
   } catch (error) {
     console.error("Error uploading to R2:", error);
-    throw new Error("Failed to upload image to R2");
+    console.error("Bucket name:", BUCKET_NAME);
+    throw new Error(
+      `Failed to upload image to R2: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
   }
 }
 

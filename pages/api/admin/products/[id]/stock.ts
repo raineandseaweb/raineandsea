@@ -1,13 +1,11 @@
 import { db } from "@/lib/db";
 import { inventory, products, stockNotifications } from "@/lib/db/schema";
 import { sendStockNotificationEmail } from "@/lib/email";
+import { withSecureAdmin } from "@/lib/security/security-middleware";
 import { and, eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
   if (req.method !== "PUT") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -136,3 +134,5 @@ export default async function handler(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export default withSecureAdmin(handler);

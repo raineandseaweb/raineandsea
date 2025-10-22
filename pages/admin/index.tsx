@@ -1,3 +1,4 @@
+import { AnalyticsChart } from "@/components/admin/analytics-chart";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { StatusIndicator } from "@/components/ui/status-indicator";
@@ -18,6 +19,11 @@ export default function AdminDashboard() {
     recentOrders: [],
   });
   const [statsLoading, setStatsLoading] = useState(true);
+  const [analyticsPeriod, setAnalyticsPeriod] = useState<
+    "7d" | "30d" | "6m" | "1y" | "all"
+  >("30d");
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   useEffect(() => {
     if (
@@ -30,8 +36,15 @@ export default function AdminDashboard() {
 
     if (user) {
       fetchStats();
+      fetchAnalytics();
     }
   }, [user, loading, router]);
+
+  useEffect(() => {
+    if (user) {
+      fetchAnalytics();
+    }
+  }, [analyticsPeriod, user]);
 
   const fetchStats = async () => {
     setStatsLoading(true);
@@ -91,6 +104,30 @@ export default function AdminDashboard() {
       console.error("Error fetching stats:", error);
     } finally {
       setStatsLoading(false);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    setAnalyticsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/admin/analytics?period=${analyticsPeriod}`,
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Analytics data:", data);
+        setAnalyticsData(data);
+      } else {
+        const error = await response.json();
+        console.error("Failed to fetch analytics:", error);
+      }
+    } catch (error) {
+      console.error("Error fetching analytics:", error);
+    } finally {
+      setAnalyticsLoading(false);
     }
   };
 
@@ -304,6 +341,113 @@ export default function AdminDashboard() {
                 </div>
               </>
             )}
+          </div>
+
+          {/* Analytics Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Analytics</h2>
+              <div className="flex gap-2">
+                {(["7d", "30d", "6m", "1y", "all"] as const).map((period) => (
+                  <button
+                    key={period}
+                    onClick={() => setAnalyticsPeriod(period)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      analyticsPeriod === period
+                        ? "bg-blue-600 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                    }`}
+                  >
+                    {period === "7d"
+                      ? "7 Days"
+                      : period === "30d"
+                      ? "30 Days"
+                      : period === "6m"
+                      ? "6 Months"
+                      : period === "1y"
+                      ? "1 Year"
+                      : "All Time"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {analyticsLoading ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+                  >
+                    <div className="animate-pulse">
+                      <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
+                      <div className="h-8 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div className="h-64 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : analyticsData?.data ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <AnalyticsChart
+                  title="Revenue"
+                  data={(analyticsData.data.data?.revenue || []).map(
+                    (d: any) => ({
+                      date: d.date,
+                      value: Number(d.revenue),
+                    })
+                  )}
+                  color="#10b981"
+                  currentTotal={Number(analyticsData.data.totals?.revenue || 0)}
+                  previousTotal={Number(
+                    analyticsData.data.previousTotals?.revenue || 0
+                  )}
+                  formatValue={(val) => `$${val.toFixed(2)}`}
+                />
+                <AnalyticsChart
+                  title="Sales (Items)"
+                  data={(analyticsData.data.data?.sales || []).map(
+                    (d: any) => ({
+                      date: d.date,
+                      value: Number(d.sales),
+                    })
+                  )}
+                  color="#3b82f6"
+                  currentTotal={Number(analyticsData.data.totals?.sales || 0)}
+                  previousTotal={Number(
+                    analyticsData.data.previousTotals?.sales || 0
+                  )}
+                />
+                <AnalyticsChart
+                  title="Orders"
+                  data={(analyticsData.data.data?.orders || []).map(
+                    (d: any) => ({
+                      date: d.date,
+                      value: Number(d.count),
+                    })
+                  )}
+                  color="#8b5cf6"
+                  currentTotal={Number(analyticsData.data.totals?.orders || 0)}
+                  previousTotal={Number(
+                    analyticsData.data.previousTotals?.orders || 0
+                  )}
+                />
+                <AnalyticsChart
+                  title="New Users"
+                  data={(analyticsData.data.data?.users || []).map(
+                    (d: any) => ({
+                      date: d.date,
+                      value: Number(d.count),
+                    })
+                  )}
+                  color="#f59e0b"
+                  currentTotal={Number(analyticsData.data.totals?.users || 0)}
+                  previousTotal={Number(
+                    analyticsData.data.previousTotals?.users || 0
+                  )}
+                />
+              </div>
+            ) : null}
           </div>
 
           {/* Content Grid */}

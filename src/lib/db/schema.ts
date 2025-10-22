@@ -258,6 +258,7 @@ export const customers = pgTable(
     passwordResetIdx: index("customers_password_reset_idx").on(
       table.password_reset_token
     ),
+    createdAtIdx: index("customers_created_at_idx").on(table.created_at),
   })
 );
 
@@ -387,6 +388,7 @@ export const orders = pgTable(
     shippingProviderIdx: index("orders_shipping_provider_idx").on(
       table.shipping_provider
     ),
+    createdAtIdx: index("orders_created_at_idx").on(table.created_at),
   })
 );
 

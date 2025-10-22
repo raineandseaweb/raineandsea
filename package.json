@@ -36,7 +36,9 @@
     "scrape:manual": "tsx scrapers/manual-scraper.ts",
     "fp": "npx tsx scripts/kill-port-3000.ts",
     "secrets:test": "tsx scripts/migrate-secrets-to-gcp.ts --dry-run",
-    "secrets:migrate": "tsx scripts/migrate-secrets-to-gcp.ts"
+    "secrets:migrate": "tsx scripts/migrate-secrets-to-gcp.ts",
+    "analytics:test": "tsx scripts/manual-analytics-aggregation.ts",
+    "analytics:all": "tsx scripts/manual-analytics-aggregation.ts --all"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.913.0",
@@ -81,6 +83,7 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "recharts": "^3.3.0",
     "sharp": "^0.34.4",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.18",
