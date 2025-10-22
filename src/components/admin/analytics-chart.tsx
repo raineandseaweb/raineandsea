@@ -52,25 +52,29 @@ export function AnalyticsChart({
   }));
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <div className="mt-2 flex items-baseline gap-4">
-          <span className="text-3xl font-bold text-gray-900">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+      <div className="mb-3 sm:mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+          {title}
+        </h3>
+        <div className="mt-2 flex items-baseline gap-2 sm:gap-4">
+          <span className="text-2xl sm:text-3xl font-bold text-gray-900">
             {formatValue(currentTotal)}
           </span>
           <span
-            className={`text-sm font-medium ${
+            className={`text-xs sm:text-sm font-medium ${
               isPositive ? "text-green-600" : "text-red-600"
             }`}
           >
             {isPositive ? "↑" : "↓"} {Math.abs(change).toFixed(1)}%
           </span>
         </div>
-        <p className="text-sm text-gray-500 mt-1">vs previous period</p>
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+          vs previous period
+        </p>
       </div>
 
-      <div className="h-64">
+      <div className="h-48 sm:h-56 md:h-64">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData}>
             <defs>

@@ -6,6 +6,34 @@ import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+// Tab transition component with staggered animation
+function TabTransition({
+  children,
+  isActive,
+}: {
+  children: React.ReactNode;
+  isActive: boolean;
+}) {
+  return (
+    <div
+      className={`${
+        isActive
+          ? "opacity-100 translate-y-0 transition-all duration-300 ease-out"
+          : "opacity-0 translate-y-4 pointer-events-none absolute w-full"
+      }`}
+      style={
+        isActive
+          ? {
+              transitionProperty: "opacity, transform",
+            }
+          : {}
+      }
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -19,11 +47,17 @@ export default function AdminDashboard() {
     recentOrders: [],
   });
   const [statsLoading, setStatsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"overview" | "analytics">(
+    "overview"
+  );
   const [analyticsPeriod, setAnalyticsPeriod] = useState<
     "7d" | "30d" | "6m" | "1y" | "all"
   >("30d");
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsAnimateKey, setAnalyticsAnimateKey] = useState(0);
+  const [isPeriodChange, setIsPeriodChange] = useState(false);
+  const [analyticsCache, setAnalyticsCache] = useState<Record<string, any>>({});
 
   useEffect(() => {
     if (
@@ -36,15 +70,41 @@ export default function AdminDashboard() {
 
     if (user) {
       fetchStats();
-      fetchAnalytics();
+      // Prefetch analytics data in the background
+      fetchAnalytics(false);
     }
   }, [user, loading, router]);
 
   useEffect(() => {
-    if (user) {
-      fetchAnalytics();
+    if (user && activeTab === "analytics") {
+      // When switching to analytics tab, always animate
+      setIsPeriodChange(false);
+      setAnalyticsAnimateKey((k) => k + 1);
+      // Check if we have cached data for the current period
+      if (analyticsCache[analyticsPeriod]) {
+        setAnalyticsData(analyticsCache[analyticsPeriod]);
+        setAnalyticsLoading(false);
+      } else {
+        fetchAnalytics(true);
+      }
+    } else {
+      // Reset when switching away from analytics
+      setIsPeriodChange(false);
     }
-  }, [analyticsPeriod, user]);
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (user && activeTab === "analytics") {
+      // When changing period while on analytics tab, don't animate
+      setIsPeriodChange(true);
+      // Check cache first
+      if (analyticsCache[analyticsPeriod]) {
+        setAnalyticsData(analyticsCache[analyticsPeriod]);
+      } else {
+        fetchAnalytics(false);
+      }
+    }
+  }, [analyticsPeriod]);
 
   const fetchStats = async () => {
     setStatsLoading(true);
@@ -107,8 +167,10 @@ export default function AdminDashboard() {
     }
   };
 
-  const fetchAnalytics = async () => {
-    setAnalyticsLoading(true);
+  const fetchAnalytics = async (animate: boolean = true) => {
+    if (animate) {
+      setAnalyticsLoading(true);
+    }
     try {
       const response = await fetch(
         `/api/admin/analytics?period=${analyticsPeriod}`,
@@ -120,6 +182,11 @@ export default function AdminDashboard() {
         const data = await response.json();
         console.log("Analytics data:", data);
         setAnalyticsData(data);
+        // Cache the data
+        setAnalyticsCache((prev) => ({
+          ...prev,
+          [analyticsPeriod]: data,
+        }));
       } else {
         const error = await response.json();
         console.error("Failed to fetch analytics:", error);
@@ -127,7 +194,9 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error("Error fetching analytics:", error);
     } finally {
-      setAnalyticsLoading(false);
+      if (animate) {
+        setAnalyticsLoading(false);
+      }
     }
   };
 
@@ -156,560 +225,718 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Admin Dashboard
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
               Welcome back, {user.name || user.email}
             </p>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-            {statsLoading ? (
-              <>
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+          {/* Tabs */}
+          <div className="mb-4 sm:mb-6 md:mb-8 border-b border-gray-200">
+            <nav className="-mb-px flex space-x-4 sm:space-x-6 md:space-x-8">
+              <button
+                onClick={() => setActiveTab("overview")}
+                className={`relative whitespace-nowrap py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-all duration-200 ${
+                  activeTab === "overview"
+                    ? "text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <span className="relative z-10 flex items-center gap-1 sm:gap-2">
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <div className="animate-pulse">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 100 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    />
+                  </svg>
+                  Overview
+                </span>
+                {activeTab === "overview" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t transition-all duration-200" />
+                )}
+              </button>
+
+              <button
+                onClick={() => setActiveTab("analytics")}
+                className={`relative whitespace-nowrap py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-all duration-200 ${
+                  activeTab === "analytics"
+                    ? "text-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <span className="relative z-10 flex items-center gap-1 sm:gap-2">
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                  Analytics
+                </span>
+                {activeTab === "analytics" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t transition-all duration-200" />
+                )}
+              </button>
+            </nav>
+          </div>
+
+          {/* Tab Content Container */}
+          <div className="relative">
+            {/* Overview Tab */}
+            <TabTransition isActive={activeTab === "overview"}>
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
+                {statsLoading ? (
+                  <>
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6"
+                      >
+                        <div className="animate-pulse">
+                          <div className="flex items-center">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 rounded-lg"></div>
+                            <div className="ml-2 sm:ml-3 md:ml-4 flex-1">
+                              <div className="h-3 sm:h-4 bg-gray-200 rounded w-16 sm:w-20 mb-1 sm:mb-2"></div>
+                              <div className="h-5 sm:h-6 bg-gray-200 rounded w-10 sm:w-12"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
-                        <div className="ml-4 flex-1">
-                          <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
-                          <div className="h-6 bg-gray-200 rounded w-12"></div>
+                        <div className="flex-shrink-0">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="ml-2 sm:ml-3 md:ml-4">
+                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                            Total Users
+                          </p>
+                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                            {stats.totalUsers}
+                          </p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-5 h-5 text-blue-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                          />
-                        </svg>
+
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-green-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="ml-2 sm:ml-3 md:ml-4">
+                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                            Total Products
+                          </p>
+                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                            {stats.totalProducts}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">
-                        Total Users
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.totalUsers}
-                      </p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-5 h-5 text-green-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                          />
-                        </svg>
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="ml-2 sm:ml-3 md:ml-4">
+                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                            Total Orders
+                          </p>
+                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                            {stats.totalOrders}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">
-                        Total Products
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.totalProducts}
-                      </p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-5 h-5 text-purple-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="ml-2 sm:ml-3 md:ml-4">
+                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                            Revenue
+                          </p>
+                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                            ${stats.totalRevenue.toFixed(2)}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">
-                        Total Orders
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.totalOrders}
-                      </p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-5 h-5 text-orange-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                          />
-                        </svg>
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="ml-2 sm:ml-3 md:ml-4">
+                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                            Pending Orders
+                          </p>
+                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                            {stats.pendingOrders}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">
-                        Revenue
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        ${stats.totalRevenue.toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-5 h-5 text-yellow-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">
-                        Pending Orders
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.pendingOrders}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Analytics Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Analytics</h2>
-              <div className="flex gap-2">
-                {(["7d", "30d", "6m", "1y", "all"] as const).map((period) => (
-                  <button
-                    key={period}
-                    onClick={() => setAnalyticsPeriod(period)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      analyticsPeriod === period
-                        ? "bg-blue-600 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
-                    }`}
-                  >
-                    {period === "7d"
-                      ? "7 Days"
-                      : period === "30d"
-                      ? "30 Days"
-                      : period === "6m"
-                      ? "6 Months"
-                      : period === "1y"
-                      ? "1 Year"
-                      : "All Time"}
-                  </button>
-                ))}
+                  </>
+                )}
               </div>
-            </div>
+            </TabTransition>
 
-            {analyticsLoading ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {[...Array(4)].map((_, i) => (
+            {/* Analytics Tab */}
+            <TabTransition isActive={activeTab === "analytics"}>
+              <div className="mb-4 sm:mb-6 md:mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    Analytics
+                  </h2>
+                  <div className="flex gap-1 sm:gap-2 flex-wrap">
+                    {(["7d", "30d", "6m", "1y", "all"] as const).map(
+                      (period) => (
+                        <button
+                          key={period}
+                          onClick={() => setAnalyticsPeriod(period)}
+                          className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+                            analyticsPeriod === period
+                              ? "bg-blue-600 text-white"
+                              : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                          }`}
+                        >
+                          {period === "7d"
+                            ? "7 Days"
+                            : period === "30d"
+                            ? "30 Days"
+                            : period === "6m"
+                            ? "6 Months"
+                            : period === "1y"
+                            ? "1 Year"
+                            : "All Time"}
+                        </button>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {analyticsLoading ? (
                   <div
-                    key={i}
-                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6"
+                    style={{
+                      animation: "fadeIn 0.2s ease-out",
+                    }}
                   >
-                    <div className="animate-pulse">
-                      <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
-                      <div className="h-8 bg-gray-200 rounded w-24 mb-2"></div>
-                      <div className="h-64 bg-gray-200 rounded"></div>
+                    {[...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6"
+                      >
+                        <div className="animate-pulse">
+                          <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
+                          <div className="h-8 bg-gray-200 rounded w-24 mb-2"></div>
+                          <div className="h-64 bg-gray-200 rounded"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : analyticsData?.data ? (
+                  <div
+                    key={analyticsAnimateKey}
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6"
+                  >
+                    <div
+                      style={{
+                        animation: !isPeriodChange
+                          ? "fadeInUp 0.4s ease-out 0.1s both"
+                          : "none",
+                      }}
+                    >
+                      <AnalyticsChart
+                        title="Revenue"
+                        data={(analyticsData.data.data?.revenue || []).map(
+                          (d: any) => ({
+                            date: d.date,
+                            value: Number(d.revenue),
+                          })
+                        )}
+                        color="#10b981"
+                        currentTotal={Number(
+                          analyticsData.data.totals?.revenue || 0
+                        )}
+                        previousTotal={Number(
+                          analyticsData.data.previousTotals?.revenue || 0
+                        )}
+                        formatValue={(val) => `$${val.toFixed(2)}`}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        animation: !isPeriodChange
+                          ? "fadeInUp 0.4s ease-out 0.2s both"
+                          : "none",
+                      }}
+                    >
+                      <AnalyticsChart
+                        title="Sales (Items)"
+                        data={(analyticsData.data.data?.sales || []).map(
+                          (d: any) => ({
+                            date: d.date,
+                            value: Number(d.sales),
+                          })
+                        )}
+                        color="#3b82f6"
+                        currentTotal={Number(
+                          analyticsData.data.totals?.sales || 0
+                        )}
+                        previousTotal={Number(
+                          analyticsData.data.previousTotals?.sales || 0
+                        )}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        animation: !isPeriodChange
+                          ? "fadeInUp 0.4s ease-out 0.3s both"
+                          : "none",
+                      }}
+                    >
+                      <AnalyticsChart
+                        title="Orders"
+                        data={(analyticsData.data.data?.orders || []).map(
+                          (d: any) => ({
+                            date: d.date,
+                            value: Number(d.count),
+                          })
+                        )}
+                        color="#8b5cf6"
+                        currentTotal={Number(
+                          analyticsData.data.totals?.orders || 0
+                        )}
+                        previousTotal={Number(
+                          analyticsData.data.previousTotals?.orders || 0
+                        )}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        animation: !isPeriodChange
+                          ? "fadeInUp 0.4s ease-out 0.4s both"
+                          : "none",
+                      }}
+                    >
+                      <AnalyticsChart
+                        title="New Users"
+                        data={(analyticsData.data.data?.users || []).map(
+                          (d: any) => ({
+                            date: d.date,
+                            value: Number(d.count),
+                          })
+                        )}
+                        color="#f59e0b"
+                        currentTotal={Number(
+                          analyticsData.data.totals?.users || 0
+                        )}
+                        previousTotal={Number(
+                          analyticsData.data.previousTotals?.users || 0
+                        )}
+                      />
                     </div>
                   </div>
-                ))}
+                ) : null}
               </div>
-            ) : analyticsData?.data ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <AnalyticsChart
-                  title="Revenue"
-                  data={(analyticsData.data.data?.revenue || []).map(
-                    (d: any) => ({
-                      date: d.date,
-                      value: Number(d.revenue),
-                    })
-                  )}
-                  color="#10b981"
-                  currentTotal={Number(analyticsData.data.totals?.revenue || 0)}
-                  previousTotal={Number(
-                    analyticsData.data.previousTotals?.revenue || 0
-                  )}
-                  formatValue={(val) => `$${val.toFixed(2)}`}
-                />
-                <AnalyticsChart
-                  title="Sales (Items)"
-                  data={(analyticsData.data.data?.sales || []).map(
-                    (d: any) => ({
-                      date: d.date,
-                      value: Number(d.sales),
-                    })
-                  )}
-                  color="#3b82f6"
-                  currentTotal={Number(analyticsData.data.totals?.sales || 0)}
-                  previousTotal={Number(
-                    analyticsData.data.previousTotals?.sales || 0
-                  )}
-                />
-                <AnalyticsChart
-                  title="Orders"
-                  data={(analyticsData.data.data?.orders || []).map(
-                    (d: any) => ({
-                      date: d.date,
-                      value: Number(d.count),
-                    })
-                  )}
-                  color="#8b5cf6"
-                  currentTotal={Number(analyticsData.data.totals?.orders || 0)}
-                  previousTotal={Number(
-                    analyticsData.data.previousTotals?.orders || 0
-                  )}
-                />
-                <AnalyticsChart
-                  title="New Users"
-                  data={(analyticsData.data.data?.users || []).map(
-                    (d: any) => ({
-                      date: d.date,
-                      value: Number(d.count),
-                    })
-                  )}
-                  color="#f59e0b"
-                  currentTotal={Number(analyticsData.data.totals?.users || 0)}
-                  previousTotal={Number(
-                    analyticsData.data.previousTotals?.users || 0
-                  )}
-                />
-              </div>
-            ) : null}
+            </TabTransition>
           </div>
 
-          {/* Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Users */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Recent Users
-                </h2>
-              </div>
-              <div className="p-6">
-                {statsLoading ? (
-                  <div className="space-y-4">
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-                          <div className="ml-3">
-                            <div className="h-4 bg-gray-200 rounded w-24 mb-1 animate-pulse"></div>
-                            <div className="h-3 bg-gray-200 rounded w-32 animate-pulse"></div>
-                          </div>
-                        </div>
-                        <div className="h-6 bg-gray-200 rounded w-16 animate-pulse"></div>
-                      </div>
-                    ))}
+          {/* Content Grid (only show on overview) */}
+          {activeTab === "overview" && (
+            <div
+              className="mt-4 sm:mt-6 md:mt-8"
+              style={{
+                animation: "fadeInUp 0.3s ease-out 0.1s both",
+              }}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                {/* Recent Users */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-gray-200">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                      Recent Users
+                    </h2>
                   </div>
-                ) : stats.recentUsers.length > 0 ? (
-                  <div className="space-y-4">
-                    {stats.recentUsers.map((user: any) => (
-                      <div
-                        key={user.id}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-gray-600">
-                              {user.name
-                                ? user.name.charAt(0).toUpperCase()
-                                : user.email.charAt(0).toUpperCase()}
-                            </span>
+                  <div className="p-3 sm:p-4 md:p-6">
+                    {statsLoading ? (
+                      <div className="space-y-4">
+                        {[...Array(5)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                              <div className="ml-3">
+                                <div className="h-4 bg-gray-200 rounded w-24 mb-1 animate-pulse"></div>
+                                <div className="h-3 bg-gray-200 rounded w-32 animate-pulse"></div>
+                              </div>
+                            </div>
+                            <div className="h-6 bg-gray-200 rounded w-16 animate-pulse"></div>
                           </div>
-                          <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900">
-                              {user.name || user.email}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {user.email}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <StatusIndicator status={user.role} type="user" />
-                        </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : stats.recentUsers.length > 0 ? (
+                      <div className="space-y-4">
+                        {stats.recentUsers.map((user: any) => (
+                          <div
+                            key={user.id}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-gray-600">
+                                  {user.name
+                                    ? user.name.charAt(0).toUpperCase()
+                                    : user.email.charAt(0).toUpperCase()}
+                                </span>
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {user.name || user.email}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {user.email}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <StatusIndicator status={user.role} type="user" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-4">
+                        No users found
+                      </p>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-4">
-                    No users found
-                  </p>
-                )}
-              </div>
-            </div>
+                </div>
 
-            {/* Recent Orders */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Recent Orders
-                </h2>
-              </div>
-              <div className="p-6">
-                {statsLoading ? (
-                  <div className="space-y-4">
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-                          <div className="ml-3">
-                            <div className="h-4 bg-gray-200 rounded w-20 mb-1 animate-pulse"></div>
-                            <div className="h-3 bg-gray-200 rounded w-28 animate-pulse"></div>
-                          </div>
-                        </div>
-                        <div className="h-6 bg-gray-200 rounded w-20 animate-pulse"></div>
-                      </div>
-                    ))}
+                {/* Recent Orders */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-gray-200">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                      Recent Orders
+                    </h2>
                   </div>
-                ) : stats.recentOrders.length > 0 ? (
-                  <div className="space-y-4">
-                    {stats.recentOrders.map((order: any) => (
-                      <div
-                        key={order.id}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-gray-600">
-                              #
-                            </span>
+                  <div className="p-3 sm:p-4 md:p-6">
+                    {statsLoading ? (
+                      <div className="space-y-4">
+                        {[...Array(5)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                              <div className="ml-3">
+                                <div className="h-4 bg-gray-200 rounded w-20 mb-1 animate-pulse"></div>
+                                <div className="h-3 bg-gray-200 rounded w-28 animate-pulse"></div>
+                              </div>
+                            </div>
+                            <div className="h-6 bg-gray-200 rounded w-20 animate-pulse"></div>
                           </div>
-                          <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900">
-                              {order.orderNumber}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {order.customer.email}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <StatusIndicator status={order.status} type="order" />
-                        </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : stats.recentOrders.length > 0 ? (
+                      <div className="space-y-4">
+                        {stats.recentOrders.map((order: any) => (
+                          <div
+                            key={order.id}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-gray-600">
+                                  #
+                                </span>
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {order.orderNumber}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {order.customer.email}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <StatusIndicator
+                                status={order.status}
+                                type="order"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-4">
+                        No orders found
+                      </p>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-4">
-                    No orders found
-                  </p>
-                )}
-              </div>
-            </div>
+                </div>
 
-            {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Actions</h2>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  <button
-                    onClick={() => router.push("/admin/users")}
-                    className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
-                  >
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-blue-600 mr-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                {/* Quick Actions */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-gray-200">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                      Actions
+                    </h2>
+                  </div>
+                  <div className="p-3 sm:p-4 md:p-6">
+                    <div className="space-y-3 sm:space-y-4">
+                      <button
+                        onClick={() => router.push("/admin/users")}
+                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                        />
-                      </svg>
-                      <div>
-                        <p className="text-sm font-medium text-blue-900">
-                          Manage Users
-                        </p>
-                        <p className="text-xs text-blue-600">
-                          View and manage user accounts
-                        </p>
-                      </div>
-                    </div>
-                  </button>
+                        <div className="flex items-center">
+                          <svg
+                            className="w-5 h-5 text-blue-600 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                            />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-blue-900">
+                              Manage Users
+                            </p>
+                            <p className="text-xs text-blue-600">
+                              View and manage user accounts
+                            </p>
+                          </div>
+                        </div>
+                      </button>
 
-                  <button
-                    onClick={() => router.push("/admin/products")}
-                    className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200"
-                  >
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-green-600 mr-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                      <button
+                        onClick={() => router.push("/admin/products")}
+                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                        />
-                      </svg>
-                      <div>
-                        <p className="text-sm font-medium text-green-900">
-                          Manage Products
-                        </p>
-                        <p className="text-xs text-green-600">
-                          Add or edit products
-                        </p>
-                      </div>
-                    </div>
-                  </button>
+                        <div className="flex items-center">
+                          <svg
+                            className="w-5 h-5 text-green-600 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-green-900">
+                              Manage Products
+                            </p>
+                            <p className="text-xs text-green-600">
+                              Add or edit products
+                            </p>
+                          </div>
+                        </div>
+                      </button>
 
-                  <button
-                    onClick={() => router.push("/admin/orders")}
-                    className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors duration-200"
-                  >
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-purple-600 mr-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                      <button
+                        onClick={() => router.push("/admin/orders")}
+                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors duration-200"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                      <div>
-                        <p className="text-sm font-medium text-purple-900">
-                          Manage Orders
-                        </p>
-                        <p className="text-xs text-purple-600">
-                          View and update order status
-                        </p>
-                      </div>
-                    </div>
-                  </button>
+                        <div className="flex items-center">
+                          <svg
+                            className="w-5 h-5 text-purple-600 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-purple-900">
+                              Manage Orders
+                            </p>
+                            <p className="text-xs text-purple-600">
+                              View and update order status
+                            </p>
+                          </div>
+                        </div>
+                      </button>
 
-                  <button className="w-full text-left px-4 py-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors duration-200">
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-orange-600 mr-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <div>
-                        <p className="text-sm font-medium text-orange-900">
-                          System Settings
-                        </p>
-                        <p className="text-xs text-orange-600">
-                          Configure system preferences
-                        </p>
-                      </div>
+                      <button className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors duration-200">
+                        <div className="flex items-center">
+                          <svg
+                            className="w-5 h-5 text-orange-600 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-orange-900">
+                              System Settings
+                            </p>
+                            <p className="text-xs text-orange-600">
+                              Configure system preferences
+                            </p>
+                          </div>
+                        </div>
+                      </button>
                     </div>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
       <Footer />
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }
