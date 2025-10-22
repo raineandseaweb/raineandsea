@@ -3,6 +3,7 @@ import { withSecureAdmin } from "@/lib/security/security-middleware";
 import formidable from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
+import os from "os";
 import sharp from "sharp";
 
 export const config = {
@@ -18,13 +19,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
   }
 
   try {
+    // Use /tmp directory for Vercel serverless environment
+    const uploadDir = process.env.VERCEL ? "/tmp" : os.tmpdir();
+
+    // Ensure directory exists
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
     const form = formidable({
       maxFileSize: 10 * 1024 * 1024, // 10MB limit
       filter: ({ mimetype }) => {
         return mimetype?.startsWith("image/") || false;
       },
-      // For serverless environments, keep files in memory instead of writing to disk
       keepExtensions: true,
+      uploadDir,
     });
 
     const [fields, files] = await form.parse(req);
@@ -85,9 +94,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
     });
   } catch (error) {
     console.error("Image upload error:", error);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack"
+    );
     return res.status(500).json({
       error: "Failed to upload image",
       details: error instanceof Error ? error.message : String(error),
+      isVercel: !!process.env.VERCEL,
     });
   }
 }
