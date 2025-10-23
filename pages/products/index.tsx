@@ -100,6 +100,7 @@ function ProductsPageContent() {
       setCurrentPage(1);
       setProducts([]); // Reset products for new search
       setHasMore(true);
+      setTotalCount(0); // Reset total count for new search
     };
 
     window.addEventListener(
@@ -164,11 +165,12 @@ function ProductsPageContent() {
         if (data.category) {
           setCategory(data.category);
         }
+        // Only update totalCount on initial load to prevent it from changing during infinite scroll
+        setTotalCount(data.pagination.totalCount);
       } else {
         setProducts((prev) => [...prev, ...data.data]);
       }
 
-      setTotalCount(data.pagination.totalCount);
       setHasMore(data.pagination.hasNext);
     } catch (err) {
       setError("Failed to load products");
