@@ -8,13 +8,30 @@ import { useEffect, useState } from "react";
  *   const { currentTheme, isDark, setTheme, toggleDarkMode } = useTheme();
  */
 export function useTheme() {
-  const [currentTheme, setCurrentTheme] = useState<ThemeName>("default");
-  const [isDark, setIsDark] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
+    // Initialize from localStorage if available (SSR-safe)
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") || "default") as ThemeName;
+    }
+    return "default";
+  });
+  const [isDark, setIsDark] = useState(() => {
+    // Initialize from localStorage if available (SSR-safe)
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("colorMode") === "dark";
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Initialize theme on mount
-    setCurrentTheme(theme.getTheme());
-    setIsDark(theme.isDarkMode());
+    // Read from localStorage again to ensure we have the latest values
+    // This handles cases where _app.tsx might have updated localStorage
+    const savedTheme = (localStorage.getItem("theme") ||
+      "default") as ThemeName;
+    const savedColorMode = localStorage.getItem("colorMode") === "dark";
+
+    setCurrentTheme(savedTheme);
+    setIsDark(savedColorMode);
 
     // Listen for system preference changes
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
