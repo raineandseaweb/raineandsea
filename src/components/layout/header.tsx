@@ -358,7 +358,13 @@ export function Header() {
                     {/* Dropdown Menu */}
                     <>
                       {/* Invisible hover buffer to prevent accidental closing */}
-                      <div className="absolute right-0 top-full w-64 h-4" />
+                      <div
+                        className={`absolute right-0 top-full h-6 w-64 ${
+                          isUserDropdownOpen
+                            ? "pointer-events-auto"
+                            : "pointer-events-none"
+                        }`}
+                      />
                       <div
                         className={`absolute right-0 top-full mt-2 w-64 bg-card border border-border rounded-xl shadow-lg overflow-visible transition-all duration-200 z-[55] ${
                           isUserDropdownOpen
