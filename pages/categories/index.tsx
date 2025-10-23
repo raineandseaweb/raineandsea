@@ -49,12 +49,12 @@ export default function CategoriesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <main className="flex-1 flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading categories...</p>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading categories...</p>
           </div>
         </main>
         <Footer />
@@ -63,22 +63,22 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 sm:mb-4">
               Product Categories
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Browse our products by category
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
-              <p className="text-sm sm:text-base text-red-600">{error}</p>
+            <div className="bg-accent border border-border rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
+              <p className="text-sm sm:text-base text-destructive">{error}</p>
             </div>
           )}
 
@@ -91,7 +91,7 @@ export default function CategoriesPage() {
             </div>
           ) : (
             <div className="text-center py-16">
-              <div className="text-gray-400 mb-6">
+              <div className="text-muted-foreground mb-6">
                 <svg
                   className="w-20 h-20 mx-auto"
                   fill="none"
@@ -106,10 +106,10 @@ export default function CategoriesPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-foreground mb-3">
                 No categories found
               </h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Categories will appear here once they are added to the system.
               </p>
             </div>
@@ -117,24 +117,24 @@ export default function CategoriesPage() {
 
           {/* Call to Action */}
           <div className="mt-12 sm:mt-16 text-center">
-            <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200/50">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+            <div className="bg-card rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
                 Can&apos;t find what you&apos;re looking for?
               </h2>
-              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                 Browse all our products or use our search feature to find
                 exactly what you need.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Link
                   href="/products"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-xl font-medium hover:from-primary/90 hover:to-primary/70 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
                 >
                   Browse All Products
                 </Link>
                 <Link
                   href="/products"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-border text-foreground rounded-xl font-medium hover:bg-muted transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
                 >
                   Search Products
                 </Link>

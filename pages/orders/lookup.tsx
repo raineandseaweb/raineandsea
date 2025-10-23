@@ -121,44 +121,44 @@ export default function OrderLookupPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "received":
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-foreground";
       case "paid":
-        return "bg-green-100 text-green-800";
+        return "bg-accent text-accent-foreground";
       case "shipped":
-        return "bg-blue-100 text-blue-800";
+        return "bg-accent text-accent-foreground";
       case "completed":
-        return "bg-green-100 text-green-800";
+        return "bg-accent text-accent-foreground";
       case "cancelled":
-        return "bg-red-100 text-red-800";
+        return "bg-accent text-accent-foreground";
       case "refunded":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-accent text-accent-foreground";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-foreground";
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Order Lookup
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Enter your order number and email to view your order details
           </p>
         </div>
 
         {/* Lookup Form */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+        <div className="bg-card rounded-lg shadow-sm border p-6 mb-8">
           <form onSubmit={handleLookup} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="orderNumber"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-foreground mb-1"
                 >
                   Order Number
                 </label>
@@ -168,14 +168,14 @@ export default function OrderLookupPage() {
                   value={orderNumber}
                   onChange={(e) => setOrderNumber(e.target.value)}
                   placeholder="e.g., ORD-12345678-ABCD"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   disabled={loading}
                 />
               </div>
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-foreground mb-1"
                 >
                   Email Address
                 </label>
@@ -185,18 +185,18 @@ export default function OrderLookupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   disabled={loading}
                 />
               </div>
             </div>
 
-            {error && <div className="text-red-600 text-sm">{error}</div>}
+            {error && <div className="text-destructive text-sm">{error}</div>}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full md:w-auto px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Looking up..." : "Lookup Order"}
             </button>
@@ -205,18 +205,18 @@ export default function OrderLookupPage() {
 
         {/* Order Details */}
         {order && (
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="bg-card rounded-lg shadow-sm border p-6">
             {/* Order Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-foreground">
                   {order.orderNumber}
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   Placed on {new Date(order.created_at).toLocaleDateString()}
                 </p>
                 {order.is_guest_order && (
-                  <p className="text-xs text-blue-600 mt-1">Guest Order</p>
+                  <p className="text-xs text-primary mt-1">Guest Order</p>
                 )}
               </div>
               <div className="mt-2 sm:mt-0">
@@ -231,7 +231,7 @@ export default function OrderLookupPage() {
                   <div className="flex-shrink-0">
                     <Link href={`/products/${item.product_slug}`}>
                       {item.product_image ? (
-                        <div className="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden">
+                        <div className="relative w-16 h-16 bg-muted rounded-lg overflow-hidden">
                           <Image
                             src={item.product_image}
                             alt={item.product_title}
@@ -241,9 +241,9 @@ export default function OrderLookupPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-6 h-6 text-gray-400"
+                            className="w-6 h-6 text-muted-foreground"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -262,11 +262,11 @@ export default function OrderLookupPage() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/products/${item.product_slug}`}
-                      className="text-sm font-medium text-gray-900 hover:text-blue-600"
+                      className="text-sm font-medium text-foreground hover:text-primary"
                     >
                       {item.descriptive_title || item.product_title}
                     </Link>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       Quantity: {item.quantity} ×{" "}
                       {formatPrice(item.unit_amount, order.currency)} ={" "}
                       {formatPrice(
@@ -278,7 +278,7 @@ export default function OrderLookupPage() {
                     </p>
                     {item.selected_options &&
                       Object.keys(item.selected_options).length > 0 && (
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           Options:{" "}
                           {Object.entries(item.selected_options)
                             .map(([key, value]) => `${key}: ${value}`)
@@ -293,11 +293,11 @@ export default function OrderLookupPage() {
             {/* Shipping Address */}
             {order.shippingAddress && (
               <div className="border-t pt-4 mb-4">
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                <div className="bg-muted border border-border rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-foreground mb-2">
                     Shipping Address
                   </h4>
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm text-foreground">
                     <p className="font-medium">{order.shippingAddress.name}</p>
                     <p>{order.shippingAddress.line1}</p>
                     {order.shippingAddress.line2 && (
@@ -317,13 +317,13 @@ export default function OrderLookupPage() {
             {/* Shipping Information */}
             {order.status === "shipped" && order.tracking_number && (
               <div className="border-t pt-4 mb-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-blue-900 mb-2">
+                <div className="bg-accent border border-border rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-accent-foreground mb-2">
                     Tracking Information
                   </h4>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-blue-800">
+                      <span className="text-sm text-accent-foreground">
                         <strong>Tracking Number:</strong>{" "}
                         {formatTrackingNumber(
                           order.tracking_number,
@@ -345,12 +345,12 @@ export default function OrderLookupPage() {
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:text-blue-800 underline"
+                        className="text-sm text-primary hover:text-accent-foreground underline"
                       >
                         Track Package
                       </a>
                     </div>
-                    <div className="text-sm text-blue-800">
+                    <div className="text-sm text-accent-foreground">
                       <strong>Shipping Provider:</strong>{" "}
                       {getProviderDisplayName(
                         (order.shipping_provider as
@@ -361,7 +361,7 @@ export default function OrderLookupPage() {
                       )}
                     </div>
                     {order.shipped_at && (
-                      <div className="text-sm text-blue-800">
+                      <div className="text-sm text-accent-foreground">
                         <strong>Shipped:</strong>{" "}
                         {new Date(order.shipped_at).toLocaleDateString()}
                       </div>
@@ -374,10 +374,10 @@ export default function OrderLookupPage() {
             {/* Order Total */}
             <div className="border-t pt-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-foreground">
                   Total: {formatPrice(order.total, order.currency)}
                 </span>
-                <div className="text-right text-sm text-gray-600">
+                <div className="text-right text-sm text-muted-foreground">
                   <p>Subtotal: {formatPrice(order.subtotal, order.currency)}</p>
                   <p>Tax: {formatPrice(order.tax, order.currency)}</p>
                   <p>
@@ -393,10 +393,10 @@ export default function OrderLookupPage() {
         )}
 
         {/* Help Text */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-muted-foreground">
           <p>
             Can't find your order?{" "}
-            <Link href="/contact" className="text-blue-600 hover:text-blue-700">
+            <Link href="/contact" className="text-primary hover:text-primary">
               Contact support
             </Link>
           </p>

@@ -90,9 +90,9 @@ export function ProductImageCarousel({
   if (sortedImages.length === 0) {
     return (
       <div
-        className={`aspect-square bg-gray-100 rounded-lg overflow-hidden ${className}`}
+        className={`aspect-square bg-muted rounded-lg overflow-hidden ${className}`}
       >
-        <div className="w-full h-full flex items-center justify-center text-gray-400">
+        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
           <svg
             className="w-24 h-24"
             fill="none"
@@ -114,10 +114,10 @@ export function ProductImageCarousel({
   return (
     <div className={`space-y-3 sm:space-y-4 ${className}`}>
       {/* Main Image */}
-      <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group">
+      <div className="relative aspect-square bg-muted rounded-lg overflow-hidden group border border-border">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-primary"></div>
           </div>
         )}
 
@@ -135,7 +135,7 @@ export function ProductImageCarousel({
           <>
             <button
               onClick={handlePrevious}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-primary-foreground p-1.5 sm:p-2 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
               aria-label="Previous image"
             >
               <svg
@@ -154,7 +154,7 @@ export function ProductImageCarousel({
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-primary-foreground p-1.5 sm:p-2 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
               aria-label="Next image"
             >
               <svg
@@ -176,7 +176,7 @@ export function ProductImageCarousel({
 
         {/* Image Counter */}
         {sortedImages.length > 1 && (
-          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/50 text-white px-2 py-1 rounded text-xs sm:text-sm">
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/50 text-primary-foreground px-2 py-1 rounded text-xs sm:text-sm">
             {selectedIndex + 1} / {sortedImages.length}
           </div>
         )}
@@ -194,8 +194,8 @@ export function ProductImageCarousel({
               onClick={() => handleThumbnailClick(index)}
               className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border-2 transition-all ${
                 selectedIndex === index
-                  ? "border-blue-500 ring-2 ring-blue-200"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-blue-500 ring-2 ring-primary/20"
+                  : "border-border hover:border-border"
               }`}
             >
               <Image

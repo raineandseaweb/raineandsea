@@ -119,10 +119,10 @@ export function StockNotificationSignup({
 
   if (isCheckingSubscription) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-4">
+      <div className="bg-muted border border-border rounded-lg p-4 mt-4">
         <div className="flex items-center">
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-          <p className="text-gray-600 text-sm">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+          <p className="text-muted-foreground text-sm">
             Checking subscription status...
           </p>
         </div>
@@ -132,10 +132,10 @@ export function StockNotificationSignup({
 
   if (isSubmitted || (isAlreadySubscribed && !wasAlreadyNotified)) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
+      <div className="bg-accent border border-border rounded-lg p-4 mt-4">
         <div className="flex items-center">
           <svg
-            className="w-5 h-5 text-green-600 mr-2"
+            className="w-5 h-5 text-primary mr-2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -147,13 +147,13 @@ export function StockNotificationSignup({
               d="M5 13l4 4L19 7"
             />
           </svg>
-          <p className="text-green-800 font-medium">
+          <p className="text-accent-foreground font-medium">
             {isAlreadySubscribed
               ? "You're signed up!"
               : "You're signed up for stock notifications!"}
           </p>
         </div>
-        <p className="text-green-700 text-sm mt-1">
+        <p className="text-primary text-sm mt-1">
           We'll email you when {productTitle} is back in stock.
         </p>
       </div>
@@ -161,10 +161,10 @@ export function StockNotificationSignup({
   }
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+    <div className="bg-accent border border-border rounded-lg p-4 mt-4">
       <div className="flex items-start">
         <svg
-          className="w-5 h-5 text-blue-600 mr-2 mt-0.5"
+          className="w-5 h-5 text-primary mr-2 mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -177,8 +177,8 @@ export function StockNotificationSignup({
           />
         </svg>
         <div className="flex-1">
-          <h3 className="text-blue-900 font-medium text-sm">Out of Stock</h3>
-          <p className="text-blue-800 text-sm mt-1">
+          <h3 className="text-accent-foreground font-medium text-sm">Out of Stock</h3>
+          <p className="text-accent-foreground text-sm mt-1">
             This item is currently out of stock. Sign up to be notified when
             it's back!
           </p>
@@ -190,18 +190,18 @@ export function StockNotificationSignup({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-1 px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 disabled={isSubmitting}
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Signing up..." : "Notify Me"}
               </button>
             </div>
-            {error && <p className="text-red-600 text-xs mt-2">{error}</p>}
+            {error && <p className="text-destructive text-xs mt-2">{error}</p>}
           </form>
         </div>
       </div>

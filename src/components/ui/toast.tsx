@@ -1,5 +1,6 @@
 "use client";
 
+import { theme } from "@/lib/theme";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface Toast {
@@ -91,8 +92,7 @@ function ToastItem({
   };
 
   const getToastStyles = () => {
-    const baseStyles =
-      "relative max-w-sm w-full bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl border border-gray-200/50 overflow-hidden transition-all duration-300 ease-out";
+    const baseStyles = `relative max-w-sm w-full ${theme.surface.elevated}/95 backdrop-blur-sm shadow-xl rounded-2xl ${theme.border.muted} overflow-hidden transition-all duration-300 ease-out`;
 
     if (isExiting) {
       return `${baseStyles} translate-x-full opacity-0 scale-95`;
@@ -108,20 +108,20 @@ function ToastItem({
   const getAccentColor = () => {
     switch (toast.type) {
       case "success":
-        return "bg-gradient-to-r from-emerald-500 to-green-500";
+        return "bg-gradient-to-r from-primary to-primary/80 dark:from-primary/80 dark:to-primary/80";
       case "error":
-        return "bg-gradient-to-r from-red-500 to-rose-500";
+        return "bg-gradient-to-r from-destructive to-destructive/80 dark:from-destructive/80 dark:to-destructive/80";
       case "warning":
-        return "bg-gradient-to-r from-amber-500 to-orange-500";
+        return "bg-gradient-to-r from-primary to-primary/80 dark:from-primary/80 dark:to-primary/80";
       case "info":
-        return "bg-gradient-to-r from-blue-500 to-indigo-500";
+        return "bg-gradient-to-r from-primary to-primary/80 dark:from-primary dark:to-primary/80";
       default:
-        return "bg-gradient-to-r from-gray-500 to-gray-600";
+        return "bg-gradient-to-r from-muted-foreground to-muted-foreground/80 dark:from-muted-foreground/80 dark:to-muted-foreground/60";
     }
   };
 
   const getIcon = () => {
-    const iconClass = "h-5 w-5 text-white";
+    const iconClass = "h-5 w-5 text-primary-foreground";
 
     switch (toast.type) {
       case "success":
@@ -196,7 +196,7 @@ function ToastItem({
   return (
     <div className={getToastStyles()}>
       {/* Progress bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200/30">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-muted/30">
         <div className={`h-full ${getAccentColor()} animate-pulse`} />
       </div>
 
@@ -211,11 +211,11 @@ function ToastItem({
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 leading-tight">
+            <p className="text-sm font-semibold text-foreground leading-tight">
               {toast.title}
             </p>
             {toast.description && (
-              <p className="mt-1 text-sm text-gray-600 leading-relaxed">
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                 {toast.description}
               </p>
             )}
@@ -223,11 +223,11 @@ function ToastItem({
 
           {/* Close button */}
           <button
-            className="flex-shrink-0 p-1 rounded-full hover:bg-gray-100 transition-colors duration-150"
+            className="flex-shrink-0 p-1 rounded-full hover:bg-muted transition-colors duration-150"
             onClick={handleRemove}
           >
             <svg
-              className="h-4 w-4 text-gray-400 hover:text-gray-600"
+              className="h-4 w-4 text-muted-foreground hover:text-foreground"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

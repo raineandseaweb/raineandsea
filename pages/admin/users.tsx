@@ -250,17 +250,17 @@ export default function AdminUsers() {
 
     return (
       <th
-        className={`px-6 py-3 ${alignClass} text-xs font-medium text-gray-500 uppercase tracking-wider`}
+        className={`px-6 py-3 ${alignClass} text-xs font-medium text-muted-foreground uppercase tracking-wider`}
       >
         <button
           onClick={() => handleSort(column)}
-          className={`flex items-center space-x-1 hover:text-gray-700 transition-colors ${
+          className={`flex items-center space-x-1 hover:text-foreground transition-colors ${
             align === "right" ? "ml-auto" : ""
           }`}
         >
           <span>{children}</span>
           {isSorted && (
-            <span className="text-blue-600">
+            <span className="text-primary">
               {sortOrder === "asc" ? "↑" : "↓"}
             </span>
           )}
@@ -271,13 +271,13 @@ export default function AdminUsers() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <main className="flex-1">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading...</p>
             </div>
           </div>
         </main>
@@ -294,17 +294,17 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Breadcrumb */}
           <nav className="mb-6">
-            <ol className="flex items-center space-x-2 text-sm text-gray-500">
+            <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
               <li>
                 <button
                   onClick={() => router.push("/admin")}
-                  className="hover:text-gray-700"
+                  className="hover:text-foreground"
                 >
                   Admin
                 </button>
@@ -321,7 +321,7 @@ export default function AdminUsers() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-gray-900 font-medium">Users</span>
+                <span className="text-foreground font-medium">Users</span>
               </li>
             </ol>
           </nav>
@@ -330,16 +330,16 @@ export default function AdminUsers() {
           <div className="mb-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-foreground">
                   User Management
                 </h1>
-                <p className="text-gray-600 mt-2">
+                <p className="text-muted-foreground mt-2">
                   Manage user accounts and permissions
                 </p>
               </div>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-colors duration-200"
               >
                 Add User
               </button>
@@ -354,64 +354,66 @@ export default function AdminUsers() {
           />
 
           {/* Users Table */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">All Users</h2>
+          <div className="bg-card rounded-lg shadow-sm border border-border">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-semibold text-foreground">
+                All Users
+              </h2>
             </div>
             <div className="overflow-x-auto">
               {loadingUsers ? (
                 <div className="p-8 text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading users...</p>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading users...</p>
                 </div>
               ) : users.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-600">No users found</p>
+                  <p className="text-muted-foreground">No users found</p>
                   <button
                     onClick={handleResetFilters}
-                    className="mt-2 text-blue-600 hover:text-blue-700 font-medium"
+                    className="mt-2 text-primary hover:text-primary/80 font-medium"
                   >
                     Reset Filters
                   </button>
                 </div>
               ) : (
                 <>
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full divide-y divide-border">
+                    <thead className="bg-muted">
                       <tr>
                         <SortableHeader column="name">User</SortableHeader>
                         <SortableHeader column="role">Role</SortableHeader>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Status
                         </th>
                         <SortableHeader column="created_at" align="right">
                           Created
                         </SortableHeader>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-card divide-y divide-border">
                       {users.map((user) => (
-                        <tr key={user.id} className="hover:bg-gray-50">
+                        <tr key={user.id} className="hover:bg-muted">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-gray-600">
+                              <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-muted-foreground">
                                   {user.name
                                     ? user.name.charAt(0).toUpperCase()
                                     : user.email.charAt(0).toUpperCase()}
                                 </span>
                               </div>
                               <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">
+                                <div className="text-sm font-medium text-foreground">
                                   {user.name || "No name"}
                                 </div>
-                                <div className="text-sm text-gray-500">
+                                <div className="text-sm text-muted-foreground">
                                   {user.email}
                                 </div>
-                                <div className="text-xs text-gray-400 font-mono">
+                                <div className="text-xs text-muted-foreground font-mono">
                                   {user.id}
                                 </div>
                               </div>
@@ -428,14 +430,14 @@ export default function AdminUsers() {
                               type="user"
                             />
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-muted-foreground">
                             {new Date(user.created_at).toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex items-center justify-end space-x-2">
                               <button
                                 onClick={() => openEditModal(user)}
-                                className="text-blue-600 hover:text-blue-900"
+                                className="text-primary hover:text-primary/80"
                               >
                                 Edit
                               </button>
@@ -443,7 +445,7 @@ export default function AdminUsers() {
                                 user.id !== currentUser?.id && (
                                   <button
                                     onClick={() => handleDeleteUser(user.id)}
-                                    className="text-red-600 hover:text-red-900"
+                                    className="text-destructive hover:text-destructive/80"
                                   >
                                     Delete
                                   </button>
@@ -456,9 +458,9 @@ export default function AdminUsers() {
                   </table>
 
                   {/* Pagination */}
-                  <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                  <div className="px-6 py-4 border-t border-border flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-muted-foreground">
                         Showing {(pagination.page - 1) * pagination.limit + 1}{" "}
                         to{" "}
                         {Math.min(
@@ -468,7 +470,7 @@ export default function AdminUsers() {
                         of {pagination.total} users
                       </div>
                       <div className="flex items-center space-x-2">
-                        <label className="text-sm text-gray-600">
+                        <label className="text-sm text-muted-foreground">
                           Per page:
                         </label>
                         <select
@@ -480,7 +482,7 @@ export default function AdminUsers() {
                               page: 1,
                             })
                           }
-                          className="px-2 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="px-2 py-1 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                           <option value="10">10</option>
                           <option value="25">25</option>
@@ -499,7 +501,7 @@ export default function AdminUsers() {
                             })
                           }
                           disabled={pagination.page === 1}
-                          className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-3 py-1 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Previous
                         </button>
@@ -531,8 +533,8 @@ export default function AdminUsers() {
                                   }
                                   className={`px-3 py-1 border rounded-lg ${
                                     pagination.page === pageNum
-                                      ? "bg-blue-600 text-white border-blue-600"
-                                      : "border-gray-300 hover:bg-gray-50"
+                                      ? "bg-primary text-primary-foreground border-primary"
+                                      : "border-border hover:bg-muted"
                                   }`}
                                 >
                                   {pageNum}
@@ -549,7 +551,7 @@ export default function AdminUsers() {
                             })
                           }
                           disabled={pagination.page === pagination.totalPages}
-                          className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-3 py-1 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Next
                         </button>
@@ -567,14 +569,14 @@ export default function AdminUsers() {
       {/* Create User Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-card rounded-lg max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Create New User
             </h3>
             <form onSubmit={handleCreateUser}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Name
                   </label>
                   <input
@@ -583,12 +585,12 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Email
                   </label>
                   <input
@@ -597,12 +599,12 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Password
                   </label>
                   <input
@@ -611,12 +613,12 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Role
                   </label>
                   <select
@@ -624,7 +626,7 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, role: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
@@ -635,13 +637,13 @@ export default function AdminUsers() {
                 <button
                   type="button"
                   onClick={closeModals}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                 >
                   Create User
                 </button>
@@ -654,14 +656,14 @@ export default function AdminUsers() {
       {/* Edit User Modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-card rounded-lg max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Edit User
             </h3>
             <form onSubmit={handleEditUser}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Name
                   </label>
                   <input
@@ -670,12 +672,12 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Email
                   </label>
                   <input
@@ -684,12 +686,12 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     Role
                   </label>
                   <select
@@ -697,7 +699,7 @@ export default function AdminUsers() {
                     onChange={(e) =>
                       setFormData({ ...formData, role: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
@@ -708,13 +710,13 @@ export default function AdminUsers() {
                 <button
                   type="button"
                   onClick={closeModals}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                 >
                   Update User
                 </button>

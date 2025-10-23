@@ -307,15 +307,15 @@ export function AddressManagementModal({
           onClick={onClose}
         />
 
-        <div className="relative bg-white w-full h-[95vh] sm:h-auto sm:max-h-[90vh] sm:rounded-lg shadow-xl sm:max-w-4xl flex flex-col">
+        <div className="relative bg-card w-full h-[95vh] sm:h-auto sm:max-h-[90vh] sm:rounded-lg shadow-xl sm:max-w-4xl flex flex-col">
           {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex justify-between items-center flex-shrink-0 z-10">
-            <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
+          <div className="sticky top-0 bg-card border-b border-border px-4 sm:px-6 py-4 flex justify-between items-center flex-shrink-0 z-10">
+            <h2 className="text-lg sm:text-2xl font-bold text-foreground">
               Manage Addresses
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-2 -mr-2"
+              className="text-muted-foreground hover:text-foreground transition-colors p-2 -mr-2"
             >
               <svg
                 className="w-6 h-6"
@@ -336,12 +336,12 @@ export function AddressManagementModal({
           {/* Mobile: Show form overlay, Desktop: Show side-by-side */}
           {isAdding || editingAddress ? (
             /* Mobile Form Overlay */
-            <div className="sm:hidden absolute inset-0 bg-white z-20 flex flex-col">
+            <div className="sm:hidden absolute inset-0 bg-card z-20 flex flex-col">
               {/* Mobile Form Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 flex justify-between items-center flex-shrink-0">
+              <div className="sticky top-0 bg-card border-b border-border px-4 py-4 flex justify-between items-center flex-shrink-0">
                 <button
                   onClick={resetForm}
-                  className="text-gray-400 hover:text-gray-600 p-2"
+                  className="text-muted-foreground hover:text-foreground p-2"
                 >
                   <svg
                     className="w-6 h-6"
@@ -357,7 +357,7 @@ export function AddressManagementModal({
                     />
                   </svg>
                 </button>
-                <h3 className="text-lg font-medium text-gray-900">
+                <h3 className="text-lg font-medium text-foreground">
                   {editingAddress ? "Edit Address" : "Add Address"}
                 </h3>
                 <div className="w-10"></div>
@@ -367,7 +367,7 @@ export function AddressManagementModal({
               <div className="flex-1 overflow-y-auto p-4">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Full Name *
                     </label>
                     <input
@@ -379,16 +379,18 @@ export function AddressManagementModal({
                           name: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                      className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                       placeholder="Enter your full name"
                     />
                     {errors.name && (
-                      <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                      <p className="mt-1 text-sm text-destructive">
+                        {errors.name}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Address Line 1 *
                     </label>
                     <input
@@ -400,18 +402,18 @@ export function AddressManagementModal({
                           line1: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                      className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                       placeholder="Street address"
                     />
                     {errors.line1 && (
-                      <p className="mt-1 text-sm text-red-600">
+                      <p className="mt-1 text-sm text-destructive">
                         {errors.line1}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Address Line 2
                     </label>
                     <input
@@ -423,14 +425,14 @@ export function AddressManagementModal({
                           line2: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                      className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                       placeholder="Apartment, suite, etc."
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-foreground mb-2">
                         City *
                       </label>
                       <input
@@ -442,18 +444,18 @@ export function AddressManagementModal({
                             city: e.target.value,
                           }))
                         }
-                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                         placeholder="City"
                       />
                       {errors.city && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.city}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-foreground mb-2">
                         State *
                       </label>
                       <input
@@ -465,11 +467,11 @@ export function AddressManagementModal({
                             region: e.target.value,
                           }))
                         }
-                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                         placeholder="State"
                       />
                       {errors.region && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.region}
                         </p>
                       )}
@@ -478,7 +480,7 @@ export function AddressManagementModal({
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-foreground mb-2">
                         ZIP Code *
                       </label>
                       <input
@@ -490,18 +492,18 @@ export function AddressManagementModal({
                             postal_code: e.target.value,
                           }))
                         }
-                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                         placeholder="ZIP Code"
                       />
                       {errors.postal_code && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.postal_code}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-foreground mb-2">
                         Country *
                       </label>
                       <select
@@ -512,13 +514,13 @@ export function AddressManagementModal({
                             country: e.target.value,
                           }))
                         }
-                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                        className="w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base"
                       >
                         <option value="US">United States</option>
                         <option value="CA">Canada</option>
                       </select>
                       {errors.country && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.country}
                         </p>
                       )}
@@ -536,11 +538,11 @@ export function AddressManagementModal({
                           is_default: e.target.checked,
                         }))
                       }
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-primary focus:ring-primary border-border rounded"
                     />
                     <label
                       htmlFor="is_default"
-                      className="ml-2 text-sm text-gray-700"
+                      className="ml-2 text-sm text-foreground"
                     >
                       Set as default address
                     </label>
@@ -549,18 +551,18 @@ export function AddressManagementModal({
               </div>
 
               {/* Mobile Form Footer */}
-              <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-4 flex gap-3 flex-shrink-0">
+              <div className="sticky bottom-0 bg-card border-t border-border px-4 py-4 flex gap-3 flex-shrink-0">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
+                  className="flex-1 px-4 py-3 border border-border text-foreground rounded-md hover:bg-muted transition-colors font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                  className="flex-1 bg-primary text-primary-foreground px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-medium"
                 >
                   {editingAddress ? "Update Address" : "Add Address"}
                 </button>
@@ -575,18 +577,18 @@ export function AddressManagementModal({
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="bg-white rounded-lg border border-gray-200 p-4 animate-pulse"
+                      className="bg-card rounded-lg border border-border p-4 animate-pulse"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                          <div className="h-3 bg-gray-200 rounded w-1/2 mb-1"></div>
-                          <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                          <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                          <div className="h-3 bg-muted rounded w-1/2 mb-1"></div>
+                          <div className="h-3 bg-muted rounded w-2/3"></div>
                         </div>
                         <div className="flex space-x-2 ml-4">
-                          <div className="h-8 w-8 bg-gray-200 rounded"></div>
-                          <div className="h-8 w-8 bg-gray-200 rounded"></div>
-                          <div className="h-8 w-8 bg-gray-200 rounded"></div>
+                          <div className="h-8 w-8 bg-muted rounded"></div>
+                          <div className="h-8 w-8 bg-muted rounded"></div>
+                          <div className="h-8 w-8 bg-muted rounded"></div>
                         </div>
                       </div>
                     </div>
@@ -594,7 +596,7 @@ export function AddressManagementModal({
                 </div>
               ) : addresses.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     <svg
                       className="w-16 h-16 mx-auto"
                       fill="none"
@@ -615,10 +617,10 @@ export function AddressManagementModal({
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-lg font-medium text-foreground mb-2">
                     No addresses saved
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-muted-foreground mb-6">
                     Add your first address to get started
                   </p>
                   <button
@@ -626,7 +628,7 @@ export function AddressManagementModal({
                       resetForm();
                       setIsAdding(true);
                     }}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
                   >
                     Add Address
                   </button>
@@ -634,7 +636,7 @@ export function AddressManagementModal({
               ) : (
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <h3 className="text-lg font-medium text-foreground">
                       Saved Addresses
                     </h3>
                     <button
@@ -642,7 +644,7 @@ export function AddressManagementModal({
                         resetForm();
                         setIsAdding(true);
                       }}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium"
                     >
                       Add New
                     </button>
@@ -652,33 +654,33 @@ export function AddressManagementModal({
                     {addresses.map((address, index) => (
                       <div
                         key={address.id}
-                        className="bg-white border border-gray-200 rounded-lg p-4"
+                        className="bg-card border border-border rounded-lg p-4"
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-medium text-gray-900">
+                              <h4 className="font-medium text-foreground">
                                 {address.name || "Address"}
                               </h4>
                               {address.is_default && (
-                                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                                <span className="bg-accent text-accent-foreground text-xs px-2 py-1 rounded-full">
                                   Default
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-muted-foreground">
                               {address.line1}
                             </p>
                             {address.line2 && (
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-muted-foreground">
                                 {address.line2}
                               </p>
                             )}
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-muted-foreground">
                               {address.city}, {address.region}{" "}
                               {address.postal_code}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-muted-foreground">
                               {address.country}
                             </p>
                           </div>
@@ -687,21 +689,21 @@ export function AddressManagementModal({
                         <div className="flex gap-2">
                           <button
                             onClick={() => setEditingAddress(address)}
-                            className="flex-1 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors touch-manipulation active:bg-gray-300"
+                            className="flex-1 px-3 py-2 text-sm font-medium text-foreground bg-muted rounded-lg hover:bg-muted transition-colors touch-manipulation active:bg-muted/60"
                           >
                             Edit
                           </button>
                           {!address.is_default && (
                             <button
                               onClick={() => handleSetDefault(address.id)}
-                              className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors touch-manipulation active:bg-blue-200"
+                              className="flex-1 px-3 py-2 text-sm font-medium text-primary bg-accent rounded-lg hover:bg-accent transition-colors touch-manipulation active:bg-accent/60"
                             >
                               Set Default
                             </button>
                           )}
                           <button
                             onClick={() => handleDelete(address.id)}
-                            className="flex-1 px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors touch-manipulation active:bg-red-200"
+                            className="flex-1 px-3 py-2 text-sm font-medium text-destructive bg-accent rounded-lg hover:bg-destructive/10 transition-colors touch-manipulation active:bg-destructive/20"
                           >
                             Delete
                           </button>
@@ -724,21 +726,21 @@ export function AddressManagementModal({
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="bg-white rounded-lg border border-gray-200 p-4 animate-pulse"
+                      className="bg-card rounded-lg border border-border p-4 animate-pulse"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <div className="h-6 w-6 bg-gray-200 rounded"></div>
+                          <div className="h-6 w-6 bg-muted rounded"></div>
                           <div className="flex-1">
-                            <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-                            <div className="h-3 bg-gray-200 rounded w-1/2 mb-1"></div>
-                            <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                            <div className="h-4 bg-muted rounded w-1/3 mb-2"></div>
+                            <div className="h-3 bg-muted rounded w-1/2 mb-1"></div>
+                            <div className="h-3 bg-muted rounded w-2/3"></div>
                           </div>
                         </div>
                         <div className="flex space-x-2">
-                          <div className="h-8 w-8 bg-gray-200 rounded"></div>
-                          <div className="h-8 w-8 bg-gray-200 rounded"></div>
-                          <div className="h-8 w-8 bg-gray-200 rounded"></div>
+                          <div className="h-8 w-8 bg-muted rounded"></div>
+                          <div className="h-8 w-8 bg-muted rounded"></div>
+                          <div className="h-8 w-8 bg-muted rounded"></div>
                         </div>
                       </div>
                     </div>
@@ -746,7 +748,7 @@ export function AddressManagementModal({
                 </div>
               ) : addresses.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     <svg
                       className="w-16 h-16 mx-auto"
                       fill="none"
@@ -767,10 +769,10 @@ export function AddressManagementModal({
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-lg font-medium text-foreground mb-2">
                     No addresses saved
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-muted-foreground mb-4">
                     Add your first address to get started
                   </p>
                   <button
@@ -778,7 +780,7 @@ export function AddressManagementModal({
                       resetForm();
                       setIsAdding(true);
                     }}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors font-medium"
                   >
                     Add Address
                   </button>
@@ -786,7 +788,7 @@ export function AddressManagementModal({
               ) : (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <h3 className="text-lg font-medium text-foreground">
                       Saved Addresses
                     </h3>
                     <button
@@ -794,7 +796,7 @@ export function AddressManagementModal({
                         resetForm();
                         setIsAdding(true);
                       }}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                      className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
                     >
                       Add New Address
                     </button>
@@ -830,11 +832,11 @@ export function AddressManagementModal({
 
             {/* Desktop Address Form */}
             {(isAdding || editingAddress) && (
-              <div className="w-96 border-l border-gray-200 p-6 overflow-y-auto bg-gray-50">
+              <div className="w-96 border-l border-border p-6 overflow-y-auto bg-muted">
                 <div className="flex items-center mb-4">
                   <button
                     onClick={resetForm}
-                    className="text-gray-400 hover:text-gray-600 mr-3 p-1"
+                    className="text-muted-foreground hover:text-foreground mr-3 p-1"
                   >
                     <svg
                       className="w-5 h-5"
@@ -850,14 +852,14 @@ export function AddressManagementModal({
                       />
                     </svg>
                   </button>
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-foreground">
                     {editingAddress ? "Edit Address" : "Add New Address"}
                   </h3>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Full Name *
                     </label>
                     <input
@@ -869,18 +871,20 @@ export function AddressManagementModal({
                           name: e.target.value,
                         }))
                       }
-                      className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base ${
-                        errors.name ? "border-red-300" : "border-gray-300"
+                      className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base ${
+                        errors.name ? "border-destructive" : "border-border"
                       }`}
                       placeholder="Enter your full name"
                     />
                     {errors.name && (
-                      <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                      <p className="mt-1 text-sm text-destructive">
+                        {errors.name}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Address Line 1 *
                     </label>
                     <input
@@ -892,20 +896,20 @@ export function AddressManagementModal({
                           line1: e.target.value,
                         }))
                       }
-                      className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base ${
-                        errors.line1 ? "border-red-300" : "border-gray-300"
+                      className={`w-full px-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base ${
+                        errors.line1 ? "border-destructive" : "border-border"
                       }`}
                       placeholder="Street address"
                     />
                     {errors.line1 && (
-                      <p className="mt-1 text-sm text-red-600">
+                      <p className="mt-1 text-sm text-destructive">
                         {errors.line1}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       Address Line 2
                     </label>
                     <input
@@ -917,14 +921,14 @@ export function AddressManagementModal({
                           line2: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="Apartment, suite, etc."
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-foreground mb-1">
                         City *
                       </label>
                       <input
@@ -936,20 +940,20 @@ export function AddressManagementModal({
                             city: e.target.value,
                           }))
                         }
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.city ? "border-red-300" : "border-gray-300"
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                          errors.city ? "border-destructive" : "border-border"
                         }`}
                         placeholder="City"
                       />
                       {errors.city && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.city}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-foreground mb-1">
                         State *
                       </label>
                       <input
@@ -961,13 +965,13 @@ export function AddressManagementModal({
                             region: e.target.value,
                           }))
                         }
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.region ? "border-red-300" : "border-gray-300"
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                          errors.region ? "border-destructive" : "border-border"
                         }`}
                         placeholder="State"
                       />
                       {errors.region && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.region}
                         </p>
                       )}
@@ -976,7 +980,7 @@ export function AddressManagementModal({
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-foreground mb-1">
                         ZIP Code *
                       </label>
                       <input
@@ -988,22 +992,22 @@ export function AddressManagementModal({
                             postal_code: e.target.value,
                           }))
                         }
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                           errors.postal_code
-                            ? "border-red-300"
-                            : "border-gray-300"
+                            ? "border-destructive"
+                            : "border-border"
                         }`}
                         placeholder="ZIP Code"
                       />
                       {errors.postal_code && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.postal_code}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-foreground mb-1">
                         Country *
                       </label>
                       <select
@@ -1014,15 +1018,17 @@ export function AddressManagementModal({
                             country: e.target.value,
                           }))
                         }
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.country ? "border-red-300" : "border-gray-300"
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                          errors.country
+                            ? "border-destructive"
+                            : "border-border"
                         }`}
                       >
                         <option value="US">United States</option>
                         <option value="CA">Canada</option>
                       </select>
                       {errors.country && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-destructive">
                           {errors.country}
                         </p>
                       )}
@@ -1040,11 +1046,11 @@ export function AddressManagementModal({
                           is_default: e.target.checked,
                         }))
                       }
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-primary focus:ring-primary border-border rounded"
                     />
                     <label
                       htmlFor="is_default"
-                      className="ml-2 text-sm text-gray-700"
+                      className="ml-2 text-sm text-foreground"
                     >
                       Set as default address
                     </label>
@@ -1053,14 +1059,14 @@ export function AddressManagementModal({
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
-                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                      className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
                     >
                       {editingAddress ? "Update Address" : "Add Address"}
                     </button>
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 border border-border text-foreground rounded-md hover:bg-muted transition-colors"
                     >
                       Cancel
                     </button>
@@ -1072,7 +1078,7 @@ export function AddressManagementModal({
 
           {/* Footer actions - commit staged changes */}
           <div
-            className={`sticky bottom-0 bg-white border-t border-gray-200 px-4 py-4 flex justify-end space-x-3 flex-shrink-0 z-10 ${
+            className={`sticky bottom-0 bg-card border-t border-border px-4 py-4 flex justify-end space-x-3 flex-shrink-0 z-10 ${
               isAdding || editingAddress ? "sm:hidden" : ""
             }`}
           >
@@ -1088,7 +1094,7 @@ export function AddressManagementModal({
                 );
                 onClose();
               }}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted"
             >
               Cancel
             </button>
@@ -1243,7 +1249,7 @@ export function AddressManagementModal({
                   setIsSaving(false);
                 }
               }}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? "Saving..." : "Save"}
             </button>
@@ -1287,7 +1293,7 @@ function SortableAddressItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`border border-gray-200 rounded-lg bg-white shadow-sm ${
+      className={`border border-border rounded-lg bg-card shadow-sm ${
         isDragging ? "opacity-50" : ""
       }`}
     >
@@ -1296,7 +1302,7 @@ function SortableAddressItem({
         <div
           {...attributes}
           {...listeners}
-          className="w-8 flex items-center justify-center cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
+          className="w-8 flex items-center justify-center cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
           title="Drag to reorder"
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -1308,23 +1314,29 @@ function SortableAddressItem({
         <div className="flex items-center space-x-3 flex-1 p-4 min-w-0">
           <div className="text-left flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-medium text-gray-900 truncate">
+              <h4 className="font-medium text-foreground truncate">
                 {address.name || "Address"}
               </h4>
               {address.is_default && (
-                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">
+                <span className="bg-accent text-accent-foreground text-xs px-2 py-0.5 rounded-full">
                   Default
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-600 truncate">{address.line1}</p>
+            <p className="text-sm text-muted-foreground truncate">
+              {address.line1}
+            </p>
             {address.line2 && (
-              <p className="text-sm text-gray-600 truncate">{address.line2}</p>
+              <p className="text-sm text-muted-foreground truncate">
+                {address.line2}
+              </p>
             )}
-            <p className="text-sm text-gray-600 truncate">
+            <p className="text-sm text-muted-foreground truncate">
               {address.city}, {address.region} {address.postal_code}
             </p>
-            <p className="text-xs text-gray-500 truncate">{address.country}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {address.country}
+            </p>
           </div>
         </div>
 
@@ -1332,7 +1344,7 @@ function SortableAddressItem({
         <div className="flex items-center space-x-1 p-2">
           <button
             onClick={onEdit}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
             title="Edit address"
           >
             <svg
@@ -1352,7 +1364,7 @@ function SortableAddressItem({
           {!address.is_default && (
             <button
               onClick={onSetDefault}
-              className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+              className="p-1 text-muted-foreground hover:text-primary transition-colors"
               title="Set as default"
             >
               <svg
@@ -1372,7 +1384,7 @@ function SortableAddressItem({
           )}
           <button
             onClick={onDelete}
-            className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+            className="p-1 text-muted-foreground hover:text-destructive transition-colors"
             title="Delete address"
           >
             <svg

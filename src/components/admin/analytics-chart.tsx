@@ -1,3 +1,4 @@
+import { theme } from "@/lib/theme";
 import {
   Area,
   AreaChart,
@@ -52,24 +53,28 @@ export function AnalyticsChart({
   }));
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+    <div className={`${theme.card} p-3 sm:p-4 md:p-6`}>
       <div className="mb-3 sm:mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+        <h3
+          className={`text-base sm:text-lg font-semibold ${theme.text.primary}`}
+        >
           {title}
         </h3>
         <div className="mt-2 flex items-baseline gap-2 sm:gap-4">
-          <span className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <span
+            className={`text-2xl sm:text-3xl font-bold ${theme.text.primary}`}
+          >
             {formatValue(currentTotal)}
           </span>
           <span
             className={`text-xs sm:text-sm font-medium ${
-              isPositive ? "text-green-600" : "text-red-600"
+              isPositive ? theme.status.success.text : theme.status.error.text
             }`}
           >
             {isPositive ? "↑" : "↓"} {Math.abs(change).toFixed(1)}%
           </span>
         </div>
-        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+        <p className={`text-xs sm:text-sm ${theme.text.tertiary} mt-1`}>
           vs previous period
         </p>
       </div>
@@ -107,12 +112,12 @@ export function AnalyticsChart({
             <Tooltip
               contentStyle={{
                 backgroundColor: "white",
-                border: "1px solid #e5e7eb",
+                border: "1px solid rgb(229 231 235)",
                 borderRadius: "0.5rem",
                 padding: "0.5rem",
               }}
               formatter={(value: number) => formatValue(value)}
-              labelStyle={{ color: "#374151", fontWeight: 600 }}
+              labelStyle={{ color: "rgb(55 65 81)", fontWeight: 600 }}
             />
             <Area
               type="monotone"

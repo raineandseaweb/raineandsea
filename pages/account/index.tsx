@@ -22,8 +22,8 @@ export default function AccountPage() {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading...</p>
           </div>
         </main>
         <Footer />
@@ -41,60 +41,62 @@ export default function AccountPage() {
       <main className="flex-1">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">
+            <h1 className="text-3xl font-bold text-foreground mb-8">
               My Account
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-card rounded-lg shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   Account Information
                 </h2>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Name
                     </label>
-                    <p className="text-gray-900">
+                    <p className="text-foreground">
                       {user.name || "Not provided"}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Email
                     </label>
-                    <p className="text-gray-900">{user.email}</p>
+                    <p className="text-foreground">{user.email}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">
+                    <label className="text-sm font-medium text-muted-foreground">
                       User ID
                     </label>
-                    <p className="text-gray-900 font-mono text-sm">{user.id}</p>
+                    <p className="text-foreground font-mono text-sm">
+                      {user.id}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-card rounded-lg shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   Quick Actions
                 </h2>
                 <div className="space-y-3">
                   <button
                     onClick={() => router.push("/orders")}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                    className="w-full text-left px-4 py-2 text-foreground hover:bg-muted rounded-md transition-colors"
                   >
                     View Order History
                   </button>
                   <button
                     onClick={() => setIsAddressModalOpen(true)}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                    className="w-full text-left px-4 py-2 text-foreground hover:bg-muted rounded-md transition-colors"
                   >
                     Manage Addresses
                   </button>
-                  <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                  <button className="w-full text-left px-4 py-2 text-foreground hover:bg-muted rounded-md transition-colors">
                     Change Password
                   </button>
-                  <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                  <button className="w-full text-left px-4 py-2 text-foreground hover:bg-muted rounded-md transition-colors">
                     Account Settings
                   </button>
                 </div>

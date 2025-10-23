@@ -202,13 +202,13 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <main className="flex-1">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading...</p>
             </div>
           </div>
         </main>
@@ -222,29 +222,29 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
           {/* Header */}
           <div className="mb-4 sm:mb-6 md:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               Admin Dashboard
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+            <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
               Welcome back, {user.name || user.email}
             </p>
           </div>
 
           {/* Tabs */}
-          <div className="mb-4 sm:mb-6 md:mb-8 border-b border-gray-200">
+          <div className="mb-4 sm:mb-6 md:mb-8 border-b border-border">
             <nav className="-mb-px flex space-x-4 sm:space-x-6 md:space-x-8">
               <button
                 onClick={() => setActiveTab("overview")}
                 className={`relative whitespace-nowrap py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-all duration-200 ${
                   activeTab === "overview"
-                    ? "text-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <span className="relative z-10 flex items-center gap-1 sm:gap-2">
@@ -264,7 +264,7 @@ export default function AdminDashboard() {
                   Overview
                 </span>
                 {activeTab === "overview" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t transition-all duration-200" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t transition-all duration-200" />
                 )}
               </button>
 
@@ -272,8 +272,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("analytics")}
                 className={`relative whitespace-nowrap py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-all duration-200 ${
                   activeTab === "analytics"
-                    ? "text-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <span className="relative z-10 flex items-center gap-1 sm:gap-2">
@@ -293,7 +293,7 @@ export default function AdminDashboard() {
                   Analytics
                 </span>
                 {activeTab === "analytics" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t transition-all duration-200" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t transition-all duration-200" />
                 )}
               </button>
             </nav>
@@ -310,14 +310,14 @@ export default function AdminDashboard() {
                     {[...Array(5)].map((_, i) => (
                       <div
                         key={i}
-                        className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6"
+                        className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6"
                       >
                         <div className="animate-pulse">
                           <div className="flex items-center">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 rounded-lg"></div>
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-muted rounded-lg"></div>
                             <div className="ml-2 sm:ml-3 md:ml-4 flex-1">
-                              <div className="h-3 sm:h-4 bg-gray-200 rounded w-16 sm:w-20 mb-1 sm:mb-2"></div>
-                              <div className="h-5 sm:h-6 bg-gray-200 rounded w-10 sm:w-12"></div>
+                              <div className="h-3 sm:h-4 bg-muted rounded w-16 sm:w-20 mb-1 sm:mb-2"></div>
+                              <div className="h-5 sm:h-6 bg-muted rounded w-10 sm:w-12"></div>
                             </div>
                           </div>
                         </div>
@@ -326,12 +326,12 @@ export default function AdminDashboard() {
                   </>
                 ) : (
                   <>
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                    <div className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-lg flex items-center justify-center">
                             <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-foreground"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -346,22 +346,22 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-2 sm:ml-3 md:ml-4">
-                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                          <p className="text-xs sm:text-sm font-medium text-foreground">
                             Total Users
                           </p>
-                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                          <p className="text-xl sm:text-2xl font-bold text-foreground">
                             {stats.totalUsers}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                    <div className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-lg flex items-center justify-center">
                             <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5 text-green-600"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-foreground"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -376,22 +376,22 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-2 sm:ml-3 md:ml-4">
-                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                          <p className="text-xs sm:text-sm font-medium text-foreground">
                             Total Products
                           </p>
-                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                          <p className="text-xl sm:text-2xl font-bold text-foreground">
                             {stats.totalProducts}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                    <div className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-lg flex items-center justify-center">
                             <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-foreground"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -406,22 +406,22 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-2 sm:ml-3 md:ml-4">
-                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                          <p className="text-xs sm:text-sm font-medium text-foreground">
                             Total Orders
                           </p>
-                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                          <p className="text-xl sm:text-2xl font-bold text-foreground">
                             {stats.totalOrders}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                    <div className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-lg flex items-center justify-center">
                             <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-foreground"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -436,22 +436,22 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-2 sm:ml-3 md:ml-4">
-                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                          <p className="text-xs sm:text-sm font-medium text-foreground">
                             Revenue
                           </p>
-                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                          <p className="text-xl sm:text-2xl font-bold text-foreground">
                             ${stats.totalRevenue.toFixed(2)}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+                    <div className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-lg flex items-center justify-center">
                             <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600"
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-foreground"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -466,10 +466,10 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-2 sm:ml-3 md:ml-4">
-                          <p className="text-xs sm:text-sm font-medium text-gray-600">
+                          <p className="text-xs sm:text-sm font-medium text-foreground">
                             Pending Orders
                           </p>
-                          <p className="text-xl sm:text-2xl font-bold text-gray-900">
+                          <p className="text-xl sm:text-2xl font-bold text-foreground">
                             {stats.pendingOrders}
                           </p>
                         </div>
@@ -484,7 +484,7 @@ export default function AdminDashboard() {
             <TabTransition isActive={activeTab === "analytics"}>
               <div className="mb-4 sm:mb-6 md:mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                     Analytics
                   </h2>
                   <div className="flex gap-1 sm:gap-2 flex-wrap">
@@ -495,8 +495,8 @@ export default function AdminDashboard() {
                           onClick={() => setAnalyticsPeriod(period)}
                           className={`px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                             analyticsPeriod === period
-                              ? "bg-blue-600 text-white"
-                              : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-card text-foreground hover:bg-muted border border-border"
                           }`}
                         >
                           {period === "7d"
@@ -524,12 +524,12 @@ export default function AdminDashboard() {
                     {[...Array(4)].map((_, i) => (
                       <div
                         key={i}
-                        className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6"
+                        className="bg-card rounded-lg shadow-sm border border-border p-3 sm:p-4 md:p-6"
                       >
                         <div className="animate-pulse">
-                          <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
-                          <div className="h-8 bg-gray-200 rounded w-24 mb-2"></div>
-                          <div className="h-64 bg-gray-200 rounded"></div>
+                          <div className="h-6 bg-muted rounded w-32 mb-4"></div>
+                          <div className="h-8 bg-muted rounded w-24 mb-2"></div>
+                          <div className="h-64 bg-muted rounded"></div>
                         </div>
                       </div>
                     ))}
@@ -652,9 +652,9 @@ export default function AdminDashboard() {
             >
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {/* Recent Users */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-gray-200">
-                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                <div className="bg-card rounded-lg shadow-sm border border-border">
+                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-border">
+                    <h2 className="text-base sm:text-lg font-semibold text-foreground">
                       Recent Users
                     </h2>
                   </div>
@@ -667,13 +667,13 @@ export default function AdminDashboard() {
                             className="flex items-center justify-between"
                           >
                             <div className="flex items-center">
-                              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                              <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
                               <div className="ml-3">
-                                <div className="h-4 bg-gray-200 rounded w-24 mb-1 animate-pulse"></div>
-                                <div className="h-3 bg-gray-200 rounded w-32 animate-pulse"></div>
+                                <div className="h-4 bg-muted rounded w-24 mb-1 animate-pulse"></div>
+                                <div className="h-3 bg-muted rounded w-32 animate-pulse"></div>
                               </div>
                             </div>
-                            <div className="h-6 bg-gray-200 rounded w-16 animate-pulse"></div>
+                            <div className="h-6 bg-muted rounded w-16 animate-pulse"></div>
                           </div>
                         ))}
                       </div>
@@ -685,18 +685,18 @@ export default function AdminDashboard() {
                             className="flex items-center justify-between"
                           >
                             <div className="flex items-center">
-                              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-gray-600">
+                              <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-muted-foreground">
                                   {user.name
                                     ? user.name.charAt(0).toUpperCase()
                                     : user.email.charAt(0).toUpperCase()}
                                 </span>
                               </div>
                               <div className="ml-3">
-                                <p className="text-sm font-medium text-gray-900">
+                                <p className="text-sm font-medium text-foreground">
                                   {user.name || user.email}
                                 </p>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-muted-foreground">
                                   {user.email}
                                 </p>
                               </div>
@@ -708,7 +708,7 @@ export default function AdminDashboard() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 text-center py-4">
+                      <p className="text-muted-foreground text-center py-4">
                         No users found
                       </p>
                     )}
@@ -716,9 +716,9 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Recent Orders */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-gray-200">
-                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                <div className="bg-card rounded-lg shadow-sm border border-border">
+                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-border">
+                    <h2 className="text-base sm:text-lg font-semibold text-foreground">
                       Recent Orders
                     </h2>
                   </div>
@@ -731,13 +731,13 @@ export default function AdminDashboard() {
                             className="flex items-center justify-between"
                           >
                             <div className="flex items-center">
-                              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                              <div className="w-8 h-8 bg-muted rounded-full animate-pulse"></div>
                               <div className="ml-3">
-                                <div className="h-4 bg-gray-200 rounded w-20 mb-1 animate-pulse"></div>
-                                <div className="h-3 bg-gray-200 rounded w-28 animate-pulse"></div>
+                                <div className="h-4 bg-muted rounded w-20 mb-1 animate-pulse"></div>
+                                <div className="h-3 bg-muted rounded w-28 animate-pulse"></div>
                               </div>
                             </div>
-                            <div className="h-6 bg-gray-200 rounded w-20 animate-pulse"></div>
+                            <div className="h-6 bg-muted rounded w-20 animate-pulse"></div>
                           </div>
                         ))}
                       </div>
@@ -749,16 +749,16 @@ export default function AdminDashboard() {
                             className="flex items-center justify-between"
                           >
                             <div className="flex items-center">
-                              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium text-gray-600">
+                              <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-muted-foreground">
                                   #
                                 </span>
                               </div>
                               <div className="ml-3">
-                                <p className="text-sm font-medium text-gray-900">
+                                <p className="text-sm font-medium text-foreground">
                                   {order.orderNumber}
                                 </p>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-muted-foreground">
                                   {order.customer.email}
                                 </p>
                               </div>
@@ -773,7 +773,7 @@ export default function AdminDashboard() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 text-center py-4">
+                      <p className="text-muted-foreground text-center py-4">
                         No orders found
                       </p>
                     )}
@@ -781,9 +781,9 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-gray-200">
-                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                <div className="bg-card rounded-lg shadow-sm border border-border">
+                  <div className="px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 border-b border-border">
+                    <h2 className="text-base sm:text-lg font-semibold text-foreground">
                       Actions
                     </h2>
                   </div>
@@ -791,11 +791,11 @@ export default function AdminDashboard() {
                     <div className="space-y-3 sm:space-y-4">
                       <button
                         onClick={() => router.push("/admin/users")}
-                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
+                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-secondary hover:bg-secondary/70 rounded-lg transition-colors duration-200"
                       >
                         <div className="flex items-center">
                           <svg
-                            className="w-5 h-5 text-blue-600 mr-3"
+                            className="w-5 h-5 text-accent-foreground mr-3"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -808,10 +808,10 @@ export default function AdminDashboard() {
                             />
                           </svg>
                           <div>
-                            <p className="text-sm font-medium text-blue-900">
+                            <p className="text-sm font-medium text-accent-foreground">
                               Manage Users
                             </p>
-                            <p className="text-xs text-blue-600">
+                            <p className="text-xs text-accent-foreground">
                               View and manage user accounts
                             </p>
                           </div>
@@ -820,11 +820,11 @@ export default function AdminDashboard() {
 
                       <button
                         onClick={() => router.push("/admin/products")}
-                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200"
+                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-secondary hover:bg-secondary/70 rounded-lg transition-colors duration-200"
                       >
                         <div className="flex items-center">
                           <svg
-                            className="w-5 h-5 text-green-600 mr-3"
+                            className="w-5 h-5 text-accent-foreground mr-3"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -837,10 +837,10 @@ export default function AdminDashboard() {
                             />
                           </svg>
                           <div>
-                            <p className="text-sm font-medium text-green-900">
+                            <p className="text-sm font-medium text-accent-foreground">
                               Manage Products
                             </p>
-                            <p className="text-xs text-green-600">
+                            <p className="text-xs text-accent-foreground">
                               Add or edit products
                             </p>
                           </div>
@@ -849,11 +849,11 @@ export default function AdminDashboard() {
 
                       <button
                         onClick={() => router.push("/admin/orders")}
-                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors duration-200"
+                        className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-secondary hover:bg-secondary/70 rounded-lg transition-colors duration-200"
                       >
                         <div className="flex items-center">
                           <svg
-                            className="w-5 h-5 text-purple-600 mr-3"
+                            className="w-5 h-5 text-accent-foreground mr-3"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -866,20 +866,20 @@ export default function AdminDashboard() {
                             />
                           </svg>
                           <div>
-                            <p className="text-sm font-medium text-purple-900">
+                            <p className="text-sm font-medium text-accent-foreground">
                               Manage Orders
                             </p>
-                            <p className="text-xs text-purple-600">
+                            <p className="text-xs text-accent-foreground">
                               View and update order status
                             </p>
                           </div>
                         </div>
                       </button>
 
-                      <button className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors duration-200">
+                      <button className="w-full text-left px-3 py-2.5 sm:px-4 sm:py-3 bg-secondary hover:bg-secondary/70 rounded-lg transition-colors duration-200">
                         <div className="flex items-center">
                           <svg
-                            className="w-5 h-5 text-orange-600 mr-3"
+                            className="w-5 h-5 text-accent-foreground mr-3"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -898,10 +898,10 @@ export default function AdminDashboard() {
                             />
                           </svg>
                           <div>
-                            <p className="text-sm font-medium text-orange-900">
+                            <p className="text-sm font-medium text-accent-foreground">
                               System Settings
                             </p>
-                            <p className="text-xs text-orange-600">
+                            <p className="text-xs text-foreground">
                               Configure system preferences
                             </p>
                           </div>

@@ -80,11 +80,11 @@ export function InfiniteProductGrid({
         {Array.from({ length: 12 }).map((_, i) => (
           <div
             key={i}
-            className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-3 sm:p-4 lg:p-6 animate-pulse"
+            className="bg-card rounded-xl shadow-sm border border-border/50 p-3 sm:p-4 lg:p-6 animate-pulse"
           >
-            <div className="aspect-square bg-gray-200 rounded-lg mb-3 sm:mb-4"></div>
-            <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-2 sm:h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="aspect-square bg-muted rounded-lg mb-3 sm:mb-4"></div>
+            <div className="h-3 sm:h-4 bg-muted rounded w-3/4 mb-2"></div>
+            <div className="h-2 sm:h-3 bg-muted rounded w-1/2"></div>
           </div>
         ))}
       </div>
@@ -95,7 +95,7 @@ export function InfiniteProductGrid({
   if (!loading && products.length === 0) {
     return (
       <div className="text-center py-16">
-        <div className="text-gray-400 mb-6">
+        <div className="text-muted-foreground mb-6">
           <svg
             className="w-20 h-20 mx-auto"
             fill="none"
@@ -110,10 +110,10 @@ export function InfiniteProductGrid({
             />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-3">
+        <h3 className="text-xl font-semibold text-foreground mb-3">
           No products found
         </h3>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Try adjusting your search or filter criteria
         </p>
       </div>
@@ -136,10 +136,10 @@ export function InfiniteProductGrid({
       {/* Loading sentinel for infinite scroll */}
       {hasMore && (
         <div ref={sentinelRef} className="flex justify-center py-6 sm:py-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-3 sm:p-4 lg:p-6 animate-pulse">
-            <div className="aspect-square bg-gray-200 rounded-lg mb-3 sm:mb-4"></div>
-            <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-2 sm:h-3 bg-gray-200 rounded w-1/2"></div>
+          <div className="bg-card rounded-xl shadow-sm border border-border/50 p-3 sm:p-4 lg:p-6 animate-pulse">
+            <div className="aspect-square bg-muted rounded-lg mb-3 sm:mb-4"></div>
+            <div className="h-3 sm:h-4 bg-muted rounded w-3/4 mb-2"></div>
+            <div className="h-2 sm:h-3 bg-muted rounded w-1/2"></div>
           </div>
         </div>
       )}

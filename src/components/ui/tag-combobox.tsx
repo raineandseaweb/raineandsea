@@ -113,7 +113,7 @@ export function TagCombobox({
     <div className={`relative ${className}`} ref={dropdownRef}>
       {/* Selected tags display */}
       <div
-        className="min-h-[40px] w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer bg-white"
+        className="min-h-[40px] w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer bg-card"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex flex-wrap gap-1 items-center">
@@ -121,7 +121,7 @@ export function TagCombobox({
             selectedTagObjects.map((tag) => (
               <span
                 key={tag.id}
-                className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md"
+                className="inline-flex items-center px-2 py-1 text-xs font-medium bg-accent text-accent-foreground rounded-md"
               >
                 {tag.name}
                 <button
@@ -130,19 +130,19 @@ export function TagCombobox({
                     e.stopPropagation();
                     handleTagRemove(tag.id);
                   }}
-                  className="ml-1 text-blue-600 hover:text-blue-800"
+                  className="ml-1 text-primary hover:text-accent-foreground"
                 >
                   ×
                 </button>
               </span>
             ))
           ) : (
-            <span className="text-gray-500 text-sm">{placeholder}</span>
+            <span className="text-muted-foreground text-sm">{placeholder}</span>
           )}
         </div>
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <svg
-            className={`w-4 h-4 text-gray-400 transition-transform ${
+            className={`w-4 h-4 text-muted-foreground transition-transform ${
               isOpen ? "rotate-180" : ""
             }`}
             fill="none"
@@ -161,9 +161,9 @@ export function TagCombobox({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-hidden">
+        <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-60 overflow-hidden">
           {/* Search input */}
-          <div className="p-2 border-b border-gray-200">
+          <div className="p-2 border-b border-border">
             <input
               ref={inputRef}
               type="text"
@@ -174,7 +174,7 @@ export function TagCombobox({
               }}
               onKeyDown={handleKeyDown}
               placeholder="Search tags..."
-              className="w-full px-2 py-1 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
               autoFocus
             />
           </div>
@@ -187,13 +187,13 @@ export function TagCombobox({
                     key={tag.id}
                     type="button"
                     onClick={() => handleTagSelect(tag.id)}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-muted focus:bg-muted focus:outline-none"
                   >
                     {tag.name}
                   </button>
                 ))
               : !showNewTagInput && (
-                  <div className="px-3 py-2 text-sm text-gray-500">
+                  <div className="px-3 py-2 text-sm text-muted-foreground">
                     No tags found
                   </div>
                 )}
@@ -210,7 +210,7 @@ export function TagCombobox({
                     setNewTagName(searchTerm);
                     setSearchTerm("");
                   }}
-                  className="w-full text-left px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
+                  className="w-full text-left px-3 py-2 text-sm text-primary hover:bg-accent focus:bg-accent focus:outline-none"
                 >
                   Create "{searchTerm}"
                 </button>
@@ -218,7 +218,7 @@ export function TagCombobox({
 
             {/* New tag input */}
             {showNewTagInput && (
-              <div className="p-2 border-t border-gray-200">
+              <div className="p-2 border-t border-border">
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -226,13 +226,13 @@ export function TagCombobox({
                     onChange={(e) => setNewTagName(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Tag name"
-                    className="flex-1 px-2 py-1 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="flex-1 px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-1 focus:ring-primary"
                     autoFocus
                   />
                   <button
                     type="button"
                     onClick={handleCreateNewTag}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   >
                     Create
                   </button>
@@ -242,7 +242,7 @@ export function TagCombobox({
                       setShowNewTagInput(false);
                       setNewTagName("");
                     }}
-                    className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 focus:outline-none"
+                    className="px-3 py-1 text-sm text-muted-foreground hover:text-foreground focus:outline-none"
                   >
                     Cancel
                   </button>

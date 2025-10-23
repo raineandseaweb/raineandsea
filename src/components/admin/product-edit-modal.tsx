@@ -245,12 +245,12 @@ export function ProductEditModal({
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-lg max-w-7xl w-full p-6 max-h-[90vh] overflow-y-auto">
+        <div className="bg-card rounded-lg max-w-7xl w-full p-6 max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Edit Product</h2>
+            <h2 className="text-2xl font-bold text-foreground">Edit Product</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -273,7 +273,7 @@ export function ProductEditModal({
               {/* Left Column - Basic Info */}
               <div className="lg:col-span-2 space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Title *
                   </label>
                   <input
@@ -282,13 +282,13 @@ export function ProductEditModal({
                     onChange={(e) =>
                       setFormData({ ...formData, title: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Slug *
                   </label>
                   <input
@@ -297,13 +297,13 @@ export function ProductEditModal({
                     onChange={(e) =>
                       setFormData({ ...formData, slug: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Description *
                   </label>
                   <textarea
@@ -312,13 +312,13 @@ export function ProductEditModal({
                       setFormData({ ...formData, description: e.target.value })
                     }
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Base Price ($)
                   </label>
                   <input
@@ -329,13 +329,13 @@ export function ProductEditModal({
                     onChange={(e) =>
                       setFormData({ ...formData, base_price: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Primary Image URL
                   </label>
                   <input
@@ -344,13 +344,13 @@ export function ProductEditModal({
                     onChange={(e) =>
                       setFormData({ ...formData, image: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="https://example.com/image.jpg"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Status
                   </label>
                   <select
@@ -364,7 +364,7 @@ export function ProductEditModal({
                           | "draft",
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="draft">Draft</option>
                     <option value="active">Active</option>
@@ -376,19 +376,19 @@ export function ProductEditModal({
               {/* Right Column - Quick Actions */}
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h4 className="text-lg font-semibold text-foreground mb-2">
                     Quick Actions
                   </h4>
                   <div className="space-y-3">
                     <button
                       type="button"
                       onClick={() => setShowOptionsModal(true)}
-                      className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-5 h-5 text-blue-600"
+                            className="w-5 h-5 text-primary"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -402,16 +402,16 @@ export function ProductEditModal({
                           </svg>
                         </div>
                         <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-foreground">
                             Product Options
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             Configure size, color, material, etc.
                           </p>
                         </div>
                       </div>
                       <svg
-                        className="w-5 h-5 text-gray-400"
+                        className="w-5 h-5 text-muted-foreground"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -428,12 +428,12 @@ export function ProductEditModal({
                     <button
                       type="button"
                       onClick={() => setShowTagsModal(true)}
-                      className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-5 h-5 text-green-600"
+                            className="w-5 h-5 text-primary"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -447,16 +447,16 @@ export function ProductEditModal({
                           </svg>
                         </div>
                         <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-foreground">
                             Product Tags
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             Manage categories and labels
                           </p>
                         </div>
                       </div>
                       <svg
-                        className="w-5 h-5 text-gray-400"
+                        className="w-5 h-5 text-muted-foreground"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -473,12 +473,12 @@ export function ProductEditModal({
                     <button
                       type="button"
                       onClick={() => setShowMediaModal(true)}
-                      className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-5 h-5 text-purple-600"
+                            className="w-5 h-5 text-primary"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -492,16 +492,16 @@ export function ProductEditModal({
                           </svg>
                         </div>
                         <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-foreground">
                             Product Images
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             Manage photos and galleries
                           </p>
                         </div>
                       </div>
                       <svg
-                        className="w-5 h-5 text-gray-400"
+                        className="w-5 h-5 text-muted-foreground"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -518,12 +518,12 @@ export function ProductEditModal({
                     <button
                       type="button"
                       onClick={() => setShowStockModal(true)}
-                      className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-5 h-5 text-orange-600"
+                            className="w-5 h-5 text-primary"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -537,16 +537,16 @@ export function ProductEditModal({
                           </svg>
                         </div>
                         <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-foreground">
                             Stock Management
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-muted-foreground">
                             Configure inventory levels
                           </p>
                         </div>
                       </div>
                       <svg
-                        className="w-5 h-5 text-gray-400"
+                        className="w-5 h-5 text-muted-foreground"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -560,12 +560,12 @@ export function ProductEditModal({
                       </svg>
                     </button>
 
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-xs text-gray-600 mb-2">
+                    <div className="p-3 bg-muted rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-2">
                         Current Options:
                       </p>
                       {productOptions.length === 0 ? (
-                        <p className="text-xs text-gray-500 italic">
+                        <p className="text-xs text-muted-foreground italic">
                           No options configured
                         </p>
                       ) : (
@@ -575,11 +575,11 @@ export function ProductEditModal({
                               key={index}
                               className="flex items-center space-x-2"
                             >
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                              <span className="text-xs text-gray-700">
+                              <div className="w-2 h-2 bg-primary rounded-full"></div>
+                              <span className="text-xs text-foreground">
                                 {option.name || `Option ${index + 1}`}
                               </span>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-muted-foreground">
                                 ({option.values.length} values)
                               </span>
                             </div>
@@ -588,12 +588,12 @@ export function ProductEditModal({
                       )}
                     </div>
 
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-xs text-gray-600 mb-2">
+                    <div className="p-3 bg-muted rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-2">
                         Current Tags:
                       </p>
                       {formData.tags.length === 0 ? (
-                        <p className="text-xs text-gray-500 italic">
+                        <p className="text-xs text-muted-foreground italic">
                           No tags assigned
                         </p>
                       ) : (
@@ -605,7 +605,7 @@ export function ProductEditModal({
                             return (
                               <span
                                 key={tagId}
-                                className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"
+                                className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-accent text-accent-foreground"
                               >
                                 {tag?.name || tagId}
                               </span>
@@ -615,19 +615,19 @@ export function ProductEditModal({
                       )}
                     </div>
 
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-xs text-gray-600 mb-2">
+                    <div className="p-3 bg-muted rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-2">
                         Current Images:
                       </p>
                       {!localProduct?.media ||
                       localProduct.media.length === 0 ? (
-                        <p className="text-xs text-gray-500 italic">
+                        <p className="text-xs text-muted-foreground italic">
                           No images uploaded
                         </p>
                       ) : (
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                          <span className="text-xs text-gray-700">
+                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                          <span className="text-xs text-foreground">
                             {localProduct.media.length} image
                             {localProduct.media.length !== 1 ? "s" : ""}
                           </span>
@@ -639,18 +639,18 @@ export function ProductEditModal({
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+            <div className="flex justify-end space-x-3 pt-6 border-t border-border">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? "Saving..." : "Save Changes"}
               </button>
@@ -773,14 +773,14 @@ export function ProductEditModal({
       {/* Stock Management Modal */}
       {showStockModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
+          <div className="bg-card rounded-lg max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-foreground">
                 Stock Management
               </h3>
               <button
                 onClick={() => setShowStockModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <svg
                   className="w-6 h-6"
@@ -800,7 +800,7 @@ export function ProductEditModal({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   Current Stock Level: {currentStock}
                 </label>
                 <input
@@ -811,16 +811,16 @@ export function ProductEditModal({
                     setCurrentStock(parseInt(e.target.value) || 0)
                   }
                   placeholder="Enter stock quantity"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
               {/* Stock Notification Warning */}
               {originalStock === 0 && currentStock > 0 && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="bg-accent border border-border rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <svg
-                      className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 text-primary mt-0.5 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -833,10 +833,10 @@ export function ProductEditModal({
                       />
                     </svg>
                     <div className="text-sm">
-                      <p className="font-medium text-blue-800">
+                      <p className="font-medium text-accent-foreground">
                         Stock Notification Alert
                       </p>
-                      <p className="text-blue-700">
+                      <p className="text-primary">
                         Customers who signed up for stock notifications will be
                         automatically notified when stock becomes available.
                       </p>
@@ -845,11 +845,11 @@ export function ProductEditModal({
                 </div>
               )}
 
-              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+              <div className="flex justify-end space-x-3 pt-4 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setShowStockModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Cancel
                 </button>
@@ -857,7 +857,7 @@ export function ProductEditModal({
                   type="button"
                   onClick={() => handleStockUpdate(currentStock)}
                   disabled={stockLoading}
-                  className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {stockLoading ? "Updating..." : "Update Stock"}
                 </button>

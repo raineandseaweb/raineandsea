@@ -14,7 +14,7 @@ interface CategoryCardProps {
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
     <PrefetchLink href={`/products?category=${category.slug}`}>
-      <div className="group relative bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 hover:shadow-md transition-all duration-300 overflow-hidden cursor-pointer">
+      <div className="group relative bg-card rounded-xl sm:rounded-2xl shadow-sm border border-border hover:shadow-lg hover:border-border transition-all duration-200 overflow-hidden cursor-pointer">
         <div className="relative w-full h-36 sm:h-48">
           {category.thumbnail ? (
             <Image
@@ -25,9 +25,9 @@ export function CategoryCard({ category }: CategoryCardProps) {
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+            <div className="w-full h-full bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center">
               <svg
-                className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600"
+                className="w-8 h-8 sm:w-12 sm:h-12 text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -47,7 +47,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
 
           {/* Category name overlay */}
           <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-4">
-            <h3 className="text-white text-sm sm:text-lg font-semibold text-center drop-shadow-lg group-hover:text-blue-200 transition-colors leading-tight">
+            <h3 className="text-primary-foreground text-sm sm:text-lg font-semibold text-center drop-shadow-lg group-hover:text-blue-200 transition-colors leading-tight">
               {category.name}
             </h3>
           </div>

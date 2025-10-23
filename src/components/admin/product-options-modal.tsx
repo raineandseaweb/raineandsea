@@ -90,17 +90,17 @@ function SortableOptionItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`border border-gray-200 rounded-lg bg-white shadow-sm ${
+      className={`border border-border rounded-lg bg-card shadow-sm ${
         isDragging ? "opacity-50" : ""
       }`}
     >
       {/* Collapsible Header */}
-      <div className="flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
+      <div className="flex items-center justify-between cursor-pointer hover:bg-muted transition-colors">
         {/* Drag Handle - Full Height */}
         <div
           {...attributes}
           {...listeners}
-          className="w-8 h-full flex items-center justify-center cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
+          className="w-8 h-full flex items-center justify-center cursor-grab active:cursor-grabbing text-muted-foreground hover:text-muted-foreground"
           title="Drag to reorder"
           onMouseDown={() => {
             // Collapse when starting to drag
@@ -119,16 +119,16 @@ function SortableOptionItem({
           className="flex items-center space-x-3 flex-1 p-4 min-w-0"
           onClick={() => onToggle(index)}
         >
-          <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-xs font-semibold text-blue-600">
+          <div className="w-6 h-6 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-semibold text-primary">
               {index + 1}
             </span>
           </div>
           <div className="text-left flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-gray-900 truncate">
+            <h4 className="text-sm font-semibold text-foreground truncate">
               {option.name || `Option ${index + 1}`}
             </h4>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {option.values.length} value
               {option.values.length !== 1 ? "s" : ""}
             </p>
@@ -142,7 +142,7 @@ function SortableOptionItem({
               e.stopPropagation();
               onRemove(index);
             }}
-            className="text-red-500 hover:text-red-700 p-1 rounded transition-colors"
+            className="text-destructive hover:text-destructive p-1 rounded transition-colors"
             title="Remove option"
           >
             <svg
@@ -161,7 +161,7 @@ function SortableOptionItem({
           </button>
           {/* Arrow on the far right */}
           <svg
-            className={`w-5 h-5 text-gray-400 transition-transform ${
+            className={`w-5 h-5 text-muted-foreground transition-transform ${
               isExpanded ? "rotate-180" : ""
             }`}
             fill="none"
@@ -180,10 +180,10 @@ function SortableOptionItem({
 
       {/* Collapsible Content */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-gray-100">
+        <div className="px-4 pb-4 border-t border-border">
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-muted-foreground mb-1">
                 Option Name *
               </label>
               <input
@@ -200,12 +200,12 @@ function SortableOptionItem({
                   }
                 }}
                 placeholder="e.g., Size, Color, Material"
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-muted-foreground mb-1">
                 Display Label *
               </label>
               <input
@@ -221,7 +221,7 @@ function SortableOptionItem({
                   }
                 }}
                 placeholder="e.g., Select Size, Choose Color"
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 required
               />
             </div>
@@ -230,17 +230,17 @@ function SortableOptionItem({
           <div>
             <div className="flex items-center justify-between mb-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600">
+                <label className="block text-xs font-medium text-muted-foreground">
                   Option Values
                 </label>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Add different choices for this option
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => onAddValue(index)}
-                className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-200 transition-colors"
+                className="inline-flex items-center px-3 py-1.5 bg-muted text-foreground text-xs font-medium rounded-md hover:bg-muted transition-colors"
               >
                 <svg
                   className="w-3 h-3 mr-1"
@@ -363,7 +363,7 @@ function SortableValueItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-gray-50 p-3 rounded-lg border border-gray-200 ${
+      className={`bg-muted p-3 rounded-lg border border-border ${
         isDragging ? "opacity-50" : ""
       }`}
     >
@@ -372,7 +372,7 @@ function SortableValueItem({
         <div
           {...attributes}
           {...listeners}
-          className="w-6 flex items-center justify-center cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
+          className="w-6 flex items-center justify-center cursor-grab active:cursor-grabbing text-muted-foreground hover:text-muted-foreground"
           title="Drag to reorder"
         >
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -383,13 +383,13 @@ function SortableValueItem({
         {/* Content Area */}
         <div className="flex-1 p-3 space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               Value Name
             </label>
             <button
               type="button"
               onClick={() => onRemove(optionIndex, valueIndex)}
-              className="text-red-500 hover:text-red-700 p-1 rounded transition-colors"
+              className="text-destructive hover:text-destructive p-1 rounded transition-colors"
               title="Remove value"
             >
               <svg
@@ -414,17 +414,17 @@ function SortableValueItem({
               onUpdate(optionIndex, valueIndex, "name", e.target.value)
             }
             placeholder="e.g., Small, Red, Gold"
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-muted-foreground mb-1">
                 Price Adjustment
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">$</span>
+                  <span className="text-muted-foreground text-sm">$</span>
                 </div>
                 <input
                   type="number"
@@ -439,10 +439,10 @@ function SortableValueItem({
                     )
                   }
                   placeholder="0.00"
-                  className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {parseFloat(value.price_adjustment || "0") > 0
                   ? `Adds $${value.price_adjustment} to base price`
                   : parseFloat(value.price_adjustment || "0") < 0
@@ -454,7 +454,7 @@ function SortableValueItem({
             </div>
 
             <div className="flex items-center justify-center">
-              <label className="flex items-center text-xs font-medium text-gray-600 cursor-pointer">
+              <label className="flex items-center text-xs font-medium text-muted-foreground cursor-pointer">
                 <input
                   type="checkbox"
                   checked={value.is_default}
@@ -466,7 +466,7 @@ function SortableValueItem({
                       e.target.checked
                     )
                   }
-                  className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="mr-2 rounded border-border text-primary focus:ring-primary"
                 />
                 Default Selection
               </label>
@@ -701,13 +701,13 @@ export default function ProductOptionsModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-foreground">
               Product Options
             </h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Configure options for:{" "}
               <span className="font-medium">{productTitle}</span>
             </p>
@@ -715,7 +715,7 @@ export default function ProductOptionsModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-muted-foreground hover:text-muted-foreground transition-colors"
           >
             <svg
               className="w-6 h-6"
@@ -736,17 +736,17 @@ export default function ProductOptionsModal({
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-lg font-semibold text-gray-900">
+              <h4 className="text-lg font-semibold text-foreground">
                 Product Options
               </h4>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Configure size, color, material, and other product variations
               </p>
             </div>
             <button
               type="button"
               onClick={addProductOption}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary transition-colors"
             >
               <svg
                 className="w-4 h-4 mr-2"
@@ -778,9 +778,9 @@ export default function ProductOptionsModal({
             >
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                 {productOptions.length === 0 ? (
-                  <div className="text-center py-8 px-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <div className="text-center py-8 px-4 bg-muted rounded-lg border-2 border-dashed border-border">
                     <svg
-                      className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                      className="w-12 h-12 text-muted-foreground mx-auto mb-4"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -792,17 +792,17 @@ export default function ProductOptionsModal({
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">
+                    <h4 className="text-sm font-medium text-foreground mb-2">
                       No options configured
                     </h4>
-                    <p className="text-xs text-gray-600 mb-4">
+                    <p className="text-xs text-muted-foreground mb-4">
                       Add options like size, color, or material to create
                       product variations
                     </p>
                     <button
                       type="button"
                       onClick={addProductOption}
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary transition-colors"
                     >
                       <svg
                         className="w-4 h-4 mr-2"
@@ -846,11 +846,11 @@ export default function ProductOptionsModal({
           </DndContext>
         </div>
 
-        <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+        <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-border">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
           >
             Cancel
           </button>
@@ -858,7 +858,7 @@ export default function ProductOptionsModal({
             type="button"
             onClick={handleSave}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Saving..." : "Save Options"}
           </button>

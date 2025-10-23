@@ -16,12 +16,12 @@ export function PrefetchTest() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg border z-50">
+    <div className="fixed bottom-4 right-4 bg-card p-4 rounded-lg shadow-lg border z-50">
       <h3 className="font-semibold mb-2">Prefetch Test</h3>
-      <p className="text-sm text-gray-600 mb-2">{status}</p>
+      <p className="text-sm text-muted-foreground mb-2">{status}</p>
       <button
         onClick={testPrefetch}
-        className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+        className="px-3 py-1 bg-blue-500 text-primary-foreground rounded text-sm hover:bg-primary"
       >
         Test Prefetch
       </button>

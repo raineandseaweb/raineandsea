@@ -1,3 +1,5 @@
+import { theme } from "@/lib/theme";
+
 interface StatusIndicatorProps {
   status: string;
   type?: "order" | "user" | "product";
@@ -12,45 +14,38 @@ export function StatusIndicator({
   const getStatusColor = (status: string, type: string) => {
     if (type === "user") {
       const userColors = {
-        root: "bg-red-100 text-red-800",
-        admin: "bg-blue-100 text-blue-800",
-        user: "bg-gray-100 text-gray-800",
-        verified: "bg-green-100 text-green-800",
-        pending: "bg-yellow-100 text-yellow-800",
+        root: theme.badge.root,
+        admin: theme.badge.admin,
+        user: theme.badge.user,
+        verified: theme.badge.verified,
+        pending: theme.badge.pending,
       };
-      return (
-        userColors[status as keyof typeof userColors] ||
-        "bg-gray-100 text-gray-800"
-      );
+      return userColors[status as keyof typeof userColors] || theme.badge.user;
     }
 
     if (type === "product") {
       const productColors = {
-        active: "bg-green-100 text-green-800",
-        inactive: "bg-red-100 text-red-800",
-        draft: "bg-yellow-100 text-yellow-800",
+        active: theme.badge.active,
+        inactive: theme.badge.inactive,
+        draft: theme.badge.draft,
       };
       return (
-        productColors[status as keyof typeof productColors] ||
-        "bg-gray-100 text-gray-800"
+        productColors[status as keyof typeof productColors] || theme.badge.user
       );
     }
 
     // Order status colors
     const orderColors = {
-      received: "bg-orange-100 text-orange-800",
-      paid: "bg-blue-100 text-blue-800",
-      shipped: "bg-indigo-100 text-indigo-800",
-      completed: "bg-green-100 text-green-800",
-      cancelled: "bg-red-100 text-red-800",
-      refunded: "bg-yellow-100 text-yellow-800",
-      created: "bg-gray-100 text-gray-800",
-      fulfilled: "bg-purple-100 text-purple-800",
+      received: theme.badge.received,
+      paid: theme.badge.paid,
+      shipped: theme.badge.shipped,
+      completed: theme.badge.completed,
+      cancelled: theme.badge.cancelled,
+      refunded: theme.badge.refunded,
+      created: theme.badge.created,
+      fulfilled: theme.badge.fulfilled,
     };
-    return (
-      orderColors[status as keyof typeof orderColors] ||
-      "bg-gray-100 text-gray-800"
-    );
+    return orderColors[status as keyof typeof orderColors] || theme.badge.user;
   };
 
   const formatStatus = (status: string) => {

@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* NProgress styles */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #3b82f6;
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #3b82f6, 0 0 5px #3b82f6;
+  opacity: 1;
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+@layer base {
+  /* Default Light Theme */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  /* Dark Theme */
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+  }
+
+  /* Forest Theme (Dark Witchy Green) */
+  :root[data-theme="forest"] {
+    --background: 150 25% 95%;
+    --foreground: 158 35% 15%;
+
+    --muted: 150 20% 88%;
+    --muted-foreground: 158 15% 40%;
+
+    --border: 150 15% 82%;
+    --input: 150 15% 82%;
+    --ring: 158 45% 38%;
+
+    --primary: 158 50% 32%;
+    --primary-foreground: 150 0% 100%;
+
+    --secondary: 150 20% 90%;
+    --secondary-foreground: 158 35% 15%;
+
+    --accent: 150 30% 85%;
+    --accent-foreground: 158 35% 15%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 150 30% 96%;
+    --card-foreground: 158 35% 15%;
+
+    --popover: 150 30% 96%;
+    --popover-foreground: 158 35% 15%;
+  }
+
+  :root[data-theme="forest"].dark {
+    --background: 158 30% 6%;
+    --foreground: 150 15% 92%;
+
+    --muted: 158 25% 12%;
+    --muted-foreground: 150 10% 68%;
+
+    --border: 158 25% 18%;
+    --input: 158 25% 18%;
+    --ring: 158 35% 42%;
+
+    --primary: 158 42% 40%;
+    --primary-foreground: 150 0% 100%;
+
+    --secondary: 158 25% 18%;
+    --secondary-foreground: 150 15% 92%;
+
+    --accent: 158 30% 22%;
+    --accent-foreground: 150 15% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 158 28% 8%;
+    --card-foreground: 150 15% 92%;
+
+    --popover: 158 28% 8%;
+    --popover-foreground: 150 15% 92%;
+  }
+
+  /* Ocean Theme (Witchy Deep Blue Water) */
+  :root[data-theme="ocean"] {
+    --background: 210 35% 96%;
+    --foreground: 220 50% 14%;
+
+    --muted: 210 25% 90%;
+    --muted-foreground: 220 20% 38%;
+
+    --border: 210 18% 85%;
+    --input: 210 18% 85%;
+    --ring: 210 55% 45%;
+
+    --primary: 210 70% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 25% 92%;
+    --secondary-foreground: 220 50% 14%;
+
+    --accent: 210 35% 88%;
+    --accent-foreground: 220 50% 14%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 210 30% 97%;
+    --card-foreground: 220 50% 14%;
+
+    --popover: 210 30% 97%;
+    --popover-foreground: 220 50% 14%;
+  }
+
+  :root[data-theme="ocean"].dark {
+    --background: 220 45% 5%;
+    --foreground: 210 18% 92%;
+
+    --muted: 220 35% 11%;
+    --muted-foreground: 210 12% 70%;
+
+    --border: 220 35% 16%;
+    --input: 220 35% 16%;
+    --ring: 210 50% 48%;
+
+    --primary: 210 65% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 35% 16%;
+    --secondary-foreground: 210 18% 92%;
+
+    --accent: 220 40% 20%;
+    --accent-foreground: 210 18% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 220 38% 7%;
+    --card-foreground: 210 18% 92%;
+
+    --popover: 220 38% 7%;
+    --popover-foreground: 210 18% 92%;
+  }
+
+  /* Sunset Theme (Orange/Pink) */
+  :root[data-theme="sunset"] {
+    --background: 20 60% 98%;
+    --foreground: 15 70% 15%;
+
+    --muted: 25 30% 94%;
+    --muted-foreground: 15 20% 40%;
+
+    --border: 20 20% 88%;
+    --input: 20 20% 88%;
+    --ring: 15 70% 50%;
+
+    --primary: 15 90% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 25 40% 92%;
+    --secondary-foreground: 15 70% 15%;
+
+    --accent: 20 50% 90%;
+    --accent-foreground: 15 70% 15%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 20 40% 98%;
+    --card-foreground: 15 70% 15%;
+
+    --popover: 20 40% 98%;
+    --popover-foreground: 15 70% 15%;
+  }
+
+  :root[data-theme="sunset"].dark {
+    --background: 20 40% 8%;
+    --foreground: 15 20% 90%;
+
+    --muted: 20 25% 15%;
+    --muted-foreground: 15 15% 65%;
+
+    --border: 20 25% 20%;
+    --input: 20 25% 20%;
+    --ring: 15 60% 50%;
+
+    --primary: 15 80% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 20 25% 20%;
+    --secondary-foreground: 15 20% 90%;
+
+    --accent: 20 30% 25%;
+    --accent-foreground: 15 20% 90%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 20 30% 10%;
+    --card-foreground: 15 20% 90%;
+
+    --popover: 20 30% 10%;
+    --popover-foreground: 15 20% 90%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -109,14 +109,14 @@ export default function OrderConfirmationPage() {
 
   const getStatusColor = (status: string) => {
     const colors = {
-      created: "bg-blue-100 text-blue-800",
-      paid: "bg-green-100 text-green-800",
-      fulfilled: "bg-purple-100 text-purple-800",
-      completed: "bg-gray-100 text-gray-800",
-      cancelled: "bg-red-100 text-red-800",
-      refunded: "bg-yellow-100 text-yellow-800",
+      created: "bg-accent text-accent-foreground",
+      paid: "bg-accent text-accent-foreground",
+      fulfilled: "bg-accent text-accent-foreground",
+      completed: "bg-muted text-foreground",
+      cancelled: "bg-accent text-accent-foreground",
+      refunded: "bg-accent text-accent-foreground",
     };
-    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
+    return colors[status as keyof typeof colors] || "bg-muted text-foreground";
   };
 
   if (loading || loadingOrder) {
@@ -125,8 +125,8 @@ export default function OrderConfirmationPage() {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading order details...</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading order details...</p>
           </div>
         </main>
         <Footer />
@@ -145,8 +145,8 @@ export default function OrderConfirmationPage() {
         <main className="flex-1">
           <div className="container mx-auto px-4 py-16">
             <div className="max-w-2xl mx-auto text-center">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-8">
-                <div className="text-red-600 mb-4">
+              <div className="bg-accent border border-border rounded-lg p-8">
+                <div className="text-destructive mb-4">
                   <svg
                     className="w-16 h-16 mx-auto"
                     fill="none"
@@ -161,13 +161,13 @@ export default function OrderConfirmationPage() {
                     />
                   </svg>
                 </div>
-                <h1 className="text-2xl font-bold text-red-900 mb-2">
+                <h1 className="text-2xl font-bold text-destructive mb-2">
                   Order Not Found
                 </h1>
-                <p className="text-red-700 mb-6">{error}</p>
+                <p className="text-destructive mb-6">{error}</p>
                 <Link
                   href="/orders"
-                  className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-destructive text-primary-foreground rounded-md hover:bg-destructive transition-colors"
                 >
                   View All Orders
                 </Link>
@@ -192,7 +192,7 @@ export default function OrderConfirmationPage() {
           <div className="max-w-4xl mx-auto">
             {/* Success Header */}
             <div className="text-center mb-8">
-              <div className="text-green-600 mb-4">
+              <div className="text-primary mb-4">
                 <svg
                   className="w-16 h-16 mx-auto"
                   fill="none"
@@ -207,10 +207,10 @@ export default function OrderConfirmationPage() {
                   />
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-foreground mb-2">
                 Order Confirmed!
               </h1>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Thank you for your order. We've received your order and will
                 begin processing it shortly.
               </p>
@@ -218,26 +218,26 @@ export default function OrderConfirmationPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Order Details */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-card rounded-lg shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   Order Details
                 </h2>
 
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Order Number:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Order Number:</span>
+                    <span className="font-medium text-foreground">
                       {order.orderNumber}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Order Date:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Order Date:</span>
+                    <span className="font-medium text-foreground">
                       {formatDate(order.created_at)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
+                    <span className="text-muted-foreground">Status:</span>
                     <StatusIndicator status={order.status} type="order" />
                   </div>
                 </div>
@@ -246,20 +246,20 @@ export default function OrderConfirmationPage() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="text-gray-900">
+                    <span className="text-muted-foreground">Subtotal:</span>
+                    <span className="text-foreground">
                       {formatPrice(order.totals.subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tax:</span>
-                    <span className="text-gray-900">
+                    <span className="text-muted-foreground">Tax:</span>
+                    <span className="text-foreground">
                       {formatPrice(order.totals.tax)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping:</span>
-                    <span className="text-gray-900">
+                    <span className="text-muted-foreground">Shipping:</span>
+                    <span className="text-foreground">
                       {order.totals.shipping === 0
                         ? "Free"
                         : formatPrice(order.totals.shipping)}
@@ -267,8 +267,8 @@ export default function OrderConfirmationPage() {
                   </div>
                   <hr />
                   <div className="flex justify-between font-semibold text-lg">
-                    <span className="text-gray-900">Total:</span>
-                    <span className="text-gray-900">
+                    <span className="text-foreground">Total:</span>
+                    <span className="text-foreground">
                       {formatPrice(order.totals.total)}
                     </span>
                   </div>
@@ -276,13 +276,13 @@ export default function OrderConfirmationPage() {
               </div>
 
               {/* Shipping Address */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-card rounded-lg shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   Shipping Address
                 </h2>
 
                 {order.shippingAddress ? (
-                  <div className="text-gray-700">
+                  <div className="text-foreground">
                     <p className="font-medium">{order.shippingAddress.name}</p>
                     <p>{order.shippingAddress.line1}</p>
                     {order.shippingAddress.line2 && (
@@ -296,14 +296,14 @@ export default function OrderConfirmationPage() {
                     <p>{order.shippingAddress.country}</p>
                   </div>
                 ) : (
-                  <p className="text-gray-500">No shipping address available</p>
+                  <p className="text-muted-foreground">No shipping address available</p>
                 )}
               </div>
             </div>
 
             {/* Order Items */}
-            <div className="mt-8 bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <div className="mt-8 bg-card rounded-lg shadow-sm border p-6">
+              <h2 className="text-xl font-semibold text-foreground mb-4">
                 Order Items
               </h2>
 
@@ -311,7 +311,7 @@ export default function OrderConfirmationPage() {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg"
+                    className="flex items-center space-x-4 p-4 border border-border rounded-lg"
                   >
                     {item.product.image && (
                       <img
@@ -321,21 +321,21 @@ export default function OrderConfirmationPage() {
                       />
                     )}
                     <div className="flex-1">
-                      <h3 className="font-medium text-gray-900">
+                      <h3 className="font-medium text-foreground">
                         {item.product.title}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         {item.variant.title}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         SKU: {item.variant.sku}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Qty: {item.quantity}
                       </p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-foreground">
                         {formatPrice(item.total)}
                       </p>
                     </div>
@@ -345,14 +345,14 @@ export default function OrderConfirmationPage() {
             </div>
 
             {/* Next Steps */}
-            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-blue-900 mb-4">
+            <div className="mt-8 bg-accent border border-border rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-accent-foreground mb-4">
                 What's Next?
               </h2>
-              <div className="space-y-3 text-blue-800">
+              <div className="space-y-3 text-accent-foreground">
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-xs font-bold text-blue-800">1</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-accent rounded-full flex items-center justify-center mr-3 mt-0.5">
+                    <span className="text-xs font-bold text-accent-foreground">1</span>
                   </div>
                   <div>
                     <p className="font-medium">Order Processing</p>
@@ -362,8 +362,8 @@ export default function OrderConfirmationPage() {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-xs font-bold text-blue-800">2</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-accent rounded-full flex items-center justify-center mr-3 mt-0.5">
+                    <span className="text-xs font-bold text-accent-foreground">2</span>
                   </div>
                   <div>
                     <p className="font-medium">Shipping Confirmation</p>
@@ -374,8 +374,8 @@ export default function OrderConfirmationPage() {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-xs font-bold text-blue-800">3</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-accent rounded-full flex items-center justify-center mr-3 mt-0.5">
+                    <span className="text-xs font-bold text-accent-foreground">3</span>
                   </div>
                   <div>
                     <p className="font-medium">Delivery</p>
@@ -385,8 +385,8 @@ export default function OrderConfirmationPage() {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-xs font-bold text-blue-800">4</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-accent rounded-full flex items-center justify-center mr-3 mt-0.5">
+                    <span className="text-xs font-bold text-accent-foreground">4</span>
                   </div>
                   <div>
                     <p className="font-medium">Track Your Order</p>
@@ -402,24 +402,24 @@ export default function OrderConfirmationPage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/orders"
-                className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 bg-white rounded-md hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 border border-border text-foreground bg-card rounded-md hover:bg-muted transition-colors"
               >
                 View All Orders
               </Link>
               <Link
                 href="/"
-                className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary transition-colors"
               >
                 Continue Shopping
               </Link>
             </div>
 
             {/* Email Confirmation Notice */}
-            <div className="mt-8 bg-green-50 border border-green-200 rounded-lg p-6">
+            <div className="mt-8 bg-accent border border-border rounded-lg p-6">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <svg
-                    className="w-5 h-5 text-green-600 mt-0.5"
+                    className="w-5 h-5 text-primary mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -433,10 +433,10 @@ export default function OrderConfirmationPage() {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-green-800">
+                  <h3 className="text-sm font-medium text-accent-foreground">
                     Confirmation Email Sent
                   </h3>
-                  <p className="mt-1 text-sm text-green-700">
+                  <p className="mt-1 text-sm text-primary">
                     We've sent a confirmation email to {user.email} with your
                     order details. Please check your inbox and spam folder.
                   </p>

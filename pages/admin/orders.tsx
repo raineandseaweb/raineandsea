@@ -298,17 +298,17 @@ export default function AdminOrdersPage() {
 
     return (
       <th
-        className={`px-6 py-3 ${alignClass} text-xs font-medium text-gray-500 uppercase tracking-wider`}
+        className={`px-6 py-3 ${alignClass} text-xs font-medium text-muted-foreground uppercase tracking-wider`}
       >
         <button
           onClick={() => handleSort(column)}
-          className={`flex items-center space-x-1 hover:text-gray-700 transition-colors ${
+          className={`flex items-center space-x-1 hover:text-foreground transition-colors ${
             align === "right" ? "ml-auto" : ""
           }`}
         >
           <span>{children}</span>
           {isSorted && (
-            <span className="text-blue-600">
+            <span className="text-primary">
               {sortOrder === "asc" ? "↑" : "↓"}
             </span>
           )}
@@ -336,13 +336,13 @@ export default function AdminOrdersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <main className="flex-1">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading...</p>
             </div>
           </div>
         </main>
@@ -356,15 +356,15 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground">
               Orders Management
             </h1>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-muted-foreground">
               Manage and track customer orders
             </p>
           </div>
@@ -377,32 +377,32 @@ export default function AdminOrdersPage() {
           />
 
           {/* Orders Table */}
-          <div className="bg-white rounded-lg shadow-sm border">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="bg-card rounded-lg shadow-sm border">
+            <div className="px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-semibold text-foreground">
                 Orders ({pagination.total})
               </h2>
             </div>
 
             {loadingOrders ? (
               <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading orders...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading orders...</p>
               </div>
             ) : orders.length === 0 ? (
               <div className="p-8 text-center">
-                <p className="text-gray-600">No orders found</p>
+                <p className="text-muted-foreground">No orders found</p>
                 <button
                   onClick={handleResetFilters}
-                  className="mt-2 text-blue-600 hover:text-blue-700 font-medium"
+                  className="mt-2 text-primary hover:text-primary/80 font-medium"
                 >
                   Reset Filters
                 </button>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-border">
+                  <thead className="bg-muted">
                     <tr>
                       <SortableHeader column="order_number">
                         Order
@@ -414,26 +414,26 @@ export default function AdminOrdersPage() {
                       <SortableHeader column="total" align="right">
                         Total
                       </SortableHeader>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Tracking
                       </th>
                       <SortableHeader column="created_at" align="right">
                         Date
                       </SortableHeader>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-card divide-y divide-border">
                     {orders.map((order) => (
-                      <tr key={order.id} className="hover:bg-gray-50">
+                      <tr key={order.id} className="hover:bg-muted">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-foreground">
                               {order.orderNumber}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-muted-foreground">
                               {order.items.length} item
                               {order.items.length !== 1 ? "s" : ""}
                             </div>
@@ -441,10 +441,10 @@ export default function AdminOrdersPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-foreground">
                               {order.customer.name || "N/A"}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-muted-foreground">
                               {order.customer.email}
                             </div>
                           </div>
@@ -452,13 +452,13 @@ export default function AdminOrdersPage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <StatusIndicator status={order.status} type="order" />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-foreground">
                           {formatPrice(order.totals.total)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                           {order.tracking_number ? (
                             <div className="space-y-1">
-                              <div className="text-xs text-gray-600">
+                              <div className="text-xs text-muted-foreground">
                                 {order.shipping_provider?.toUpperCase() ||
                                   "UNKNOWN"}
                               </div>
@@ -466,7 +466,7 @@ export default function AdminOrdersPage() {
                                 {order.tracking_number.slice(0, 12)}...
                               </div>
                               {order.shipped_at && (
-                                <div className="text-xs text-green-600">
+                                <div className="text-xs text-primary">
                                   {new Date(
                                     order.shipped_at
                                   ).toLocaleDateString()}
@@ -474,12 +474,12 @@ export default function AdminOrdersPage() {
                               )}
                             </div>
                           ) : (
-                            <span className="text-gray-400 text-xs">
+                            <span className="text-muted-foreground text-xs">
                               No tracking
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-muted-foreground">
                           {formatDate(order.created_at)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -488,7 +488,7 @@ export default function AdminOrdersPage() {
                               setSelectedOrder(order);
                               setShowOrderModal(true);
                             }}
-                            className="text-blue-600 hover:text-blue-900 mr-4"
+                            className="text-primary hover:text-primary/80 mr-4"
                           >
                             View
                           </button>
@@ -497,7 +497,7 @@ export default function AdminOrdersPage() {
                             onChange={(e) =>
                               updateOrderStatus(order.id, e.target.value)
                             }
-                            className="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="text-sm border border-border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary"
                           >
                             <option value="received">Received</option>
                             <option value="paid">Paid</option>
@@ -515,9 +515,9 @@ export default function AdminOrdersPage() {
             )}
 
             {/* Pagination */}
-            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+            <div className="px-6 py-4 border-t border-border flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
                   {Math.min(
                     pagination.page * pagination.limit,
@@ -526,7 +526,9 @@ export default function AdminOrdersPage() {
                   of {pagination.total} orders
                 </div>
                 <div className="flex items-center space-x-2">
-                  <label className="text-sm text-gray-600">Per page:</label>
+                  <label className="text-sm text-muted-foreground">
+                    Per page:
+                  </label>
                   <select
                     value={pagination.limit}
                     onChange={(e) =>
@@ -536,7 +538,7 @@ export default function AdminOrdersPage() {
                         page: 1,
                       })
                     }
-                    className="px-2 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-2 py-1 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -555,7 +557,7 @@ export default function AdminOrdersPage() {
                       })
                     }
                     disabled={pagination.page === 1}
-                    className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-1 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -587,8 +589,8 @@ export default function AdminOrdersPage() {
                             }
                             className={`px-3 py-1 border rounded-lg ${
                               pagination.page === pageNum
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "border-gray-300 hover:bg-gray-50"
+                                ? "bg-primary text-primary-foreground border-primary"
+                                : "border-border hover:bg-muted"
                             }`}
                           >
                             {pageNum}
@@ -605,7 +607,7 @@ export default function AdminOrdersPage() {
                       })
                     }
                     disabled={pagination.page === pagination.totalPages}
-                    className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-1 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -628,16 +630,16 @@ export default function AdminOrdersPage() {
       {/* Tracking Number Modal */}
       {showTrackingModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-card rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Add Tracking Number
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               Please enter the tracking number for this order:
             </p>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Tracking Number
               </label>
               <input
@@ -657,19 +659,19 @@ export default function AdminOrdersPage() {
                   }
                 }}
                 placeholder="Enter tracking number..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {trackingError && (
-                <p className="text-red-600 text-sm mt-1">{trackingError}</p>
+                <p className="text-destructive text-sm mt-1">{trackingError}</p>
               )}
 
               {/* Detected Provider Display */}
               {detectedProvider && detectedProvider !== "other" && (
-                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <div className="mt-3 p-3 bg-accent border border-border rounded-md">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <svg
-                        className="w-5 h-5 text-blue-600"
+                        className="w-5 h-5 text-primary"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -683,10 +685,10 @@ export default function AdminOrdersPage() {
                       </svg>
                     </div>
                     <div className="ml-3">
-                      <p className="text-sm font-medium text-blue-800">
+                      <p className="text-sm font-medium text-accent-foreground">
                         Detected Shipping Provider
                       </p>
-                      <p className="text-sm text-blue-600">
+                      <p className="text-sm text-primary">
                         {getProviderDisplayName(detectedProvider as any)}
                       </p>
                     </div>
@@ -696,11 +698,11 @@ export default function AdminOrdersPage() {
 
               {detectedProvider === "other" &&
                 trackingNumber.trim().length > 5 && (
-                  <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <div className="mt-3 p-3 bg-accent border border-border rounded-md">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
                         <svg
-                          className="w-5 h-5 text-yellow-600"
+                          className="w-5 h-5 text-primary"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -714,10 +716,10 @@ export default function AdminOrdersPage() {
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <p className="text-sm font-medium text-yellow-800">
+                        <p className="text-sm font-medium text-accent-foreground">
                           Unknown Shipping Provider
                         </p>
-                        <p className="text-sm text-yellow-600">
+                        <p className="text-sm text-primary">
                           Could not identify carrier from tracking number format
                         </p>
                       </div>
@@ -729,13 +731,13 @@ export default function AdminOrdersPage() {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={handleTrackingCancel}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="px-4 py-2 text-sm font-medium text-foreground bg-muted rounded-md hover:bg-muted/80 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 Cancel
               </button>
               <button
                 onClick={handleTrackingSubmit}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 Update Status
               </button>

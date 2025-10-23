@@ -123,14 +123,14 @@ export function BulkOperationsModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-foreground">
             Bulk Operations
           </h3>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-muted-foreground hover:text-muted-foreground"
           >
             <svg
               className="w-6 h-6"
@@ -148,20 +148,20 @@ export function BulkOperationsModal({
           </button>
         </div>
 
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-muted-foreground mb-4">
           {selectedCount} product(s) selected
         </p>
 
         <div className="space-y-4">
           {/* Operation Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Select Operation
             </label>
             <select
               value={operation}
               onChange={(e) => setOperation(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">Choose an operation...</option>
               <optgroup label="Status">
@@ -188,13 +188,13 @@ export function BulkOperationsModal({
           {/* Operation-specific inputs */}
           {operation === "update_status" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 New Status
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
@@ -205,7 +205,7 @@ export function BulkOperationsModal({
 
           {operation === "update_stock" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Stock Quantity
               </label>
               <input
@@ -213,21 +213,21 @@ export function BulkOperationsModal({
                 value={stockQuantity}
                 onChange={(e) => setStockQuantity(parseInt(e.target.value))}
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           )}
 
           {operation === "adjust_stock" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Stock Adjustment (use negative numbers to decrease)
               </label>
               <input
                 type="number"
                 value={stockAdjustment}
                 onChange={(e) => setStockAdjustment(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="e.g., +10 or -5"
               />
             </div>
@@ -235,7 +235,7 @@ export function BulkOperationsModal({
 
           {operation === "update_price" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Base Price ($)
               </label>
               <input
@@ -244,14 +244,14 @@ export function BulkOperationsModal({
                 onChange={(e) => setBasePrice(parseFloat(e.target.value))}
                 min="0"
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           )}
 
           {operation === "adjust_price" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Price Adjustment ($ - use negative numbers to decrease)
               </label>
               <input
@@ -259,7 +259,7 @@ export function BulkOperationsModal({
                 value={priceAdjustment}
                 onChange={(e) => setPriceAdjustment(parseFloat(e.target.value))}
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="e.g., +5.00 or -2.50"
               />
             </div>
@@ -267,10 +267,10 @@ export function BulkOperationsModal({
 
           {(operation === "add_tags" || operation === "remove_tags") && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Select Tags
               </label>
-              <div className="border border-gray-300 rounded-lg p-3 max-h-48 overflow-y-auto space-y-2">
+              <div className="border border-border rounded-lg p-3 max-h-48 overflow-y-auto space-y-2">
                 {availableTags.map((tag) => (
                   <label key={tag.id} className="flex items-center">
                     <input
@@ -285,9 +285,9 @@ export function BulkOperationsModal({
                           );
                         }
                       }}
-                      className="mr-2 rounded text-blue-600 focus:ring-blue-500"
+                      className="mr-2 rounded text-primary focus:ring-primary"
                     />
-                    <span className="text-sm text-gray-700">{tag.name}</span>
+                    <span className="text-sm text-foreground">{tag.name}</span>
                   </label>
                 ))}
               </div>
@@ -295,8 +295,8 @@ export function BulkOperationsModal({
           )}
 
           {operation === "delete" && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-sm text-red-800">
+            <div className="bg-accent border border-border rounded-lg p-4">
+              <p className="text-sm text-accent-foreground">
                 <strong>Warning:</strong> This will permanently delete{" "}
                 {selectedCount} product(s) and all associated data. This action
                 cannot be undone.
@@ -309,7 +309,7 @@ export function BulkOperationsModal({
           <button
             onClick={handleClose}
             disabled={processing}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50"
+            className="px-4 py-2 text-muted-foreground hover:text-foreground disabled:opacity-50"
           >
             Cancel
           </button>
@@ -318,8 +318,8 @@ export function BulkOperationsModal({
             disabled={processing || !operation}
             className={`px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
               operation === "delete"
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                ? "bg-destructive text-primary-foreground hover:bg-destructive"
+                : "bg-primary text-primary-foreground hover:bg-primary"
             }`}
           >
             {processing ? "Processing..." : "Apply Changes"}

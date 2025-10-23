@@ -64,16 +64,16 @@ function SortableImageItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex flex-none w-40 h-28 rounded-lg border border-gray-200 overflow-hidden bg-white ${
+      className={`flex flex-none w-40 h-28 rounded-lg border border-border overflow-hidden bg-card ${
         isDragging ? "opacity-50" : ""
       }`}
     >
       {/* Left control rail */}
-      <div className="flex flex-col w-8 h-full bg-gray-50 border-r border-gray-200">
+      <div className="flex flex-col w-8 h-full bg-muted border-r border-border">
         <div
           {...attributes}
           {...listeners}
-          className="flex-1 w-full flex items-center justify-center cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
+          className="flex-1 w-full flex items-center justify-center cursor-grab active:cursor-grabbing text-muted-foreground hover:text-muted-foreground"
           title="Drag to reorder"
         >
           <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -82,7 +82,7 @@ function SortableImageItem({
         </div>
         <button
           onClick={() => onDelete(media.id)}
-          className="p-2 text-red-500 hover:text-red-700"
+          className="p-2 text-destructive hover:text-destructive/80"
           title="Delete image"
         >
           <svg
@@ -338,13 +338,13 @@ export default function MediaModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-foreground">
               Product Images
             </h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Manage images for:{" "}
               <span className="font-medium">{productTitle}</span>
             </p>
@@ -352,7 +352,7 @@ export default function MediaModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-muted-foreground hover:text-muted-foreground transition-colors"
           >
             <svg
               className="w-6 h-6"
@@ -374,7 +374,7 @@ export default function MediaModal({
           {/* Existing Images */}
           {media.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-3">
+              <h4 className="text-sm font-medium text-foreground mb-3">
                 Current Images
               </h4>
               <DndContext
@@ -403,7 +403,7 @@ export default function MediaModal({
 
           {/* Add New Image */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-3">
+            <h4 className="text-sm font-medium text-foreground mb-3">
               Upload New Image
             </h4>
             <div className="space-y-3">
@@ -411,8 +411,8 @@ export default function MediaModal({
               <div
                 className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                   dragActive
-                    ? "border-blue-400 bg-blue-50"
-                    : "border-gray-300 hover:border-gray-400"
+                    ? "border-primary bg-accent"
+                    : "border-border hover:border-border"
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -429,7 +429,7 @@ export default function MediaModal({
                 />
                 <div className="space-y-2">
                   <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
+                    className="mx-auto h-12 w-12 text-muted-foreground"
                     stroke="currentColor"
                     fill="none"
                     viewBox="0 0 48 48"
@@ -441,20 +441,20 @@ export default function MediaModal({
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium text-blue-600 hover:text-blue-500">
+                  <div className="text-sm text-muted-foreground">
+                    <span className="font-medium text-primary hover:text-primary/80">
                       Click to upload
                     </span>{" "}
                     or drag and drop
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     PNG, JPG, GIF up to 10MB
                   </p>
                 </div>
               </div>
 
               {uploadingFiles.size > 0 && (
-                <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                <div className="text-sm text-muted-foreground bg-accent p-3 rounded-lg">
                   <div className="font-medium">
                     Uploading {uploadingFiles.size} file(s)...
                   </div>
@@ -464,11 +464,11 @@ export default function MediaModal({
           </div>
         </div>
 
-        <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+        <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-border">
           <button
             type="button"
             onClick={handleCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
           >
             Cancel
           </button>
@@ -476,7 +476,7 @@ export default function MediaModal({
             type="button"
             onClick={handleSave}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Saving..." : "Save Images"}
           </button>

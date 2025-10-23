@@ -29,6 +29,7 @@
 }
 
 @layer base {
+  /* Default Light Theme */
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -61,6 +62,7 @@
     --radius: 0.5rem;
   }
 
+  /* Dark Theme */
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -90,6 +92,493 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
   }
+
+  /* Forest Theme (Dark Witchy Green) */
+  :root[data-theme="forest"] {
+    --background: 150 25% 95%;
+    --foreground: 158 35% 15%;
+
+    --muted: 150 20% 88%;
+    --muted-foreground: 158 15% 40%;
+
+    --border: 150 15% 82%;
+    --input: 150 15% 82%;
+    --ring: 158 45% 38%;
+
+    --primary: 158 50% 32%;
+    --primary-foreground: 150 0% 100%;
+
+    --secondary: 150 20% 90%;
+    --secondary-foreground: 158 35% 15%;
+
+    --accent: 150 30% 85%;
+    --accent-foreground: 158 35% 15%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 150 30% 96%;
+    --card-foreground: 158 35% 15%;
+
+    --popover: 150 30% 96%;
+    --popover-foreground: 158 35% 15%;
+  }
+
+  :root[data-theme="forest"].dark {
+    --background: 158 30% 6%;
+    --foreground: 150 15% 92%;
+
+    --muted: 158 25% 12%;
+    --muted-foreground: 150 10% 68%;
+
+    --border: 158 25% 18%;
+    --input: 158 25% 18%;
+    --ring: 158 35% 42%;
+
+    --primary: 158 42% 40%;
+    --primary-foreground: 150 0% 100%;
+
+    --secondary: 158 25% 18%;
+    --secondary-foreground: 150 15% 92%;
+
+    --accent: 158 30% 22%;
+    --accent-foreground: 150 15% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 158 28% 8%;
+    --card-foreground: 150 15% 92%;
+
+    --popover: 158 28% 8%;
+    --popover-foreground: 150 15% 92%;
+  }
+
+  /* Forest Alt Theme (Brighter Vibrant Green) */
+  :root[data-theme="forest-alt"] {
+    --background: 142 35% 98%;
+    --foreground: 140 40% 20%;
+
+    --muted: 142 25% 92%;
+    --muted-foreground: 140 20% 45%;
+
+    --border: 142 20% 85%;
+    --input: 142 20% 85%;
+    --ring: 140 50% 42%;
+
+    --primary: 140 50% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 142 30% 94%;
+    --secondary-foreground: 140 40% 20%;
+
+    --accent: 142 40% 90%;
+    --accent-foreground: 140 40% 20%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 142 35% 99%;
+    --card-foreground: 140 40% 20%;
+
+    --popover: 142 35% 99%;
+    --popover-foreground: 140 40% 20%;
+  }
+
+  :root[data-theme="forest-alt"].dark {
+    --background: 142 45% 5%;
+    --foreground: 140 20% 94%;
+
+    --muted: 142 35% 10%;
+    --muted-foreground: 140 15% 72%;
+
+    --border: 142 35% 16%;
+    --input: 142 35% 16%;
+    --ring: 140 48% 48%;
+
+    --primary: 140 45% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 142 35% 16%;
+    --secondary-foreground: 140 20% 94%;
+
+    --accent: 142 40% 20%;
+    --accent-foreground: 140 20% 94%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 142 40% 7%;
+    --card-foreground: 140 20% 94%;
+
+    --popover: 142 40% 7%;
+    --popover-foreground: 140 20% 94%;
+  }
+
+  /* Ocean Theme (Witchy Deep Blue Water) */
+  :root[data-theme="ocean"] {
+    --background: 210 35% 96%;
+    --foreground: 220 50% 14%;
+
+    --muted: 210 25% 90%;
+    --muted-foreground: 220 20% 38%;
+
+    --border: 210 18% 85%;
+    --input: 210 18% 85%;
+    --ring: 210 55% 45%;
+
+    --primary: 210 70% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 25% 92%;
+    --secondary-foreground: 220 50% 14%;
+
+    --accent: 210 35% 88%;
+    --accent-foreground: 220 50% 14%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 210 30% 97%;
+    --card-foreground: 220 50% 14%;
+
+    --popover: 210 30% 97%;
+    --popover-foreground: 220 50% 14%;
+  }
+
+  :root[data-theme="ocean"].dark {
+    --background: 220 45% 5%;
+    --foreground: 210 18% 92%;
+
+    --muted: 220 35% 11%;
+    --muted-foreground: 210 12% 70%;
+
+    --border: 220 35% 16%;
+    --input: 220 35% 16%;
+    --ring: 210 50% 48%;
+
+    --primary: 210 65% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 35% 16%;
+    --secondary-foreground: 210 18% 92%;
+
+    --accent: 220 40% 20%;
+    --accent-foreground: 210 18% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 220 38% 7%;
+    --card-foreground: 210 18% 92%;
+
+    --popover: 220 38% 7%;
+    --popover-foreground: 210 18% 92%;
+  }
+
+  /* Ocean Alt Theme (Bright Cyan/Turquoise) */
+  :root[data-theme="ocean-alt"] {
+    --background: 185 40% 97%;
+    --foreground: 195 50% 18%;
+
+    --muted: 185 25% 92%;
+    --muted-foreground: 195 20% 42%;
+
+    --border: 185 20% 87%;
+    --input: 185 20% 87%;
+    --ring: 195 50% 45%;
+
+    --primary: 195 55% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 185 30% 94%;
+    --secondary-foreground: 195 50% 18%;
+
+    --accent: 185 40% 91%;
+    --accent-foreground: 195 50% 18%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 185 38% 98%;
+    --card-foreground: 195 50% 18%;
+
+    --popover: 185 38% 98%;
+    --popover-foreground: 195 50% 18%;
+  }
+
+  :root[data-theme="ocean-alt"].dark {
+    --background: 195 50% 6%;
+    --foreground: 185 20% 93%;
+
+    --muted: 195 40% 12%;
+    --muted-foreground: 185 15% 73%;
+
+    --border: 195 40% 18%;
+    --input: 195 40% 18%;
+    --ring: 195 50% 48%;
+
+    --primary: 195 50% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 195 40% 18%;
+    --secondary-foreground: 185 20% 93%;
+
+    --accent: 195 45% 22%;
+    --accent-foreground: 185 20% 93%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 195 45% 8%;
+    --card-foreground: 185 20% 93%;
+
+    --popover: 195 45% 8%;
+    --popover-foreground: 185 20% 93%;
+  }
+
+  /* Sunset Theme (Orange/Pink) */
+  :root[data-theme="sunset"] {
+    --background: 20 60% 98%;
+    --foreground: 15 70% 15%;
+
+    --muted: 25 30% 94%;
+    --muted-foreground: 15 20% 40%;
+
+    --border: 20 20% 88%;
+    --input: 20 20% 88%;
+    --ring: 15 70% 50%;
+
+    --primary: 15 90% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 25 40% 92%;
+    --secondary-foreground: 15 70% 15%;
+
+    --accent: 20 50% 90%;
+    --accent-foreground: 15 70% 15%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 20 40% 98%;
+    --card-foreground: 15 70% 15%;
+
+    --popover: 20 40% 98%;
+    --popover-foreground: 15 70% 15%;
+  }
+
+  :root[data-theme="sunset"].dark {
+    --background: 20 40% 8%;
+    --foreground: 15 20% 90%;
+
+    --muted: 20 25% 15%;
+    --muted-foreground: 15 15% 65%;
+
+    --border: 20 25% 20%;
+    --input: 20 25% 20%;
+    --ring: 15 60% 50%;
+
+    --primary: 15 80% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 20 25% 20%;
+    --secondary-foreground: 15 20% 90%;
+
+    --accent: 20 30% 25%;
+    --accent-foreground: 15 20% 90%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 20 30% 10%;
+    --card-foreground: 15 20% 90%;
+
+    --popover: 20 30% 10%;
+    --popover-foreground: 15 20% 90%;
+  }
+
+  /* Sunset Alt Theme (Bright Vibrant Coral/Rose) */
+  :root[data-theme="sunset-alt"] {
+    --background: 10 60% 99%;
+    --foreground: 5 90% 20%;
+
+    --muted: 15 40% 96%;
+    --muted-foreground: 5 30% 45%;
+
+    --border: 10 30% 90%;
+    --input: 10 30% 90%;
+    --ring: 5 90% 55%;
+
+    --primary: 5 100% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 15 50% 96%;
+    --secondary-foreground: 5 90% 20%;
+
+    --accent: 10 70% 95%;
+    --accent-foreground: 5 90% 20%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 10 50% 99%;
+    --card-foreground: 5 90% 20%;
+
+    --popover: 10 50% 99%;
+    --popover-foreground: 5 90% 20%;
+  }
+
+  :root[data-theme="sunset-alt"].dark {
+    --background: 5 45% 7%;
+    --foreground: 10 25% 92%;
+
+    --muted: 5 30% 14%;
+    --muted-foreground: 10 20% 68%;
+
+    --border: 5 30% 19%;
+    --input: 5 30% 19%;
+    --ring: 5 85% 58%;
+
+    --primary: 5 95% 62%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 5 30% 19%;
+    --secondary-foreground: 10 25% 92%;
+
+    --accent: 5 35% 24%;
+    --accent-foreground: 10 25% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 5 35% 9%;
+    --card-foreground: 10 25% 92%;
+
+    --popover: 5 35% 9%;
+    --popover-foreground: 10 25% 92%;
+  }
+  /* IRIS — crisp indigo/violet with strong contrast */
+  :root[data-theme="iris"] {
+    --background: 252 40% 98%;
+    --foreground: 252 46% 16%;
+
+    --muted: 252 28% 95%;
+    --muted-foreground: 252 20% 42%;
+
+    --border: 252 18% 90%;
+    --input: 252 18% 90%;
+    --ring: 258 85% 56%;
+
+    --primary: 258 85% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 252 26% 96%;
+    --secondary-foreground: 252 46% 16%;
+
+    --accent: 252 30% 93%;
+    --accent-foreground: 252 46% 16%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 252 35% 99%;
+    --card-foreground: 252 46% 16%;
+
+    --popover: 252 35% 99%;
+    --popover-foreground: 252 46% 16%;
+  }
+
+  :root[data-theme="iris"].dark {
+    --background: 252 32% 10%;
+    --foreground: 252 24% 92%;
+
+    --muted: 252 22% 15%;
+    --muted-foreground: 252 14% 70%;
+
+    --border: 252 22% 20%;
+    --input: 252 22% 20%;
+    --ring: 258 85% 64%;
+
+    --primary: 258 80% 66%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 252 22% 20%;
+    --secondary-foreground: 252 24% 92%;
+
+    --accent: 252 24% 24%;
+    --accent-foreground: 252 24% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 252 28% 12%;
+    --card-foreground: 252 24% 92%;
+
+    --popover: 252 28% 12%;
+    --popover-foreground: 252 24% 92%;
+  }
+
+  /* IRIS SOFT — muted lilac for a calmer feel */
+  :root[data-theme="iris-alt"] {
+    --background: 265 38% 99%;
+    --foreground: 265 35% 18%;
+
+    --muted: 265 22% 95%;
+    --muted-foreground: 265 20% 42%;
+
+    --border: 265 18% 90%;
+    --input: 265 18% 90%;
+    --ring: 268 70% 52%;
+
+    --primary: 268 70% 54%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 265 26% 97%;
+    --secondary-foreground: 265 35% 18%;
+
+    --accent: 265 28% 94%;
+    --accent-foreground: 265 35% 18%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 265 32% 99%;
+    --card-foreground: 265 35% 18%;
+
+    --popover: 265 32% 99%;
+    --popover-foreground: 265 35% 18%;
+  }
+
+  :root[data-theme="iris-alt"].dark {
+    --background: 265 28% 9%;
+    --foreground: 265 22% 93%;
+
+    --muted: 265 20% 14%;
+    --muted-foreground: 265 16% 72%;
+
+    --border: 265 20% 20%;
+    --input: 265 20% 20%;
+    --ring: 268 72% 58%;
+
+    --primary: 268 68% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 265 20% 20%;
+    --secondary-foreground: 265 22% 93%;
+
+    --accent: 265 22% 24%;
+    --accent-foreground: 265 22% 93%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --card: 265 24% 11%;
+    --card-foreground: 265 22% 93%;
+
+    --popover: 265 24% 11%;
+    --popover-foreground: 265 22% 93%;
+  }
 }
 
 @layer base {
@@ -103,11 +592,33 @@
 }
 
 @layer utilities {
+  /* Enable smooth iOS momentum scrolling and fix nested scroll containers */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    min-height: 0; /* important for flex children to allow scrolling */
+  }
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Ensure all form elements use theme background */
+@layer base {
+  input,
+  textarea,
+  select {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    background-color: hsl(var(--background));
   }
 }

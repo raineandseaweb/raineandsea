@@ -36,15 +36,15 @@ export function ProductFilters({
     filters.categories.length > 0;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+    <div className="bg-card border border-border rounded-lg shadow-sm mb-6">
       {/* Basic Filters */}
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+          <h3 className="text-lg font-semibold text-foreground">Filters</h3>
           {hasActiveFilters && (
             <button
               onClick={onReset}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="text-sm text-primary hover:text-primary font-medium"
             >
               Reset All
             </button>
@@ -53,7 +53,7 @@ export function ProductFilters({
 
         {/* Search */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Search
           </label>
           <input
@@ -61,20 +61,20 @@ export function ProductFilters({
             value={filters.search}
             onChange={(e) => updateFilter("search", e.target.value)}
             placeholder="Search by ID, title, slug, or description..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Status Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Status
             </label>
             <select
               value={filters.status}
               onChange={(e) => updateFilter("status", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="all">All Statuses</option>
               <option value="active">Active</option>
@@ -85,13 +85,13 @@ export function ProductFilters({
 
           {/* Stock Status Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Stock Status
             </label>
             <select
               value={filters.stockStatus}
               onChange={(e) => updateFilter("stockStatus", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="all">All</option>
               <option value="in_stock">In Stock (&gt;10)</option>
@@ -104,7 +104,7 @@ export function ProductFilters({
         {/* Advanced Filters Toggle */}
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center"
+          className="text-sm text-primary hover:text-primary font-medium flex items-center"
         >
           {showAdvanced ? "Hide" : "Show"} Advanced Filters
           <svg
@@ -127,11 +127,11 @@ export function ProductFilters({
 
       {/* Advanced Filters */}
       {showAdvanced && (
-        <div className="px-4 pb-4 space-y-4 border-t border-gray-200 pt-4">
+        <div className="px-4 pb-4 space-y-4 border-t border-border pt-4">
           {/* Tags Filter */}
           {availableTags.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Tags
               </label>
               <TagCombobox
@@ -146,7 +146,7 @@ export function ProductFilters({
           {/* Categories Filter */}
           {availableCategories.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Categories
               </label>
               <TagCombobox

@@ -104,8 +104,8 @@ export default function CartPage() {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading cart...</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading cart...</p>
           </div>
         </main>
         <Footer />
@@ -114,15 +114,15 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               Shopping Cart
             </h1>
-            <p className="mt-2 text-sm sm:text-base text-gray-600">
+            <p className="mt-2 text-sm sm:text-base text-muted-foreground">
               {getTotalItems()} {getTotalItems() === 1 ? "item" : "items"} in
               your cart
             </p>
@@ -130,9 +130,9 @@ export default function CartPage() {
 
           {!cart || cart.items.length === 0 ? (
             <div className="text-center py-12 sm:py-24">
-              <div className="mx-auto w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+              <div className="mx-auto w-16 h-16 sm:w-24 sm:h-24 bg-muted rounded-full flex items-center justify-center mb-4 sm:mb-6">
                 <svg
-                  className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400"
+                  className="w-8 h-8 sm:w-12 sm:h-12 text-muted-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -145,17 +145,17 @@ export default function CartPage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
+              <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-2 sm:mb-3">
                 Your cart is empty
               </h2>
-              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
+              <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
                 Looks like you haven&apos;t added any items to your cart yet.
                 Start shopping to add some beautiful crystals to your
                 collection.
               </p>
               <Link
                 href="/products"
-                className="inline-flex items-center px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                className="inline-flex items-center px-4 sm:px-6 py-3 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-medium rounded-xl hover:from-primary/90 hover:to-primary/70 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
@@ -177,10 +177,10 @@ export default function CartPage() {
             <>
               {/* Out of Stock Warning Banner */}
               {outOfStockItems.length > 0 && (
-                <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-accent border border-border rounded-lg">
                   <div className="flex items-start gap-2 sm:gap-3">
                     <svg
-                      className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 mt-0.5 flex-shrink-0"
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-destructive mt-0.5 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -193,10 +193,10 @@ export default function CartPage() {
                       />
                     </svg>
                     <div>
-                      <h3 className="font-semibold text-red-800 mb-1 sm:mb-2 text-sm sm:text-base">
+                      <h3 className="font-semibold text-accent-foreground mb-1 sm:mb-2 text-sm sm:text-base">
                         Some items are no longer available
                       </h3>
-                      <p className="text-red-700 text-xs sm:text-sm mb-2 sm:mb-3">
+                      <p className="text-destructive text-xs sm:text-sm mb-2 sm:mb-3">
                         Please review the items below and remove any that are
                         out of stock before proceeding to checkout.
                       </p>
@@ -204,7 +204,7 @@ export default function CartPage() {
                         {outOfStockItems.map((item, index) => (
                           <p
                             key={index}
-                            className="text-xs sm:text-sm text-red-600"
+                            className="text-xs sm:text-sm text-destructive"
                           >
                             • {item.product_title}: Requested {item.requested},
                             Available {item.available}
@@ -219,14 +219,14 @@ export default function CartPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
                 {/* Cart Items */}
                 <div className="lg:col-span-2">
-                  <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden">
-                    <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50/50 border-b border-gray-200/50">
-                      <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                  <div className="bg-card rounded-xl sm:rounded-2xl shadow-sm border border-border/50 overflow-hidden">
+                    <div className="px-4 sm:px-6 py-3 sm:py-4 bg-muted/50 border-b border-border/50">
+                      <h2 className="text-base sm:text-lg font-semibold text-foreground">
                         Cart Items
                       </h2>
                     </div>
 
-                    <div className="divide-y divide-gray-200/50">
+                    <div className="divide-y divide-border/50">
                       {cart.items.map((item) => {
                         const isOutOfStock = isItemOutOfStock(item);
                         const outOfStockInfo = getOutOfStockInfo(item);
@@ -238,8 +238,8 @@ export default function CartPage() {
                               isRemoving === item.id
                                 ? "opacity-50 scale-95"
                                 : isOutOfStock
-                                ? "bg-red-50 border-l-4 border-red-400"
-                                : "hover:bg-gray-50/50"
+                                ? "bg-accent border-l-4 border-destructive"
+                                : "hover:bg-muted/50"
                             }`}
                           >
                             <div className="flex items-start gap-3 sm:gap-4">
@@ -259,9 +259,9 @@ export default function CartPage() {
                                         blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                                       />
                                     ) : (
-                                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg sm:rounded-xl flex items-center justify-center">
+                                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-muted to-muted/80 rounded-lg sm:rounded-xl flex items-center justify-center">
                                         <svg
-                                          className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
+                                          className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground"
                                           fill="none"
                                           viewBox="0 0 24 24"
                                           stroke="currentColor"
@@ -277,9 +277,9 @@ export default function CartPage() {
                                     )}
                                   </Link>
                                 ) : (
-                                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg sm:rounded-xl flex items-center justify-center">
+                                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-muted to-muted/80 rounded-lg sm:rounded-xl flex items-center justify-center">
                                     <svg
-                                      className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
+                                      className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground"
                                       fill="none"
                                       viewBox="0 0 24 24"
                                       stroke="currentColor"
@@ -302,17 +302,17 @@ export default function CartPage() {
                                     href={`/products/${item.product.slug}`}
                                     className="block group"
                                   >
-                                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+                                    <h3 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-200 line-clamp-2">
                                       {item.product.title}
                                     </h3>
                                   </Link>
                                 ) : (
-                                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 line-clamp-2">
+                                  <h3 className="text-sm sm:text-base font-semibold text-foreground line-clamp-2">
                                     Loading product...
                                   </h3>
                                 )}
 
-                                <div className="mt-1 flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                                <div className="mt-1 flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                                   <span className="font-medium">
                                     {(() => {
                                       // Use descriptive title if available, otherwise generate from options
@@ -357,10 +357,10 @@ export default function CartPage() {
 
                                 {/* Out of Stock Warning */}
                                 {isOutOfStock && outOfStockInfo && (
-                                  <div className="mt-2 p-2 sm:p-3 bg-red-100 border border-red-200 rounded-lg">
+                                  <div className="mt-2 p-2 sm:p-3 bg-accent border border-border rounded-lg">
                                     <div className="flex items-start gap-2">
                                       <svg
-                                        className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 mt-0.5 flex-shrink-0"
+                                        className="w-4 h-4 sm:w-5 sm:h-5 text-destructive mt-0.5 flex-shrink-0"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -373,10 +373,10 @@ export default function CartPage() {
                                         />
                                       </svg>
                                       <div className="text-xs sm:text-sm">
-                                        <p className="font-medium text-red-800">
+                                        <p className="font-medium text-accent-foreground">
                                           No longer available
                                         </p>
-                                        <p className="text-red-700">
+                                        <p className="text-destructive">
                                           You requested{" "}
                                           {outOfStockInfo.requested} but only{" "}
                                           {outOfStockInfo.available} are
@@ -391,9 +391,7 @@ export default function CartPage() {
                                   {/* Quantity Controls */}
                                   <div
                                     className={`flex items-center rounded-lg w-fit ${
-                                      isOutOfStock
-                                        ? "bg-gray-200"
-                                        : "bg-gray-100"
+                                      isOutOfStock ? "bg-muted" : "bg-muted"
                                     }`}
                                   >
                                     <button
@@ -405,8 +403,8 @@ export default function CartPage() {
                                       }
                                       className={`p-1.5 sm:p-2 rounded-l-lg transition-colors duration-150 touch-manipulation ${
                                         isOutOfStock
-                                          ? "text-gray-400 cursor-not-allowed"
-                                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-200 active:bg-gray-300"
+                                          ? "text-muted-foreground cursor-not-allowed"
+                                          : "text-primary hover:text-primary-foreground hover:bg-primary active:bg-primary/90"
                                       }`}
                                       disabled={
                                         item.quantity <= 1 || isOutOfStock
@@ -429,8 +427,8 @@ export default function CartPage() {
                                     <span
                                       className={`px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium min-w-[2rem] sm:min-w-[3rem] text-center ${
                                         isOutOfStock
-                                          ? "text-gray-500"
-                                          : "text-gray-900"
+                                          ? "text-muted-foreground"
+                                          : "text-foreground"
                                       }`}
                                     >
                                       {item.quantity}
@@ -444,8 +442,8 @@ export default function CartPage() {
                                       }
                                       className={`p-1.5 sm:p-2 rounded-r-lg transition-colors duration-150 touch-manipulation ${
                                         isOutOfStock
-                                          ? "text-gray-400 cursor-not-allowed"
-                                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-200 active:bg-gray-300"
+                                          ? "text-muted-foreground cursor-not-allowed"
+                                          : "text-primary hover:text-primary-foreground hover:bg-primary active:bg-primary/90"
                                       }`}
                                       disabled={isOutOfStock}
                                     >
@@ -470,7 +468,7 @@ export default function CartPage() {
                                     <div className="text-left sm:text-right">
                                       {item.product ? (
                                         <>
-                                          <p className="text-xs sm:text-sm text-gray-500">
+                                          <p className="text-xs sm:text-sm text-muted-foreground">
                                             {(() => {
                                               const basePrice = parseFloat(
                                                 String(
@@ -516,7 +514,7 @@ export default function CartPage() {
                                             })()}{" "}
                                             each
                                           </p>
-                                          <p className="text-base sm:text-lg font-semibold text-gray-900">
+                                          <p className="text-base sm:text-lg font-semibold text-foreground">
                                             {(() => {
                                               const basePrice = parseFloat(
                                                 String(
@@ -564,10 +562,10 @@ export default function CartPage() {
                                         </>
                                       ) : (
                                         <>
-                                          <p className="text-xs sm:text-sm text-gray-500">
+                                          <p className="text-xs sm:text-sm text-muted-foreground">
                                             Loading...
                                           </p>
-                                          <p className="text-base sm:text-lg font-semibold text-gray-900">
+                                          <p className="text-base sm:text-lg font-semibold text-foreground">
                                             Loading...
                                           </p>
                                         </>
@@ -582,7 +580,7 @@ export default function CartPage() {
                                           item.product?.title || "item"
                                         )
                                       }
-                                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200 touch-manipulation active:bg-red-100"
+                                      className="p-2 text-muted-foreground hover:text-destructive hover:bg-accent rounded-lg transition-all duration-200 touch-manipulation active:bg-accent"
                                       disabled={isRemoving === item.id}
                                     >
                                       <svg
@@ -612,45 +610,45 @@ export default function CartPage() {
 
                 {/* Order Summary */}
                 <div className="lg:col-span-1">
-                  <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/50 p-4 sm:p-6 sticky top-4 sm:top-24">
-                    <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">
+                  <div className="bg-card rounded-xl sm:rounded-2xl shadow-sm border border-border/50 p-4 sm:p-6 sticky top-4 sm:top-24">
+                    <h2 className="text-base sm:text-lg font-semibold text-foreground mb-4 sm:mb-6">
                       Order Summary
                     </h2>
 
                     <div className="space-y-3 sm:space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm sm:text-base text-gray-600">
+                        <span className="text-sm sm:text-base text-muted-foreground">
                           Subtotal ({getTotalItems()} items)
                         </span>
-                        <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                        <span className="font-semibold text-foreground text-sm sm:text-base">
                           {formatPrice(getTotalPrice())}
                         </span>
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <span className="text-sm sm:text-base text-gray-600">
+                        <span className="text-sm sm:text-base text-muted-foreground">
                           Shipping
                         </span>
-                        <span className="text-xs sm:text-sm text-gray-500">
+                        <span className="text-xs sm:text-sm text-muted-foreground">
                           Calculated at checkout
                         </span>
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <span className="text-sm sm:text-base text-gray-600">
+                        <span className="text-sm sm:text-base text-muted-foreground">
                           Tax
                         </span>
-                        <span className="text-xs sm:text-sm text-gray-500">
+                        <span className="text-xs sm:text-sm text-muted-foreground">
                           Calculated at checkout
                         </span>
                       </div>
 
-                      <div className="border-t border-gray-200 pt-3 sm:pt-4">
+                      <div className="border-t border-border pt-3 sm:pt-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-base sm:text-lg font-semibold text-gray-900">
+                          <span className="text-base sm:text-lg font-semibold text-foreground">
                             Total
                           </span>
-                          <span className="text-lg sm:text-xl font-bold text-gray-900">
+                          <span className="text-lg sm:text-xl font-bold text-foreground">
                             {formatPrice(getTotalPrice())}
                           </span>
                         </div>
@@ -658,13 +656,13 @@ export default function CartPage() {
                     </div>
 
                     {outOfStockItems.length > 0 ? (
-                      <div className="w-full mt-4 sm:mt-6 bg-gray-300 text-gray-500 font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl text-center cursor-not-allowed text-sm sm:text-base">
+                      <div className="w-full mt-4 sm:mt-6 bg-muted text-muted-foreground font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl text-center cursor-not-allowed text-sm sm:text-base">
                         Remove out-of-stock items to checkout
                       </div>
                     ) : (
                       <Link
                         href="/checkout"
-                        className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl text-center block text-sm sm:text-base touch-manipulation active:from-blue-800 active:to-indigo-800"
+                        className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-semibold py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:from-primary/90 hover:to-primary/70 transition-all duration-200 shadow-lg hover:shadow-xl text-center block text-sm sm:text-base touch-manipulation active:from-primary/80 active:to-primary/60"
                       >
                         Proceed to Checkout
                       </Link>
@@ -673,14 +671,14 @@ export default function CartPage() {
                     <div className="mt-3 sm:mt-4 text-center">
                       <Link
                         href="/products"
-                        className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+                        className="text-xs sm:text-sm text-primary hover:text-accent-foreground font-medium transition-colors duration-200"
                       >
                         Continue Shopping
                       </Link>
                     </div>
                     {/* Trust Signals */}
-                    <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
-                      <div className="flex items-center justify-center gap-2 sm:gap-4 text-xs text-gray-500">
+                    <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border">
+                      <div className="flex items-center justify-center gap-2 sm:gap-4 text-xs text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <svg
                             className="w-3 h-3 sm:w-4 sm:h-4"

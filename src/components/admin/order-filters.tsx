@@ -21,14 +21,14 @@ export function OrderFilters({
     filters.search || filters.status !== "" || filters.orderType !== "";
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+    <div className="bg-card border border-border rounded-lg shadow-sm mb-6">
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+          <h3 className="text-lg font-semibold text-foreground">Filters</h3>
           {hasActiveFilters && (
             <button
               onClick={onReset}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="text-sm text-primary hover:text-primary/80 font-medium"
             >
               Reset All
             </button>
@@ -38,7 +38,7 @@ export function OrderFilters({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Search
             </label>
             <input
@@ -46,19 +46,19 @@ export function OrderFilters({
               value={filters.search}
               onChange={(e) => updateFilter("search", e.target.value)}
               placeholder="Search by email, order number, or order ID..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           {/* Status Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Status
             </label>
             <select
               value={filters.status}
               onChange={(e) => updateFilter("status", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">All Statuses</option>
               <option value="in_progress">
@@ -78,13 +78,13 @@ export function OrderFilters({
 
           {/* Order Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Order Type
             </label>
             <select
               value={filters.orderType}
               onChange={(e) => updateFilter("orderType", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">All Orders</option>
               <option value="guest">Guest Orders</option>

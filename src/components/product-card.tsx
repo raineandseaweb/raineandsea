@@ -107,9 +107,9 @@ export function ProductCard({
 
   return (
     <PrefetchLink href={`/products/${product.slug}`}>
-      <div className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-200 overflow-hidden cursor-pointer">
+      <div className="group bg-card rounded-xl shadow-sm border border-border hover:shadow-lg hover:border-border transition-all duration-200 overflow-hidden cursor-pointer">
         {/* Product Image */}
-        <div className="relative w-full h-48 sm:h-56 lg:h-64 bg-gray-50 overflow-hidden">
+        <div className="relative w-full h-48 sm:h-56 lg:h-64 bg-muted overflow-hidden">
           {product.image ? (
             <Image
               src={product.image}
@@ -121,7 +121,7 @@ export function ProductCard({
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+            <div className="w-full h-full bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center">
               <svg
                 className="w-8 h-8 sm:w-10 sm:h-10 text-gray-300"
                 fill="none"
@@ -141,7 +141,7 @@ export function ProductCard({
           {/* Out of stock overlay */}
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <div className="bg-red-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold">
+              <div className="bg-destructive text-primary-foreground px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold">
                 Out of Stock
               </div>
             </div>
@@ -153,7 +153,7 @@ export function ProductCard({
           {/* Price pill */}
           {priceRange.min > 0 && (
             <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
-              <span className="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-xs font-semibold bg-white/90 text-gray-900 shadow-sm backdrop-blur">
+              <span className="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-xs font-semibold bg-card/90 text-foreground shadow-sm backdrop-blur">
                 {priceDisplay()}
               </span>
             </div>
@@ -163,14 +163,14 @@ export function ProductCard({
         {/* Product Info */}
         <div className="p-3 sm:p-4">
           <h3
-            className={`text-xs sm:text-sm font-medium mb-1 group-hover:text-blue-600 transition-colors leading-snug ${
-              isOutOfStock ? "text-gray-500" : "text-gray-900"
+            className={`text-xs sm:text-sm font-medium mb-1 group-hover:text-primary transition-colors leading-snug ${
+              isOutOfStock ? "text-muted-foreground" : "text-foreground"
             }`}
           >
             {cleanProductTitle(product.title)}
           </h3>
           {isOutOfStock && (
-            <p className="text-xs text-red-600 font-medium">
+            <p className="text-xs text-destructive font-medium">
               Currently unavailable
             </p>
           )}

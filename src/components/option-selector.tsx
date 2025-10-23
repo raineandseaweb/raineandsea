@@ -55,20 +55,20 @@ export function OptionSelector({
     const priceDiff = option.priceAdjustment - selectedPrice;
     const isSelected = selectedOption?.id === option.id;
 
-    let badgeColor = "bg-gray-100 text-gray-700";
+    let badgeColor = "bg-muted text-foreground";
     let badgeText = "Included";
 
     if (isSelected) {
-      badgeColor = "bg-blue-100 text-blue-700";
+      badgeColor = "bg-accent text-primary";
       badgeText = "Included";
     } else if (priceDiff === 0) {
-      badgeColor = "bg-blue-100 text-blue-700";
+      badgeColor = "bg-accent text-primary";
       badgeText = "Included";
     } else if (priceDiff > 0) {
-      badgeColor = "bg-green-100 text-green-700";
+      badgeColor = "bg-accent text-primary";
       badgeText = `+${formatPrice(priceDiff, currency)}`;
     } else {
-      badgeColor = "bg-red-100 text-red-700";
+      badgeColor = "bg-accent text-destructive";
       badgeText = `${formatPrice(priceDiff, currency)}`;
     }
 
@@ -78,19 +78,19 @@ export function OptionSelector({
   if (useDropdown) {
     return (
       <div>
-        <div className="text-xs sm:text-sm font-medium text-gray-600 mb-2">
+        <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-2">
           {label}
         </div>
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white text-gray-900 font-medium text-left flex justify-between items-center text-sm sm:text-base"
+            className="w-full p-3 sm:p-4 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 bg-card text-foreground font-medium text-left flex justify-between items-center text-sm sm:text-base"
           >
             <span className="truncate">
               {selectedOption ? selectedOption.label : `Select ${label}`}
             </span>
             <svg
-              className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform flex-shrink-0 ml-2 ${
+              className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground transition-transform flex-shrink-0 ml-2 ${
                 showDropdown ? "rotate-180" : ""
               }`}
               fill="none"
@@ -106,7 +106,7 @@ export function OptionSelector({
             </svg>
           </button>
           {showDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
               {options.map((option) => {
                 const { badgeColor, badgeText } = calculateBadge(option);
 
@@ -117,9 +117,9 @@ export function OptionSelector({
                       onSelect(option);
                       setShowDropdown(false);
                     }}
-                    className="w-full p-3 sm:p-4 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 flex justify-between items-center"
+                    className="w-full p-3 sm:p-4 text-left hover:bg-muted border-b border-border last:border-b-0 flex justify-between items-center"
                   >
-                    <span className="font-medium text-gray-900 text-sm sm:text-base truncate">
+                    <span className="font-medium text-foreground text-sm sm:text-base truncate">
                       {option.label}
                     </span>
                     <span
@@ -140,7 +140,7 @@ export function OptionSelector({
   // Tile/button layout
   return (
     <div>
-      <div className="text-xs sm:text-sm font-medium text-gray-600 mb-2">
+      <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-2">
         {label}
       </div>
       <div className="grid grid-cols-1 gap-2 sm:gap-3">
@@ -153,12 +153,12 @@ export function OptionSelector({
               onClick={() => onSelect(option)}
               className={`p-3 sm:p-4 border rounded-lg transition-all duration-200 text-left ${
                 selectedOption?.id === option.id
-                  ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
-                  : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                  ? "border-primary bg-accent ring-2 ring-primary/20"
+                  : "border-border hover:border-border hover:bg-muted"
               }`}
             >
               <div className="flex justify-between items-center">
-                <span className="font-medium text-sm sm:text-base text-gray-900 truncate">
+                <span className="font-medium text-sm sm:text-base text-foreground truncate">
                   {option.label}
                 </span>
                 <span

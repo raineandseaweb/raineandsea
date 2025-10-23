@@ -305,12 +305,12 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <main className="flex-1 flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading product...</p>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading product...</p>
           </div>
         </main>
         <Footer />
@@ -320,11 +320,11 @@ export default function ProductDetailPage() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <main className="flex-1 flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="text-red-400 mb-6">
+            <div className="text-destructive mb-6">
               <svg
                 className="w-20 h-20 mx-auto"
                 fill="none"
@@ -339,16 +339,16 @@ export default function ProductDetailPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">
+            <h3 className="text-xl font-semibold text-foreground mb-3">
               Product not found
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               The product you&apos;re looking for doesn&apos;t exist or has been
               removed.
             </p>
             <Link
               href="/products"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-xl font-medium hover:from-primary/90 hover:to-primary/70 transition-all duration-200 shadow-sm hover:shadow-md"
             >
               Browse Products
             </Link>
@@ -360,27 +360,27 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-20 sm:pb-24">
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 lg:mb-8 px-1">
+          <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 lg:mb-8 px-1">
             <Link
               href="/"
-              className="hover:text-gray-900 transition-colors duration-200"
+              className="hover:text-foreground transition-colors duration-200"
             >
               Home
             </Link>
             <span>/</span>
             <Link
               href="/products"
-              className="hover:text-gray-900 transition-colors duration-200"
+              className="hover:text-foreground transition-colors duration-200"
             >
               Products
             </Link>
             <span>/</span>
-            <span className="text-gray-900 truncate">
+            <span className="text-foreground truncate">
               {cleanProductTitle(product.title)}
             </span>
           </nav>
@@ -398,13 +398,13 @@ export default function ProductDetailPage() {
               {/* Header */}
               <div>
                 <div className="flex items-start justify-between mb-2 sm:mb-3">
-                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900 pr-2">
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground pr-2">
                     {cleanProductTitle(product.title)}
                   </h1>
                   {(user?.role === "admin" || user?.role === "root") && (
                     <button
                       onClick={openEditModal}
-                      className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 flex-shrink-0"
+                      className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-foreground/90 bg-secondary hover:bg-secondary/70 rounded-lg transition-colors duration-200 flex-shrink-0"
                     >
                       <svg
                         className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5"
@@ -426,7 +426,7 @@ export default function ProductDetailPage() {
                 </div>
                 {product.description &&
                   product.description !== product.title && (
-                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-3">
+                    <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-3">
                       {product.description}
                     </p>
                   )}
@@ -438,7 +438,7 @@ export default function ProductDetailPage() {
                       <Link
                         key={category.id}
                         href={`/categories/${category.slug}`}
-                        className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-xs hover:bg-gray-200 transition-colors"
+                        className="px-2 py-1 bg-muted text-foreground rounded-md text-xs hover:bg-muted transition-colors"
                       >
                         {category.name}
                       </Link>
@@ -478,7 +478,7 @@ export default function ProductDetailPage() {
                       .map((tag) => (
                         <span
                           key={tag.id}
-                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-50 text-gray-600 border border-gray-200"
+                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground border border-border"
                         >
                           {tag.name}
                         </span>
@@ -508,7 +508,7 @@ export default function ProductDetailPage() {
                     }).length > 4 && (
                       <button
                         onClick={() => setShowAllTags(true)}
-                        className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer"
+                        className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
                       >
                         +
                         {product.tags.filter((tag) => {
@@ -543,10 +543,10 @@ export default function ProductDetailPage() {
 
               {/* Unified purchase section */}
               {product && (
-                <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/50 space-y-4 sm:space-y-5">
+                <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-border/50 space-y-4 sm:space-y-5">
                   <div className="flex items-baseline justify-between">
                     <div className="flex items-baseline gap-2 sm:gap-3">
-                      <span className="text-2xl sm:text-3xl font-bold text-gray-900">
+                      <span className="text-2xl sm:text-3xl font-bold text-foreground">
                         {formatPrice(getTotalPrice(), "USD")}
                       </span>
                     </div>
@@ -555,7 +555,7 @@ export default function ProductDetailPage() {
                   {/* Options - Unified system for all product options */}
                   {product.options && product.options.length > 0 && (
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-3">
+                      <label className="block text-sm font-semibold text-foreground mb-3">
                         Options
                       </label>
                       <div className="space-y-3">
@@ -593,20 +593,20 @@ export default function ProductDetailPage() {
                   )}
 
                   {/* Quantity and Add to Cart */}
-                  <div className="pt-2 border-t border-gray-100 space-y-3 sm:space-y-4">
+                  <div className="pt-2 border-t border-border space-y-3 sm:space-y-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      <label className="block text-sm font-semibold text-foreground mb-2">
                         Quantity
                       </label>
                       <div className="flex items-center gap-2 sm:gap-3">
                         <button
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="w-10 h-10 sm:w-12 sm:h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold text-lg"
+                          className="w-10 h-10 sm:w-12 sm:h-12 border border-border rounded-lg flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground font-semibold text-lg"
                         >
                           −
                         </button>
-                        <div className="w-16 h-10 sm:w-20 sm:h-12 border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                          <span className="text-sm sm:text-base font-bold text-gray-900">
+                        <div className="w-16 h-10 sm:w-20 sm:h-12 border border-border rounded-lg flex items-center justify-center bg-muted">
+                          <span className="text-sm sm:text-base font-bold text-foreground">
                             {quantity}
                           </span>
                         </div>
@@ -614,7 +614,7 @@ export default function ProductDetailPage() {
                           onClick={() =>
                             setQuantity(Math.min(999, quantity + 1))
                           }
-                          className="w-10 h-10 sm:w-12 sm:h-12 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-gray-600 font-semibold text-lg"
+                          className="w-10 h-10 sm:w-12 sm:h-12 border border-border rounded-lg flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground font-semibold text-lg"
                         >
                           +
                         </button>
@@ -623,13 +623,13 @@ export default function ProductDetailPage() {
                     <button
                       onClick={addToCart}
                       disabled={false}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 sm:py-4 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md text-base sm:text-lg"
+                      className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-3 sm:py-4 px-4 rounded-lg font-semibold hover:from-primary/90 hover:to-primary/70 disabled:bg-muted disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md text-base sm:text-lg"
                     >
                       Add to Cart
                     </button>
                     <div className="flex items-center gap-2 text-sm">
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
-                      <span className="text-gray-600">In stock</span>
+                      <div className="w-2 h-2 rounded-full bg-primary" />
+                      <span className="text-muted-foreground">In stock</span>
                     </div>
                   </div>
 
@@ -652,14 +652,14 @@ export default function ProductDetailPage() {
       {/* All Tags Modal */}
       {showAllTags && product.tags && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 max-w-md w-full shadow-xl">
+          <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 max-w-md w-full shadow-xl">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 All Tags
               </h3>
               <button
                 onClick={() => setShowAllTags(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1"
+                className="text-muted-foreground hover:text-muted-foreground transition-colors duration-200 p-1"
               >
                 <svg
                   className="w-5 h-5 sm:w-6 sm:h-6"
@@ -680,7 +680,7 @@ export default function ProductDetailPage() {
               {product.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+                  className="inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium bg-muted text-foreground border border-border"
                 >
                   {tag.name}
                 </span>

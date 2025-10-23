@@ -129,14 +129,14 @@ export function OrderDetailsModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
-      <div className="bg-white w-full h-[90vh] sm:h-auto sm:max-h-[90vh] sm:rounded-lg sm:max-w-4xl overflow-hidden flex flex-col mt-8 sm:mt-0">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex justify-between items-center flex-shrink-0">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate pr-4">
+      <div className="bg-card w-full h-[90vh] sm:h-auto sm:max-h-[90vh] sm:rounded-lg sm:max-w-4xl overflow-hidden flex flex-col mt-8 sm:mt-0">
+        <div className="sticky top-0 bg-card border-b border-border px-4 sm:px-6 py-4 flex justify-between items-center flex-shrink-0">
+          <h3 className="text-lg sm:text-xl font-semibold text-foreground truncate pr-4">
             Order Details - {order.orderNumber}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-2 -mr-2"
+            className="text-muted-foreground hover:text-muted-foreground transition-colors p-2 -mr-2"
           >
             <svg
               className="w-6 h-6"
@@ -159,13 +159,13 @@ export function OrderDetailsModal({
             {/* Left Column */}
             <div className="space-y-4">
               {/* Order Information */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="font-semibold text-foreground mb-3 text-sm sm:text-base">
                   Order Information
                 </h4>
                 <div className="space-y-3 text-sm">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Order Number:
                     </span>
                     <span className="font-medium text-sm sm:text-base">
@@ -173,7 +173,7 @@ export function OrderDetailsModal({
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Status:
                     </span>
                     <StatusIndicator
@@ -183,7 +183,7 @@ export function OrderDetailsModal({
                     />
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Placed:
                     </span>
                     <span className="text-sm sm:text-base">
@@ -191,7 +191,7 @@ export function OrderDetailsModal({
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Last Updated:
                     </span>
                     <span className="text-sm sm:text-base">
@@ -203,11 +203,11 @@ export function OrderDetailsModal({
 
               {/* Shipping Address */}
               {order.shippingAddress && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+                <div className="bg-muted p-4 rounded-lg">
+                  <h4 className="font-semibold text-foreground mb-3 text-sm sm:text-base">
                     Shipping Address
                   </h4>
-                  <div className="text-sm text-gray-700 space-y-1">
+                  <div className="text-sm text-foreground space-y-1">
                     <p className="font-medium text-sm sm:text-base">
                       {order.shippingAddress.name}
                     </p>
@@ -233,16 +233,16 @@ export function OrderDetailsModal({
 
               {/* Tracking Information */}
               {order.tracking_number && (
-                <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-3 text-sm sm:text-base">
+                <div className="bg-accent border border-border p-4 rounded-lg">
+                  <h4 className="font-semibold text-accent-foreground mb-3 text-sm sm:text-base">
                     Tracking Information
                   </h4>
                   <div className="space-y-3 text-sm">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                      <span className="text-blue-800 text-xs sm:text-sm">
+                      <span className="text-accent-foreground text-xs sm:text-sm">
                         Tracking Number:
                       </span>
-                      <span className="font-mono text-blue-900 text-xs sm:text-sm break-all mt-1 sm:mt-0">
+                      <span className="font-mono text-accent-foreground text-xs sm:text-sm break-all mt-1 sm:mt-0">
                         {formatTrackingNumber(
                           order.tracking_number,
                           (order.shipping_provider as ShippingProvider) ||
@@ -251,10 +251,10 @@ export function OrderDetailsModal({
                       </span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                      <span className="text-blue-800 text-xs sm:text-sm">
+                      <span className="text-accent-foreground text-xs sm:text-sm">
                         Provider:
                       </span>
-                      <span className="font-medium text-blue-900 text-sm sm:text-base mt-1 sm:mt-0">
+                      <span className="font-medium text-accent-foreground text-sm sm:text-base mt-1 sm:mt-0">
                         {getProviderDisplayName(
                           (order.shipping_provider as ShippingProvider) ||
                             "other"
@@ -263,10 +263,10 @@ export function OrderDetailsModal({
                     </div>
                     {order.shipped_at && (
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                        <span className="text-blue-800 text-xs sm:text-sm">
+                        <span className="text-accent-foreground text-xs sm:text-sm">
                           Shipped:
                         </span>
-                        <span className="text-blue-900 text-sm sm:text-base mt-1 sm:mt-0">
+                        <span className="text-accent-foreground text-sm sm:text-base mt-1 sm:mt-0">
                           {new Date(order.shipped_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -280,7 +280,7 @@ export function OrderDetailsModal({
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                        className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary transition-colors"
                       >
                         Track Package
                         <svg
@@ -304,20 +304,20 @@ export function OrderDetailsModal({
 
               {/* Customer Information (Admin only) */}
               {showCustomer && order.customer && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 mb-3">
+                <div className="bg-muted p-4 rounded-lg">
+                  <h4 className="font-semibold text-foreground mb-3">
                     Customer Information
                   </h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Email:</span>
+                      <span className="text-muted-foreground">Email:</span>
                       <span className="font-medium">
                         {order.customer.email}
                       </span>
                     </div>
                     {order.customer.name && (
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Name:</span>
+                        <span className="text-muted-foreground">Name:</span>
                         <span>{order.customer.name}</span>
                       </div>
                     )}
@@ -328,8 +328,8 @@ export function OrderDetailsModal({
 
             {/* Right Column - Order Items */}
             <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="font-semibold text-foreground mb-3 text-sm sm:text-base">
                   Order Items ({order.items.length})
                 </h4>
                 <div className="space-y-3">
@@ -350,14 +350,14 @@ export function OrderDetailsModal({
                     return (
                       <div
                         key={item.id}
-                        className="flex items-start space-x-3 p-3 bg-white rounded border border-gray-200"
+                        className="flex items-start space-x-3 p-3 bg-card rounded border border-border"
                       >
                         <Link
                           href={`/products/${productSlug}`}
                           className="flex-shrink-0"
                         >
                           {productImage ? (
-                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded overflow-hidden">
+                            <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded overflow-hidden">
                               <Image
                                 src={productImage}
                                 alt={productTitle}
@@ -370,9 +370,9 @@ export function OrderDetailsModal({
                               />
                             </div>
                           ) : (
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded flex items-center justify-center">
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded flex items-center justify-center">
                               <svg
-                                className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"
+                                className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -390,23 +390,23 @@ export function OrderDetailsModal({
                         <div className="flex-1 min-w-0">
                           <Link
                             href={`/products/${productSlug}`}
-                            className="text-xs sm:text-sm font-medium text-gray-900 hover:text-blue-600 block"
+                            className="text-xs sm:text-sm font-medium text-foreground hover:text-primary block"
                           >
                             {item.descriptive_title || productTitle}
                           </Link>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                             Qty: {item.quantity} ×{" "}
                             {formatPrice(unitAmount, order.currency)}
                           </p>
                           {item.selected_options &&
                             Object.keys(item.selected_options).length > 0 && (
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="text-xs text-muted-foreground mt-1">
                                 {Object.entries(item.selected_options)
                                   .map(([key, value]) => `${key}: ${value}`)
                                   .join(", ")}
                               </p>
                             )}
-                          <p className="text-xs sm:text-sm font-medium text-gray-900 mt-1">
+                          <p className="text-xs sm:text-sm font-medium text-foreground mt-1">
                             {formatPrice(
                               unitAmount * item.quantity,
                               order.currency
@@ -420,13 +420,13 @@ export function OrderDetailsModal({
               </div>
 
               {/* Order Totals */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="font-semibold text-foreground mb-3 text-sm sm:text-base">
                   Order Totals
                 </h4>
                 <div className="space-y-3 text-sm">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Subtotal:
                     </span>
                     <span className="text-sm sm:text-base">
@@ -434,7 +434,7 @@ export function OrderDetailsModal({
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Tax:
                     </span>
                     <span className="text-sm sm:text-base">
@@ -442,7 +442,7 @@ export function OrderDetailsModal({
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-gray-600 text-xs sm:text-sm">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
                       Shipping:
                     </span>
                     <span className="text-sm sm:text-base">
@@ -451,11 +451,11 @@ export function OrderDetailsModal({
                         : formatPrice(shipping, order.currency)}
                     </span>
                   </div>
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-3 border-t border-gray-300">
-                    <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-3 border-t border-border">
+                    <span className="font-semibold text-foreground text-sm sm:text-base">
                       Total:
                     </span>
-                    <span className="font-semibold text-gray-900 text-base sm:text-lg">
+                    <span className="font-semibold text-foreground text-base sm:text-lg">
                       {formatPrice(total, order.currency)}
                     </span>
                   </div>

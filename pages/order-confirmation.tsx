@@ -181,13 +181,13 @@ export default function OrderConfirmationPage() {
 
   if (fetchError) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-4">
               <svg
-                className="w-8 h-8 text-red-600"
+                className="w-8 h-8 text-destructive"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -200,10 +200,10 @@ export default function OrderConfirmationPage() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-foreground mb-2">
               {fetchError}
             </h1>
-            <p className="text-gray-600">Redirecting to home page...</p>
+            <p className="text-muted-foreground">Redirecting to home page...</p>
           </div>
         </div>
         <Footer />
@@ -213,12 +213,12 @@ export default function OrderConfirmationPage() {
 
   if (!orderData) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header />
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading order confirmation...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading order confirmation...</p>
           </div>
         </div>
         <Footer />
@@ -227,15 +227,15 @@ export default function OrderConfirmationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Success Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-4">
             <svg
-              className="w-8 h-8 text-green-600"
+              className="w-8 h-8 text-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -248,29 +248,29 @@ export default function OrderConfirmationPage() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Order Confirmed!
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-muted-foreground">
             Thank you for your purchase, {user?.name || "valued customer"}!
           </p>
           {orderData.isGuestOrder && (
             <div className="mt-4">
-              <p className="text-sm text-blue-600 mb-3">
+              <p className="text-sm text-primary mb-3">
                 We've sent a confirmation email with your order details. Save
                 your order number to track your order.
               </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-900 mb-2">
+              <div className="bg-accent border border-border rounded-lg p-4">
+                <h3 className="text-sm font-medium text-accent-foreground mb-2">
                   Create an account to save your information
                 </h3>
-                <p className="text-sm text-blue-700 mb-3">
+                <p className="text-sm text-primary mb-3">
                   Set up an account with just a password to save your address
                   and track future orders easily.
                 </p>
                 <button
                   onClick={() => setIsAccountSetupOpen(true)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary transition-colors text-sm font-medium"
                 >
                   Create Account
                 </button>
@@ -280,35 +280,35 @@ export default function OrderConfirmationPage() {
         </div>
 
         {/* Order Details Card */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="bg-card rounded-lg shadow-sm border p-6 mb-8">
+          <h2 className="text-xl font-semibold text-foreground mb-4">
             Order Details
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Order Number</p>
-              <p className="font-medium text-gray-900">
+              <p className="text-sm text-muted-foreground">Order Number</p>
+              <p className="font-medium text-foreground">
                 {orderData.orderNumber}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Order Date</p>
-              <p className="font-medium text-gray-900">
+              <p className="text-sm text-muted-foreground">Order Date</p>
+              <p className="font-medium text-foreground">
                 {orderData.createdAt
                   ? new Date(orderData.createdAt).toLocaleDateString()
                   : new Date().toLocaleDateString()}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Status</p>
-              <p className="font-medium text-green-600 capitalize">
+              <p className="text-sm text-muted-foreground">Status</p>
+              <p className="font-medium text-primary capitalize">
                 {orderData.status}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total Amount</p>
-              <p className="font-medium text-gray-900">
+              <p className="text-sm text-muted-foreground">Total Amount</p>
+              <p className="font-medium text-foreground">
                 ${parseFloat(orderData.total).toFixed(2)}
               </p>
             </div>
@@ -317,8 +317,8 @@ export default function OrderConfirmationPage() {
 
         {/* Order Items */}
         {orderData.items && orderData.items.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-card rounded-lg shadow-sm border p-6 mb-8">
+            <h2 className="text-xl font-semibold text-foreground mb-4">
               Order Items
             </h2>
             <div className="space-y-4">
@@ -330,7 +330,7 @@ export default function OrderConfirmationPage() {
                   <div className="flex-shrink-0">
                     <Link href={`/products/${item.product_slug}`}>
                       {item.product_image ? (
-                        <div className="relative w-20 h-20 bg-gray-50 rounded-lg overflow-hidden">
+                        <div className="relative w-20 h-20 bg-muted rounded-lg overflow-hidden">
                           <Image
                             src={item.product_image}
                             alt={item.product_title}
@@ -340,9 +340,9 @@ export default function OrderConfirmationPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-8 h-8 text-gray-400"
+                            className="w-8 h-8 text-muted-foreground"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -361,19 +361,19 @@ export default function OrderConfirmationPage() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/products/${item.product_slug}`}
-                      className="text-base font-medium text-gray-900 hover:text-blue-600"
+                      className="text-base font-medium text-foreground hover:text-primary"
                     >
                       {item.descriptive_title || item.product_title}
                     </Link>
                     {item.selected_options &&
                       Object.keys(item.selected_options).length > 0 && (
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                           {Object.entries(item.selected_options)
                             .map(([key, value]) => `${key}: ${value}`)
                             .join(", ")}
                         </p>
                       )}
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       Quantity: {item.quantity} × $
                       {parseFloat(item.unit_amount).toFixed(2)} = $
                       {(parseFloat(item.unit_amount) * item.quantity).toFixed(
@@ -388,11 +388,11 @@ export default function OrderConfirmationPage() {
         )}
 
         {/* Next Steps */}
-        <div className="bg-blue-50 rounded-lg p-6 mb-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">
+        <div className="bg-accent rounded-lg p-6 mb-8">
+          <h3 className="text-lg font-semibold text-accent-foreground mb-3">
             What happens next?
           </h3>
-          <div className="space-y-2 text-blue-800">
+          <div className="space-y-2 text-accent-foreground">
             <p>• You'll receive an email confirmation shortly</p>
             <p>• We'll process your order and prepare it for shipping</p>
             <p>• You'll receive tracking information once your order ships</p>
@@ -407,7 +407,7 @@ export default function OrderConfirmationPage() {
               console.log("View Order History clicked");
               router.push("/orders");
             }}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary transition-colors font-medium"
           >
             View Order History
           </button>
@@ -416,19 +416,19 @@ export default function OrderConfirmationPage() {
               console.log("Continue Shopping clicked");
               router.push("/products");
             }}
-            className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+            className="px-6 py-3 bg-muted text-foreground rounded-lg hover:bg-muted transition-colors font-medium"
           >
             Continue Shopping
           </button>
         </div>
 
         {/* Contact Info */}
-        <div className="text-center mt-8 text-gray-600">
+        <div className="text-center mt-8 text-muted-foreground">
           <p>
             Questions about your order?{" "}
             <a
               href="mailto:support@raineandsea.com"
-              className="text-blue-600 hover:text-blue-700 underline"
+              className="text-primary hover:text-primary underline"
             >
               Contact our support team
             </a>
@@ -447,15 +447,15 @@ export default function OrderConfirmationPage() {
               onClick={() => setIsAccountSetupOpen(false)}
             />
 
-            <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="relative bg-card rounded-lg shadow-xl max-w-md w-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900">
+              <div className="flex items-center justify-between p-6 border-b border-border">
+                <h2 className="text-xl font-bold text-foreground">
                   Create Your Account
                 </h2>
                 <button
                   onClick={() => setIsAccountSetupOpen(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-muted-foreground hover:text-muted-foreground transition-colors"
                 >
                   <svg
                     className="w-6 h-6"
@@ -476,10 +476,10 @@ export default function OrderConfirmationPage() {
               {/* Form */}
               <div className="p-6">
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  <h3 className="text-sm font-medium text-foreground mb-2">
                     Account Information
                   </h3>
-                  <div className="text-sm text-gray-600 space-y-1">
+                  <div className="text-sm text-muted-foreground space-y-1">
                     <p>
                       <strong>Email:</strong> {orderData?.guestEmail}
                     </p>
@@ -496,7 +496,7 @@ export default function OrderConfirmationPage() {
 
                 <form onSubmit={handleCreateAccount} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       Password *
                     </label>
                     <input
@@ -508,22 +508,22 @@ export default function OrderConfirmationPage() {
                           password: e.target.value,
                         }))
                       }
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                         accountErrors.password
-                          ? "border-red-300"
-                          : "border-gray-300"
+                          ? "border-destructive"
+                          : "border-border"
                       }`}
                       placeholder="Enter your password"
                     />
                     {accountErrors.password && (
-                      <p className="mt-1 text-sm text-red-600">
+                      <p className="mt-1 text-sm text-destructive">
                         {accountErrors.password}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-1">
                       Confirm Password *
                     </label>
                     <input
@@ -535,22 +535,22 @@ export default function OrderConfirmationPage() {
                           confirmPassword: e.target.value,
                         }))
                       }
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                         accountErrors.confirmPassword
-                          ? "border-red-300"
-                          : "border-gray-300"
+                          ? "border-destructive"
+                          : "border-border"
                       }`}
                       placeholder="Confirm your password"
                     />
                     {accountErrors.confirmPassword && (
-                      <p className="mt-1 text-sm text-red-600">
+                      <p className="mt-1 text-sm text-destructive">
                         {accountErrors.confirmPassword}
                       </p>
                     )}
                   </div>
 
-                  <div className="bg-gray-50 rounded-md p-3">
-                    <p className="text-xs text-gray-600">
+                  <div className="bg-muted rounded-md p-3">
+                    <p className="text-xs text-muted-foreground">
                       By creating an account, your shipping address will be
                       saved for future orders and you'll be able to track this
                       order in your account.
@@ -561,14 +561,14 @@ export default function OrderConfirmationPage() {
                     <button
                       type="submit"
                       disabled={isCreatingAccount}
-                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isCreatingAccount ? "Creating..." : "Create Account"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsAccountSetupOpen(false)}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 border border-border text-foreground rounded-md hover:bg-muted transition-colors"
                     >
                       Cancel
                     </button>

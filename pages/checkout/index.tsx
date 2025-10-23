@@ -593,8 +593,8 @@ export default function CheckoutPage() {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading...</p>
           </div>
         </main>
         <Footer />
@@ -614,23 +614,23 @@ export default function CheckoutPage() {
       <main className="flex-1">
         <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-16">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-6 sm:mb-8">
               Checkout
             </h1>
 
             <form onSubmit={handleSubmit}>
               {/* Guest Checkout Section */}
               {formData.isGuestCheckout && (
-                <div className="bg-blue-50 rounded-lg border border-blue-200 p-4 sm:p-6 mb-4 sm:mb-6">
-                  <h2 className="text-lg sm:text-xl font-semibold text-blue-900 mb-3 sm:mb-4">
+                <div className="bg-accent rounded-lg border border-border p-4 sm:p-6 mb-4 sm:mb-6">
+                  <h2 className="text-lg sm:text-xl font-semibold text-accent-foreground mb-3 sm:mb-4">
                     Guest Checkout
                   </h2>
-                  <p className="text-sm sm:text-base text-blue-700 mb-3 sm:mb-4">
+                  <p className="text-sm sm:text-base text-primary mb-3 sm:mb-4">
                     You're checking out as a guest. We'll send your order
                     confirmation to the email below.
                   </p>
                   <div>
-                    <label className="block text-sm font-medium text-blue-900 mb-1">
+                    <label className="block text-sm font-medium text-accent-foreground mb-1">
                       Email Address *
                     </label>
                     <input
@@ -640,17 +640,19 @@ export default function CheckoutPage() {
                         handleInputChange("guestEmail", e.target.value)
                       }
                       placeholder="your@email.com"
-                      className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
-                        errors.guestEmail ? "border-red-300" : "border-blue-300"
+                      className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation bg-background ${
+                        errors.guestEmail
+                          ? "border-destructive"
+                          : "border-border"
                       }`}
                     />
                     {errors.guestEmail && (
-                      <p className="mt-1 text-sm text-red-600">
+                      <p className="mt-1 text-sm text-destructive">
                         {errors.guestEmail}
                       </p>
                     )}
                   </div>
-                  <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-blue-600">
+                  <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-primary">
                     <p>
                       Already have an account?{" "}
                       <a
@@ -665,16 +667,16 @@ export default function CheckoutPage() {
               )}
 
               {/* Shipping Information */}
-              <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
+              <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
-                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+                  <h2 className="text-lg sm:text-xl font-semibold text-foreground">
                     Shipping Address
                   </h2>
                   {user && (
                     <button
                       type="button"
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium touch-manipulation"
+                      className="text-primary hover:text-primary/80 text-xs sm:text-sm font-medium touch-manipulation"
                     >
                       Manage Addresses
                     </button>
@@ -684,16 +686,16 @@ export default function CheckoutPage() {
                 {/* Address Selection for Logged-in Users */}
                 {user && isLoadingAddresses ? (
                   <div className="mb-4 sm:mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Choose Shipping Address
                     </label>
-                    <div className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md bg-gray-100 animate-pulse">
-                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="w-full px-3 py-3 sm:py-2 border border-border rounded-md bg-muted animate-pulse">
+                      <div className="h-4 bg-muted rounded w-3/4"></div>
                     </div>
                   </div>
                 ) : user && savedAddresses.length > 0 ? (
                   <div className="mb-4 sm:mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Choose Shipping Address
                     </label>
                     <select
@@ -701,7 +703,7 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         handleAddressSelection("shipping", e.target.value)
                       }
-                      className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                      className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                     >
                       {savedAddresses.map((address) => (
                         <option key={address.id} value={address.id}>
@@ -715,8 +717,8 @@ export default function CheckoutPage() {
 
                 {/* No addresses message for logged-in users */}
                 {user && !isLoadingAddresses && savedAddresses.length === 0 && (
-                  <div className="text-center py-6 sm:py-8 border-2 border-dashed border-gray-300 rounded-lg">
-                    <div className="text-gray-400 mb-3 sm:mb-4">
+                  <div className="text-center py-6 sm:py-8 border-2 border-dashed border-border rounded-lg">
+                    <div className="text-muted-foreground mb-3 sm:mb-4">
                       <svg
                         className="w-8 h-8 sm:w-12 sm:h-12 mx-auto"
                         fill="none"
@@ -737,16 +739,16 @@ export default function CheckoutPage() {
                         />
                       </svg>
                     </div>
-                    <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
+                    <h3 className="text-base sm:text-lg font-medium text-foreground mb-2">
                       No addresses saved
                     </h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-4">
+                    <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 px-4">
                       Add your first address to continue with checkout
                     </p>
                     <button
                       type="button"
                       onClick={() => setIsAddressModalOpen(true)}
-                      className="bg-blue-600 text-white px-4 py-3 sm:py-2 rounded-md hover:bg-blue-700 transition-colors touch-manipulation text-sm sm:text-base"
+                      className="bg-primary text-primary-foreground px-4 py-3 sm:py-2 rounded-md hover:bg-primary/90 transition-colors touch-manipulation text-sm sm:text-base"
                     >
                       Add Address
                     </button>
@@ -758,7 +760,7 @@ export default function CheckoutPage() {
                   <>
                     <div className="space-y-3 sm:space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-foreground mb-1">
                           Full Name *
                         </label>
                         <input
@@ -770,22 +772,22 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                          className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                             errors.shippingName
-                              ? "border-red-300"
-                              : "border-gray-300"
+                              ? "border-destructive"
+                              : "border-border"
                           }`}
                           placeholder="Enter your full name"
                         />
                         {errors.shippingName && (
-                          <p className="mt-1 text-sm text-red-600">
+                          <p className="mt-1 text-sm text-destructive">
                             {errors.shippingName}
                           </p>
                         )}
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-foreground mb-1">
                           Phone
                         </label>
                         <input
@@ -797,12 +799,12 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                          className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-foreground mb-1">
                           Address Line 1 *
                         </label>
                         <input
@@ -814,21 +816,21 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                          className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                             errors.shippingLine1
-                              ? "border-red-300"
-                              : "border-gray-300"
+                              ? "border-destructive"
+                              : "border-border"
                           }`}
                         />
                         {errors.shippingLine1 && (
-                          <p className="mt-1 text-sm text-red-600">
+                          <p className="mt-1 text-sm text-destructive">
                             {errors.shippingLine1}
                           </p>
                         )}
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-foreground mb-1">
                           Address Line 2
                         </label>
                         <input
@@ -840,13 +842,13 @@ export default function CheckoutPage() {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                          className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             City *
                           </label>
                           <input
@@ -858,21 +860,21 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                               errors.shippingCity
-                                ? "border-red-300"
-                                : "border-gray-300"
+                                ? "border-destructive"
+                                : "border-border"
                             }`}
                           />
                           {errors.shippingCity && (
-                            <p className="mt-1 text-sm text-red-600">
+                            <p className="mt-1 text-sm text-destructive">
                               {errors.shippingCity}
                             </p>
                           )}
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             State/Region *
                           </label>
                           <input
@@ -884,14 +886,14 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                               errors.shippingRegion
-                                ? "border-red-300"
-                                : "border-gray-300"
+                                ? "border-destructive"
+                                : "border-border"
                             }`}
                           />
                           {errors.shippingRegion && (
-                            <p className="mt-1 text-sm text-red-600">
+                            <p className="mt-1 text-sm text-destructive">
                               {errors.shippingRegion}
                             </p>
                           )}
@@ -900,7 +902,7 @@ export default function CheckoutPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             Postal Code *
                           </label>
                           <input
@@ -912,21 +914,21 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                               errors.shippingPostal
-                                ? "border-red-300"
-                                : "border-gray-300"
+                                ? "border-destructive"
+                                : "border-border"
                             }`}
                           />
                           {errors.shippingPostal && (
-                            <p className="mt-1 text-sm text-red-600">
+                            <p className="mt-1 text-sm text-destructive">
                               {errors.shippingPostal}
                             </p>
                           )}
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             Country *
                           </label>
                           <select
@@ -937,7 +939,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                            className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                           >
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
@@ -952,14 +954,16 @@ export default function CheckoutPage() {
 
                 {/* Error message for logged-in users with no addresses */}
                 {user && savedAddresses.length === 0 && errors.noAddresses && (
-                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                    <p className="text-sm text-red-600">{errors.noAddresses}</p>
+                  <div className="mt-4 p-3 bg-accent border border-border rounded-md">
+                    <p className="text-sm text-destructive">
+                      {errors.noAddresses}
+                    </p>
                   </div>
                 )}
               </div>
 
               {/* Billing Information - Compact and Conditional */}
-              <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
+              <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
                 <div className="flex items-center mb-3 sm:mb-4">
                   <label className="flex items-center cursor-pointer">
                     <input
@@ -968,20 +972,20 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         handleSameAddressChange(e.target.checked)
                       }
-                      className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded touch-manipulation"
+                      className="mr-3 h-4 w-4 text-primary focus:ring-primary border-border rounded touch-manipulation"
                     />
-                    <span className="text-base sm:text-lg font-semibold text-gray-900">
+                    <span className="text-base sm:text-lg font-semibold text-foreground">
                       Billing Address
                     </span>
                   </label>
                 </div>
 
                 {formData.useSameAddress ? (
-                  <div className="p-2 sm:p-3 bg-green-50 border border-green-200 rounded-md">
+                  <div className="p-2 sm:p-3 bg-accent border border-border rounded-md">
                     <div className="flex">
                       <div className="flex-shrink-0">
                         <svg
-                          className="h-4 w-4 sm:h-5 sm:w-5 text-green-400"
+                          className="h-4 w-4 sm:h-5 sm:w-5 text-primary"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -993,7 +997,7 @@ export default function CheckoutPage() {
                         </svg>
                       </div>
                       <div className="ml-2 sm:ml-3">
-                        <p className="text-xs sm:text-sm text-green-800">
+                        <p className="text-xs sm:text-sm text-accent-foreground">
                           Billing address will be the same as shipping address
                         </p>
                       </div>
@@ -1004,16 +1008,16 @@ export default function CheckoutPage() {
                     {/* Address Selection for Logged-in Users */}
                     {user && isLoadingAddresses ? (
                       <div className="mb-3 sm:mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-foreground mb-2">
                           Choose Billing Address
                         </label>
-                        <div className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md bg-gray-100 animate-pulse">
-                          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div className="w-full px-3 py-3 sm:py-2 border border-border rounded-md bg-muted animate-pulse">
+                          <div className="h-4 bg-muted rounded w-3/4"></div>
                         </div>
                       </div>
                     ) : user && savedAddresses.length > 0 ? (
                       <div className="mb-3 sm:mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-foreground mb-2">
                           Choose Billing Address
                         </label>
                         <select
@@ -1021,7 +1025,7 @@ export default function CheckoutPage() {
                           onChange={(e) =>
                             handleAddressSelection("billing", e.target.value)
                           }
-                          className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                          className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                         >
                           {savedAddresses.map((address) => (
                             <option key={address.id} value={address.id}>
@@ -1038,7 +1042,7 @@ export default function CheckoutPage() {
                       <div className="space-y-3 sm:space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               Full Name *
                             </label>
                             <input
@@ -1050,22 +1054,22 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                                 errors.billingName
-                                  ? "border-red-300"
-                                  : "border-gray-300"
+                                  ? "border-destructive"
+                                  : "border-border"
                               }`}
                               placeholder="Enter your full name"
                             />
                             {errors.billingName && (
-                              <p className="mt-1 text-sm text-red-600">
+                              <p className="mt-1 text-sm text-destructive">
                                 {errors.billingName}
                               </p>
                             )}
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               Phone
                             </label>
                             <input
@@ -1077,13 +1081,13 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                              className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             Address Line 1 *
                           </label>
                           <input
@@ -1095,21 +1099,21 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                            className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                               errors.billingLine1
-                                ? "border-red-300"
-                                : "border-gray-300"
+                                ? "border-destructive"
+                                : "border-border"
                             }`}
                           />
                           {errors.billingLine1 && (
-                            <p className="mt-1 text-sm text-red-600">
+                            <p className="mt-1 text-sm text-destructive">
                               {errors.billingLine1}
                             </p>
                           )}
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             Address Line 2
                           </label>
                           <input
@@ -1121,13 +1125,13 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                            className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                           />
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               City *
                             </label>
                             <input
@@ -1139,21 +1143,21 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                                 errors.billingCity
-                                  ? "border-red-300"
-                                  : "border-gray-300"
+                                  ? "border-destructive"
+                                  : "border-border"
                               }`}
                             />
                             {errors.billingCity && (
-                              <p className="mt-1 text-sm text-red-600">
+                              <p className="mt-1 text-sm text-destructive">
                                 {errors.billingCity}
                               </p>
                             )}
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               State/Region *
                             </label>
                             <input
@@ -1165,21 +1169,21 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                                 errors.billingRegion
-                                  ? "border-red-300"
-                                  : "border-gray-300"
+                                  ? "border-destructive"
+                                  : "border-border"
                               }`}
                             />
                             {errors.billingRegion && (
-                              <p className="mt-1 text-sm text-red-600">
+                              <p className="mt-1 text-sm text-destructive">
                                 {errors.billingRegion}
                               </p>
                             )}
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-foreground mb-1">
                               Postal Code *
                             </label>
                             <input
@@ -1191,14 +1195,14 @@ export default function CheckoutPage() {
                                   e.target.value
                                 )
                               }
-                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation ${
+                              className={`w-full px-3 py-3 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation ${
                                 errors.billingPostal
-                                  ? "border-red-300"
-                                  : "border-gray-300"
+                                  ? "border-destructive"
+                                  : "border-border"
                               }`}
                             />
                             {errors.billingPostal && (
-                              <p className="mt-1 text-sm text-red-600">
+                              <p className="mt-1 text-sm text-destructive">
                                 {errors.billingPostal}
                               </p>
                             )}
@@ -1206,7 +1210,7 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-foreground mb-1">
                             Country *
                           </label>
                           <select
@@ -1217,7 +1221,7 @@ export default function CheckoutPage() {
                                 e.target.value
                               )
                             }
-                            className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                            className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                           >
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
@@ -1230,8 +1234,8 @@ export default function CheckoutPage() {
               </div>
 
               {/* Order Summary */}
-              <div className="mt-6 sm:mt-8 bg-white rounded-lg shadow-sm border p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
+              <div className="mt-6 sm:mt-8 bg-card rounded-lg shadow-sm border p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-3 sm:mb-4">
                   Order Summary
                 </h2>
 
@@ -1242,14 +1246,14 @@ export default function CheckoutPage() {
                       className="flex justify-between items-center"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 text-sm sm:text-base truncate">
+                        <p className="font-medium text-foreground text-sm sm:text-base truncate">
                           {item.product?.title || `Product ${item.product_id}`}
                         </p>
-                        <p className="text-xs sm:text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900 text-sm sm:text-base ml-2">
+                      <p className="font-medium text-foreground text-sm sm:text-base ml-2">
                         {formatPrice(getItemPrice(item) * item.quantity)}
                       </p>
                     </div>
@@ -1260,26 +1264,26 @@ export default function CheckoutPage() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm sm:text-base text-gray-600">
+                    <span className="text-sm sm:text-base text-muted-foreground">
                       Subtotal
                     </span>
-                    <span className="text-sm sm:text-base text-gray-900">
+                    <span className="text-sm sm:text-base text-foreground">
                       {formatPrice(totals.subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm sm:text-base text-gray-600">
+                    <span className="text-sm sm:text-base text-muted-foreground">
                       Tax
                     </span>
-                    <span className="text-sm sm:text-base text-gray-900">
+                    <span className="text-sm sm:text-base text-foreground">
                       {formatPrice(totals.tax)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm sm:text-base text-gray-600">
+                    <span className="text-sm sm:text-base text-muted-foreground">
                       Shipping
                     </span>
-                    <span className="text-sm sm:text-base text-gray-900">
+                    <span className="text-sm sm:text-base text-foreground">
                       {totals.shipping === 0
                         ? "Free"
                         : formatPrice(totals.shipping)}
@@ -1287,15 +1291,15 @@ export default function CheckoutPage() {
                   </div>
                   <hr />
                   <div className="flex justify-between font-semibold text-base sm:text-lg">
-                    <span className="text-gray-900">Total</span>
-                    <span className="text-gray-900">
+                    <span className="text-foreground">Total</span>
+                    <span className="text-foreground">
                       {formatPrice(totals.total)}
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-4 sm:mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Order Notes (Optional)
                   </label>
                   <textarea
@@ -1307,7 +1311,7 @@ export default function CheckoutPage() {
                       }))
                     }
                     rows={3}
-                    className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base touch-manipulation"
+                    className="w-full px-3 py-3 sm:py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-base touch-manipulation"
                     placeholder="Any special instructions for your order..."
                   />
                 </div>
@@ -1315,7 +1319,7 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full mt-4 sm:mt-6 bg-blue-600 text-white px-4 py-3 sm:py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base touch-manipulation active:bg-blue-800"
+                  className="w-full mt-4 sm:mt-6 bg-primary text-primary-foreground px-4 py-3 sm:py-3 rounded-md hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base touch-manipulation active:bg-blue-800"
                 >
                   {isSubmitting ? "Processing..." : "Complete Purchase"}
                 </button>

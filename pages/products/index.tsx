@@ -197,36 +197,36 @@ function ProductsPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
           {/* Breadcrumb for category view */}
           {category && (
-            <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+            <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">
               <Link
                 href="/"
-                className="hover:text-gray-900 transition-colors duration-200"
+                className="hover:text-foreground transition-colors duration-200"
               >
                 Home
               </Link>
               <span>/</span>
               <Link
                 href="/categories"
-                className="hover:text-gray-900 transition-colors duration-200"
+                className="hover:text-foreground transition-colors duration-200"
               >
                 Categories
               </Link>
               <span>/</span>
-              <span className="text-gray-900 truncate">{category.name}</span>
+              <span className="text-foreground truncate">{category.name}</span>
             </nav>
           )}
 
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 sm:mb-4">
               {category ? category.name : "Product Catalog"}
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-muted-foreground">
               {category?.description ||
                 "Discover our collection of premium crystal jewelry"}
             </p>
@@ -236,21 +236,21 @@ function ProductsPageContent() {
           <SearchControls key="search-controls" />
 
           {/* Results count - separate from search controls to prevent re-renders */}
-          <div className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 px-1">
+          <div className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 px-1">
             {totalCount} products found
           </div>
 
           {/* Inline loading indicator for subsequent fetches */}
           {!initialLoad && loading && (
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 px-1">
-              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-600"></div>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 px-1">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
               Updating results...
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
-              <p className="text-sm sm:text-base text-red-600">{error}</p>
+            <div className="bg-accent border border-border rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
+              <p className="text-sm sm:text-base text-destructive">{error}</p>
             </div>
           )}
 
