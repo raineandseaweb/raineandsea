@@ -8,14 +8,12 @@ import {
   products,
 } from "@/lib/db/schema";
 import { getProductImageUrlFromMedia } from "@/lib/image-utils";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === "GET") {
       // Get or create cart
@@ -225,11 +223,11 @@ export default async function handler(
       "Error stack:",
       error instanceof Error ? error.stack : "No stack trace"
     );
-    return res
-      .status(500)
-      .json({
-        error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error",
-      });
+    return res.status(500).json({
+      error: "Internal server error",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 }
+
+export default withPublicRequest(handler, "cart_operations");

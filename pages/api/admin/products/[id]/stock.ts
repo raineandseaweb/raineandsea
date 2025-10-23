@@ -1,11 +1,11 @@
 import { db } from "@/lib/db";
 import { inventory, products, stockNotifications } from "@/lib/db/schema";
 import { sendStockNotificationEmail } from "@/lib/email";
-import { withSecureAdmin } from "@/lib/security/security-middleware";
+import { withAdminRequest } from "@/lib/security/request-wrapper";
 import { and, eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
-async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "PUT") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -135,4 +135,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
   }
 }
 
-export default withSecureAdmin(handler);
+export default withAdminRequest(handler, "update_product_stock");

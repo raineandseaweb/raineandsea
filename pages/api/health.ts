@@ -1,6 +1,7 @@
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -12,4 +13,4 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 }
 
-
+export default withPublicRequest(handler, "health_check");

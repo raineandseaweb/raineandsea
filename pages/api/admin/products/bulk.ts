@@ -1,13 +1,14 @@
 import { db } from "@/lib/db";
 import { inventory, products, productTags } from "@/lib/db/schema";
-import { AuthenticatedUser, withAdminProtection } from "@/lib/role-middleware";
+import { AuthenticatedUser } from "@/lib/role-middleware";
+import { withAdminRequest } from "@/lib/security/request-wrapper";
 import { eq, inArray } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
-  user: AuthenticatedUser
+  user?: AuthenticatedUser
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -203,4 +204,4 @@ async function handler(
   }
 }
 
-export default withAdminProtection(handler);
+export default withAdminRequest(handler as any, "bulk_product_operations");

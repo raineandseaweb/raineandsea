@@ -2,14 +2,12 @@ import { db } from "@/lib/db";
 import { customers } from "@/lib/db/schema";
 import { verifyEmailToken } from "@/lib/email-verification";
 import { getSecretAsync } from "@/lib/encryption/async-secrets";
+import { withAuthRequest } from "@/lib/security/request-wrapper";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -88,3 +86,5 @@ export default async function handler(
     });
   }
 }
+
+export default withAuthRequest(handler, "verify_email");

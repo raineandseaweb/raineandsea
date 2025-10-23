@@ -1,4 +1,5 @@
 import { AnalyticsChart } from "@/components/admin/analytics-chart";
+import { AuditTrailContent } from "@/components/admin/audit-trail-content";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { StatusIndicator } from "@/components/ui/status-indicator";
@@ -47,9 +48,9 @@ export default function AdminDashboard() {
     recentOrders: [],
   });
   const [statsLoading, setStatsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"overview" | "analytics">(
-    "overview"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "analytics" | "audit"
+  >("overview");
   const [analyticsPeriod, setAnalyticsPeriod] = useState<
     "7d" | "30d" | "6m" | "1y" | "all"
   >("30d");
@@ -293,6 +294,35 @@ export default function AdminDashboard() {
                   Analytics
                 </span>
                 {activeTab === "analytics" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t transition-all duration-200" />
+                )}
+              </button>
+
+              <button
+                onClick={() => setActiveTab("audit")}
+                className={`relative whitespace-nowrap py-3 sm:py-4 px-1 font-medium text-xs sm:text-sm transition-all duration-200 ${
+                  activeTab === "audit"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <span className="relative z-10 flex items-center gap-1 sm:gap-2">
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Audit Trail
+                </span>
+                {activeTab === "audit" && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t transition-all duration-200" />
                 )}
               </button>
@@ -639,6 +669,11 @@ export default function AdminDashboard() {
                   </div>
                 ) : null}
               </div>
+            </TabTransition>
+
+            {/* Audit Trail Tab */}
+            <TabTransition isActive={activeTab === "audit"}>
+              <AuditTrailContent />
             </TabTransition>
           </div>
 

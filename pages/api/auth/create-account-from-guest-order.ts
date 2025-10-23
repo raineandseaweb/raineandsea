@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { addresses, customers } from "@/lib/db/schema";
+import { withAuthRequest } from "@/lib/security/request-wrapper";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -23,10 +24,7 @@ const createAccountSchema = z.object({
     .optional(),
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -110,3 +108,5 @@ export default async function handler(
     });
   }
 }
+
+export default withAuthRequest(handler, "create_account_from_guest_order");

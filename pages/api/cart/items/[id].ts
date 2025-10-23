@@ -1,12 +1,10 @@
 import { db } from "@/lib/db";
 import { cartItems } from "@/lib/db/schema";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { and, eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
     const cartId = req.cookies.cart_id;
@@ -63,3 +61,5 @@ export default async function handler(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export default withPublicRequest(handler, "cart_item_operations");

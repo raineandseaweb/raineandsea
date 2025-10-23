@@ -10,14 +10,12 @@ import {
   tags,
 } from "@/lib/db/schema";
 import { getProductImageUrlFromMedia } from "@/lib/image-utils";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { searchSchema } from "@/lib/validations";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -315,3 +313,5 @@ export default async function handler(
     });
   }
 }
+
+export default withPublicRequest(handler, "get_products_original");

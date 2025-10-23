@@ -3,12 +3,14 @@ import {
   boolean,
   decimal,
   index,
+  inet,
   integer,
   jsonb,
   pgTable,
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 // Products table
@@ -744,5 +746,74 @@ export const productPurchasesRelations = relations(
       fields: [productPurchases.customer_id],
       references: [customers.id],
     }),
+  })
+);
+
+// API Audit Logs table
+export const apiAuditLogs = pgTable(
+  "api_audit_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    // User Information
+    userId: uuid("user_id").references(() => customers.id, {
+      onDelete: "set null",
+    }),
+    userEmail: varchar("user_email", { length: 255 }),
+    userRole: varchar("user_role", { length: 50 }),
+    sessionId: varchar("session_id", { length: 255 }),
+
+    // Request Information
+    requestMethod: varchar("request_method", { length: 10 }).notNull(),
+    requestPath: text("request_path").notNull(),
+    requestQuery: jsonb("request_query"),
+    requestBody: jsonb("request_body"),
+    requestSize: integer("request_size"),
+
+    // Response Information
+    responseStatus: integer("response_status").notNull(),
+    responseTimeMs: integer("response_time_ms"),
+    responseSize: integer("response_size"),
+
+    // Request Metadata
+    ipAddress: inet("ip_address"),
+    userAgent: text("user_agent"),
+    referer: text("referer"),
+
+    // Context
+    endpointType: varchar("endpoint_type", { length: 50 }),
+    action: varchar("action", { length: 100 }),
+    errorType: varchar("error_type", { length: 100 }),
+    errorMessage: text("error_message"),
+
+    // Audit Trail
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+
+    // Metadata
+    metadata: jsonb("metadata"),
+  },
+  (table) => ({
+    userIdIdx: index("idx_audit_logs_user_id").on(table.userId),
+    userEmailIdx: index("idx_audit_logs_user_email").on(table.userEmail),
+    userRoleIdx: index("idx_audit_logs_user_role").on(table.userRole),
+    requestPathIdx: index("idx_audit_logs_request_path").on(table.requestPath),
+    endpointTypeIdx: index("idx_audit_logs_endpoint_type").on(
+      table.endpointType
+    ),
+    responseStatusIdx: index("idx_audit_logs_response_status").on(
+      table.responseStatus
+    ),
+    createdAtIdx: index("idx_audit_logs_created_at").on(table.createdAt),
+    sessionIdIdx: index("idx_audit_logs_session_id").on(table.sessionId),
+    userTimeIdx: index("idx_audit_logs_user_time").on(
+      table.userId,
+      table.createdAt
+    ),
+    errorIdx: index("idx_audit_logs_error").on(
+      table.errorType,
+      table.createdAt
+    ),
   })
 );

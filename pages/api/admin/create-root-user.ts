@@ -1,14 +1,12 @@
 import { db } from "@/lib/db";
 import { customers } from "@/lib/db/schema";
 import { getSecretAsync } from "@/lib/encryption/async-secrets";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -91,3 +89,5 @@ export default async function handler(
     });
   }
 }
+
+export default withPublicRequest(handler, "create_root_user");

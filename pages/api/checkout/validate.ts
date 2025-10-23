@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { inventory, prices, products } from "@/lib/db/schema";
+import { withCheckoutRequest } from "@/lib/security/request-wrapper";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -22,10 +23,7 @@ interface ValidationResult {
   total: number;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -141,3 +139,5 @@ export default async function handler(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export default withCheckoutRequest(handler, "checkout_validate");

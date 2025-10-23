@@ -1,5 +1,5 @@
 import { generateImageKey, uploadImageVariants } from "@/lib/r2";
-import { withSecureAdmin } from "@/lib/security/security-middleware";
+import { withAdminRequest } from "@/lib/security/request-wrapper";
 import formidable from "formidable";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -13,7 +13,7 @@ export const config = {
   },
 };
 
-async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -106,4 +106,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
   }
 }
 
-export default withSecureAdmin(handler);
+export default withAdminRequest(handler, "upload_image");

@@ -1,8 +1,8 @@
 import { deleteImageVariants, extractImageKeyFromUrl } from "@/lib/r2";
-import { withSecureAdmin } from "@/lib/security/security-middleware";
+import { withAdminRequest } from "@/lib/security/request-wrapper";
 import { NextApiRequest, NextApiResponse } from "next";
 
-async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "DELETE") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -31,4 +31,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse, user: any) {
   }
 }
 
-export default withSecureAdmin(handler);
+export default withAdminRequest(handler, "delete_image");

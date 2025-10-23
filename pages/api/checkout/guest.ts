@@ -17,6 +17,7 @@ import {
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
 import { withRateLimit } from "@/lib/security/rate-limiting";
+import { withCheckoutRequest } from "@/lib/security/request-wrapper";
 import { eq, sql } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
@@ -25,10 +26,7 @@ import { v4 as uuidv4 } from "uuid";
  * Guest checkout submission endpoint
  * Creates an order without requiring user authentication
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -326,3 +324,5 @@ export default async function handler(
     );
   }
 }
+
+export default withCheckoutRequest(handler, "checkout_guest");

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { customers, orderItems, orders } from "@/lib/db/schema";
 import { sendSuccessResponse } from "@/lib/security/error-handling";
-import { withSecureAdmin } from "@/lib/security/security-middleware";
+import { withAdminRequest } from "@/lib/security/request-wrapper";
 import { and, eq, gte, lte, sql } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -203,72 +203,72 @@ async function getSummaryTotals(range: DateRange) {
  * Admin analytics API
  * GET /api/admin/analytics?period=7d|30d|6m|1y|all
  */
-export default withSecureAdmin(
-  async (req: NextApiRequest, res: NextApiResponse, user: any) => {
-    if (req.method !== "GET") {
-      return res.status(405).json({ error: "Method not allowed" });
-    }
-
-    try {
-      const period = (req.query.period as TimePeriod) || "30d";
-
-      // Validate period
-      if (!["7d", "30d", "6m", "1y", "all"].includes(period)) {
-        return res.status(400).json({ error: "Invalid period" });
-      }
-
-      const currentRange = getDateRange(period);
-      const previousRange = getPreviousDateRange(period);
-
-      // Fetch current period data
-      const [ordersData, revenueData, salesData, usersData, currentTotals] =
-        await Promise.all([
-          getOrdersData(currentRange),
-          getRevenueData(currentRange),
-          getSalesData(currentRange),
-          getUsersData(currentRange),
-          getSummaryTotals(currentRange),
-        ]);
-
-      // Fetch previous period totals for comparison
-      const previousTotals = await getSummaryTotals(previousRange);
-
-      // Calculate percentage changes
-      const calculateChange = (current: number, previous: number) => {
-        if (previous === 0) return current > 0 ? 100 : 0;
-        return ((current - previous) / previous) * 100;
-      };
-
-      const changes = {
-        orders: calculateChange(currentTotals.orders, previousTotals.orders),
-        revenue: calculateChange(currentTotals.revenue, previousTotals.revenue),
-        sales: calculateChange(currentTotals.sales, previousTotals.sales),
-        users: calculateChange(currentTotals.users, previousTotals.users),
-      };
-
-      return sendSuccessResponse(res, {
-        period,
-        currentRange: {
-          start: currentRange.start.toISOString(),
-          end: currentRange.end.toISOString(),
-        },
-        previousRange: {
-          start: previousRange.start.toISOString(),
-          end: previousRange.end.toISOString(),
-        },
-        data: {
-          orders: ordersData,
-          revenue: revenueData,
-          sales: salesData,
-          users: usersData,
-        },
-        totals: currentTotals,
-        previousTotals,
-        changes,
-      });
-    } catch (error) {
-      console.error("Error fetching analytics:", error);
-      return res.status(500).json({ error: "Failed to fetch analytics" });
-    }
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
-);
+
+  try {
+    const period = (req.query.period as TimePeriod) || "30d";
+
+    // Validate period
+    if (!["7d", "30d", "6m", "1y", "all"].includes(period)) {
+      return res.status(400).json({ error: "Invalid period" });
+    }
+
+    const currentRange = getDateRange(period);
+    const previousRange = getPreviousDateRange(period);
+
+    // Fetch current period data
+    const [ordersData, revenueData, salesData, usersData, currentTotals] =
+      await Promise.all([
+        getOrdersData(currentRange),
+        getRevenueData(currentRange),
+        getSalesData(currentRange),
+        getUsersData(currentRange),
+        getSummaryTotals(currentRange),
+      ]);
+
+    // Fetch previous period totals for comparison
+    const previousTotals = await getSummaryTotals(previousRange);
+
+    // Calculate percentage changes
+    const calculateChange = (current: number, previous: number) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return ((current - previous) / previous) * 100;
+    };
+
+    const changes = {
+      orders: calculateChange(currentTotals.orders, previousTotals.orders),
+      revenue: calculateChange(currentTotals.revenue, previousTotals.revenue),
+      sales: calculateChange(currentTotals.sales, previousTotals.sales),
+      users: calculateChange(currentTotals.users, previousTotals.users),
+    };
+
+    return sendSuccessResponse(res, {
+      period,
+      currentRange: {
+        start: currentRange.start.toISOString(),
+        end: currentRange.end.toISOString(),
+      },
+      previousRange: {
+        start: previousRange.start.toISOString(),
+        end: previousRange.end.toISOString(),
+      },
+      data: {
+        orders: ordersData,
+        revenue: revenueData,
+        sales: salesData,
+        users: usersData,
+      },
+      totals: currentTotals,
+      previousTotals,
+      changes,
+    });
+  } catch (error) {
+    console.error("Error fetching analytics:", error);
+    return res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+}
+
+export default withAdminRequest(handler, "view_analytics");

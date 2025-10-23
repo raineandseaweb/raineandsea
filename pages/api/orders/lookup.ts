@@ -17,6 +17,7 @@ import {
   sendSuccessResponse,
 } from "@/lib/security/error-handling";
 import { withRateLimit } from "@/lib/security/rate-limiting";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { and, eq, or } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -25,10 +26,7 @@ import { NextApiRequest, NextApiResponse } from "next";
  * Allows users to look up their orders by order number and email
  * Works for both guest orders and logged-in user orders
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -190,3 +188,5 @@ export default async function handler(
     );
   }
 }
+
+export default withPublicRequest(handler, "order_lookup");

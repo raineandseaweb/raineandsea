@@ -6,14 +6,12 @@ import {
   productOptionValues,
   products,
 } from "@/lib/db/schema";
+import { withAuthenticatedRequest } from "@/lib/security/request-wrapper";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === "POST") {
       const { items } = req.body;
@@ -129,3 +127,5 @@ export default async function handler(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export default withAuthenticatedRequest(handler, "sync_cart");

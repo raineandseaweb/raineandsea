@@ -1,6 +1,7 @@
 // import { withCSRFProtection } from "@/lib/csrf-middleware";
 import { db } from "@/lib/db";
 import { cartItems, carts, prices, products } from "@/lib/db/schema";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
@@ -130,4 +131,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default handler;
+export default withPublicRequest(handler, "cart_items_operations");

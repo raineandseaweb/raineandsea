@@ -10,13 +10,11 @@ import {
   tags,
 } from "@/lib/db/schema";
 import { getProductImageUrlFromMedia } from "@/lib/image-utils";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { eq } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -180,3 +178,5 @@ export default async function handler(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export default withPublicRequest(handler, "get_product_detail");

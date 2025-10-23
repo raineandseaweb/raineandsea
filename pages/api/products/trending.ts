@@ -8,16 +8,14 @@ import {
   productTags,
   tags,
 } from "@/lib/db/schema";
+import { withPublicRequest } from "@/lib/security/request-wrapper";
 import { eq, gte, sql } from "drizzle-orm";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Get trending products based on recent sales
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -148,3 +146,5 @@ export default async function handler(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export default withPublicRequest(handler, "get_trending_products");
